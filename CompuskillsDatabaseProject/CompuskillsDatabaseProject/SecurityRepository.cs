@@ -6,45 +6,25 @@ using System.Threading.Tasks;
 
 namespace CompuskillsDatabaseProject
 {
-  
+
     class SecurityRepository
     {
-       
         public void AddSecurityDevice(string securityDevice)
         {
-            using (BuildingSecurityContext building = new BuildingSecurityContext())
+            using (BuildingSecurityContext SecurityContext = new BuildingSecurityContext())
             {
-                building.SecurityDevices.Add(new SecurityDevice { SecurityDeviceType = securityDevice });
-                building.SaveChanges();
+            
+                SecurityContext.SecurityDevices.Add(new SecurityDevice { SecurityDeviceType = securityDevice });
+                SecurityContext.SaveChanges();
             }
         }
-    public IQueryable<AccessHistory> GetActivity(DateTime begin, DateTime to)
-    {
-       using (BuildingSecurityContext SecurityContext = new BuildingSecurityContext())
-            { 
-
-            var dates = from total in SecurityContext.AccessHistories.Include("Door").Include("Employees")
-                        where total.AttemptDate >= begin && total.AttemptDate <= to
-                        select total;
-                foreach (var item in dates)
-                {
-                    Console.WriteLine(item.AccessHistoryID);
-                    Console.WriteLine(item.AttemptDate);
-                    Console.WriteLine(item.Door.Room);
-                    Console.WriteLine(item.Employees.Name);
-                    Console.WriteLine(item.Result);
-                }
-                return dates;
-        }    
-        }
-        public IQueryable<AccessHistory> GetDoorActivity(DateTime begin, DateTime to, int doorId)
+        public IQueryable<AccessHistory> GetActivity(DateTime begin, DateTime to)
         {
-            using (BuildingSecurityContext securityContext= new BuildingSecurityContext())
+        
+            using (BuildingSecurityContext SecurityContext = new BuildingSecurityContext())
             {
-                var door = securityContext.AccessHistories.Find(doorId);
-                var dates = from total in securityContext.AccessHistories.Include("Door").Include("Employees")
+                var dates = from total in SecurityContext.AccessHistories.Include("Door").Include("Employees")
                             where total.AttemptDate >= begin && total.AttemptDate <= to
-                            where total.DoorID==doorId
                             select total;
                 foreach (var item in dates)
                 {
@@ -56,7 +36,28 @@ namespace CompuskillsDatabaseProject
                 }
                 return dates;
             }
-           
+        }
+        public IQueryable<AccessHistory> GetDoorActivity(DateTime begin, DateTime to,string door)
+        {
+       
+            using (BuildingSecurityContext securityContext = new BuildingSecurityContext())
+            {
+               var id= GetDoorId(door);       
+                var dates = from total in securityContext.AccessHistories.Include("Door").Include("Employees")
+                            where total.AttemptDate >= begin && total.AttemptDate <= to
+                            where total.DoorID == id
+                select total;
+                foreach (var item in dates)
+                {
+                    Console.WriteLine(item.AccessHistoryID);
+                    Console.WriteLine(item.AttemptDate);
+                    Console.WriteLine(item.Door.Room);
+                    Console.WriteLine(item.Employees.Name);
+                    Console.WriteLine(item.Result);
+                }
+                return dates;
+            }
+
         }
         public IQueryable<AccessHistory> GetSuspiciousActivity(DateTime begin, DateTime to)
         {
@@ -66,67 +67,97 @@ namespace CompuskillsDatabaseProject
                             where total.AttemptDate >= begin && total.AttemptDate <= to
                             where total.Result == false
                             select total;
-                //  bool result = true;
-
-
                 foreach (var item in dates)
                 {
-                    var temp = item.AttemptDate.AddMinutes(2);
-
-                    var tem = securityContext.AccessHistories.Include("Door").Include("Employees").Where(x => x.AttemptDate >= begin && x.AttemptDate <= to && x.Result == false);
-                    if (tem.Any(x => x.AttemptDate == temp))
+                    //rerun the query and put the results of the if in the new query e.g dates=temp
+                    var w = item.AttemptDate.AddMinutes(2);
+                    if(item.AttemptDate==w)
                     {
-                        tem = dates;
-                    }
+                    
+                   }
                 }
-                foreach (var item in dates)
+                var a = dates.Any(x => x.AttemptDate == x.AttemptDate.AddMinutes(2));
+                string c = Convert.ToString(a);
+                DateTime D = Convert.ToDateTime(c);
+                //   var b = dates.Any(x => x.AttemptDate >= D && x.Result == false);
+                var b = from q in securityContext.AccessHistories.Include("Door").Include("Employees")
+                  
+                        where q.AttemptDate >= D
+                        where q.Result !=true
+                        select q;
+               foreach (var item in  b)
                 {
-                    Console.WriteLine(item.AccessHistoryID);
-                    Console.WriteLine(item.AttemptDate);
-                    Console.WriteLine(item.Door.Room);
-                    Console.WriteLine(item.Employees.Name);
-                    Console.WriteLine(item.Result);
+          
+                        Console.WriteLine(item.AccessHistoryID);
+                        Console.WriteLine(item.AttemptDate);
+                        Console.WriteLine(item.Door.Room);
+                        Console.WriteLine(item.Employees.Name);
+                        Console.WriteLine(item.Result);
+                        
                 }
-                return dates;
+             
+                return b;
             }
         }
 
-        public void GrantAccess(int doorId, IEnumerable<EmployeeSecurityDevice> credentials)
+        public void GrantAccess(string door, IQueryable<DoorSecurityDevice> credentials)
         {
             using (BuildingSecurityContext securityContext = new BuildingSecurityContext())
-            {
-                bool Authorized = false;
-                var DoorAccess = from access in securityContext.DoorSecurityDevices.Include("SecurityDevices ")
-                                 where access.DoorId == doorId
-                                 orderby access.SecurityDeviceId
-                                 select access.SecurityDevices.SecurityDeviceType;
-                // string a = DoorAccess.ToString();
-                foreach (var item in DoorAccess)
+            {            
+                Console.WriteLine("These are the credentials currently with this door");
+                Console.WriteLine("Credential type \t CredentialId");
+                foreach (var item in credentials)
                 {
-                    if (credentials.Any(x => x.SecurityDevices.SecurityDeviceType == item))
+                    Console.WriteLine(item.SecurityDevices.SecurityDeviceType + "\t" + item.SecurityDeviceId);
+                    Console.WriteLine();
+                }
+                Console.WriteLine();
+                Console.WriteLine("Type which of these credentials would you like to add");
+                Console.WriteLine("Credential type \t CredentialId");
+                foreach (var item in securityContext.SecurityDevices)
+                {
+                    Console.WriteLine(item.SecurityDeviceType + "\t" + item.SecurityDeviceId);
+                    Console.WriteLine();
+                }
+                string credential = Console.ReadLine();
+        
+
+                if (securityContext.SecurityDevices.Any(x => x.SecurityDeviceType == credential))
+                {
+                    var ID = GetSecurityDeviceId(credential);
+                    if (credentials.Any(x => x.SecurityDevices.SecurityDeviceType == credential))
                     {
-                        Authorized = true;
-                    }
-                    else if (credentials.Any(x => x.SecurityDevices.SecurityDeviceType != item))
+                        Console.WriteLine("The door already has this credential");
+                    }                  
+                  else  if (credentials.All(x => x.SecurityDeviceId != ID))
                     {
-                        Authorized = false;
-                        break;
+                        var doorId = GetDoorId(door);
+                        securityContext.DoorSecurityDevices.Add(new DoorSecurityDevice { DoorId = doorId, SecurityDeviceId = ID });
+                        securityContext.SaveChanges();
                     }
+                }
+              else 
+                {
+                    Console.WriteLine("No such credential exists");
                 }
             }
         }
-        public bool IsAuthorized(int doorId, IEnumerable<EmployeeCredential> credentials, int empId)
+        
+        public bool IsAuthorized(string door, IEnumerable<EmployeeCredential> credentials, string name)
         {
+            
             using (BuildingSecurityContext securityContext = new BuildingSecurityContext())
             {
-                bool Authorized = false;
+                var doorid = GetDoorId(door);
+                var id= GetEmployeeId(name);
+                bool Authorized = false;           
                 var DoorAccess = from access in securityContext.DoorSecurityDevices
-                                 where access.DoorId == doorId
+                                 where access.DoorId == doorid
                                  orderby access.SecurityDeviceId
                                  select access.SecurityDeviceId;
                 foreach (var item in DoorAccess)
                 {
-                    if (credentials.Any(x => x.EmployeeSecurityDevices.Any(y=>y.SecurityDeviceId==item)))
+                    if (credentials.Any(x => x.EmployeeSecurityDevices.Any(y => y.SecurityDeviceId == item)))
                     {
                         Authorized = true;
                     }
@@ -135,82 +166,99 @@ namespace CompuskillsDatabaseProject
                         Authorized = false;
                         break;
                     }
-                }            
-                    LogAuthorizationAttempt(doorId, Authorized, empId);
-                    return Authorized;
-                
-            }
-        }
-        public void LogAuthorizationAttempt(int doorId, bool result,int id=1)
-        {
-            using (BuildingSecurityContext securityContext = new BuildingSecurityContext())
-            {
-                securityContext.AccessHistories.Add(new AccessHistory {  DoorID = doorId,AttemptDate=DateTime.Now,EmployeeId=id, Result = result });
-                securityContext.SaveChanges();
-            }
-        }
-
-
-     /*   public void SetEmployeeSecurityId(int PersonId)
-        {
-            using (BuildingSecurityContext securityContext = new BuildingSecurityContext())
-            {
-                int ranking = PersonId;
-                var devices = from device in securityContext.EmployeeSecurityDevices
-                              where device.EmployeeId == PersonId
-                              select device.SecurityDeviceId;
-                foreach (var item in devices)
-                {
-                    ranking += item;
                 }
-                securityContext.EmployeeAccessRights.Add(new EmployeeAccessRight { EmployeeId = PersonId, EmployeeSecurityLevelRanking = ranking });
-                securityContext.SaveChanges();
+                LogAuthorizationAttempt(doorid, Authorized, id);
+                return Authorized;
+
             }
-        }*/
-public void Add (int id,byte bt=0)
+        }
+        public void LogAuthorizationAttempt(int doorId, bool result, int id)
         {
             using (BuildingSecurityContext securityContext = new BuildingSecurityContext())
             {
-               var guid= Guid.NewGuid();
-                var a = securityContext.Employees.SingleOrDefault(x => x.EmployeeId == id);
-                securityContext.EmployeeCredentials.Add(new EmployeeCredential { EmployeeId = id,SecurityBadgeId=guid,Fingerprint=bt});
+                securityContext.AccessHistories.Add(new AccessHistory { DoorID = doorId, AttemptDate = DateTime.Now, EmployeeId = id, Result = result });
                 securityContext.SaveChanges();
             }
         }
+        public void RevokeAccess()
+        {
+            Console.WriteLine("Please select a door  to remove a credential from this list");
+            using (BuildingSecurityContext securityContext = new BuildingSecurityContext())
+            {
+                foreach (var item in securityContext.Doors)
+                {
+                    Console.WriteLine(item.Room);
+                }
+                string door = Console.ReadLine();
+                if (securityContext.Doors.Any(x => x.Room == door))
+                {
+                    var doorId = GetDoorId(door);
+                    var doorCreds = securityContext.DoorSecurityDevices.Include("SecurityDevices").Where(x => x.DoorId == doorId);
+                    Console.WriteLine("Please select a credential to remove from this list");
+                    foreach (var item in doorCreds)
+                    {
+                        Console.WriteLine(item.SecurityDevices.SecurityDeviceType+"\t"+item.SecurityDeviceId);
+                    }
+                    string credential = Console.ReadLine();
+                    if(doorCreds.Any(x=>x.SecurityDevices.SecurityDeviceType==credential))
+                    {
+                      var deviceId=  GetSecurityDeviceId(credential);
+                        if(doorCreds.Any(x=>x.SecurityDeviceId>deviceId))
+                        {
+                            Console.WriteLine("Please delete a the device with the highest deviceId 1st ");
+                        }
+                        else
+                        {
+                            var credToRemove = securityContext.DoorSecurityDevices.FirstOrDefault(x => x.SecurityDeviceId == deviceId && x.DoorId == doorId);
+                            securityContext.DoorSecurityDevices.Remove(credToRemove);
+                            securityContext.SaveChanges();
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Please select a credential to remove from the above list");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Please select a door from the above list");
+                }
+                 
+                 
+                }
+                }
+            
+        
+       internal int GetDoorId(string door)
+        {
+            using (BuildingSecurityContext securityContext = new BuildingSecurityContext())
+            {
 
-
-
-
-        /*   public bool IsAuthorized(string doorName, string employee)
-           {
-               using (BuildingSecurityContext securityContext = new BuildingSecurityContext())
-               {
-                   bool Authorized = false;
-                   var room = securityContext.Doors.SingleOrDefault(x => x.Room == doorName);
-                   var name = securityContext.Employees.SingleOrDefault(x => x.Name == employee);
-                   var roomId = room.DoorId;
-                   var roomRanking = securityContext.DoorSecurityLevels.Find(roomId);
-                   var empRanking = from ranking in securityContext.EmployeeAccessRights
-                                    where ranking.EmployeeId == name.EmployeeId
-                                    select ranking.EmployeeSecurityLevelRanking;
-                   //int EmpRanking = Convert.ToInt32(empRanking);
-                   string a = empRanking.ToString();
-                   decimal b = Math.Round(decimal.Parse(a) / 100000, 0) * 100000;
-                   if (b >= roomRanking.DoorSecurityLevelRanking)
-                   {
-                       Authorized = true;
-                   }
-                   else
-                   {
-                       Authorized = false;
-                   }
-                   LogAuthorizationAttempt(roomId, Authorized);
-                   return Authorized;
-               }*/
+                var entrance = securityContext.Doors.SingleOrDefault(x => x.Room == door);
+                var id = entrance.DoorId;
+                return id;
+            }
+        }
+        private int GetEmployeeId(string employee)
+        {
+            using (BuildingSecurityContext securityContext = new BuildingSecurityContext())
+            {
+                var worker = securityContext.Employees.SingleOrDefault(x => x.Name == employee);
+                var id = worker.EmployeeId;
+                return id;
+            }
+        }
+        internal int GetSecurityDeviceId(string credential)
+        {
+            using (BuildingSecurityContext securityContext = new BuildingSecurityContext())
+            {
+                var device = securityContext.SecurityDevices.SingleOrDefault(x => x.SecurityDeviceType == credential);
+                var id = device.SecurityDeviceId;
+                return id;
+            }
+        }
     }
-    }
-
-    
+}
         
     
 

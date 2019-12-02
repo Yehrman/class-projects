@@ -56,8 +56,6 @@
     <Compile Include="AccessHistory.cs" />
     <Compile Include="DoorCode.cs" />
     <Compile Include="DoorSecurityDevice.cs" />
-    <Compile Include="EmployeeAccessRight.cs" />
-    <Compile Include="DoorSecurityLevel.cs" />
     <Compile Include="EmployeeCredential.cs" />
     <Compile Include="EmployeeSecurityDevice.cs" />
     <Compile Include="SecurityDevice.cs" />
