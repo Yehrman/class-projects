@@ -13,14 +13,20 @@ namespace CompuskillsDatabaseProject
         {
             using (BuildingSecurityContext SecurityContext = new BuildingSecurityContext())
             {
-            
-                SecurityContext.SecurityDevices.Add(new SecurityDevice { SecurityDeviceType = securityDevice });
-                SecurityContext.SaveChanges();
+                if (SecurityContext.SecurityDevices.All(x => x.SecurityDeviceType != securityDevice))
+                {
+                    SecurityContext.SecurityDevices.Add(new SecurityDevice { SecurityDeviceType = securityDevice });
+                    SecurityContext.SaveChanges();
+                }
+                else
+                {
+                    Console.WriteLine("This device already is installed in our system");
+                }            
             }
         }
         public IQueryable<AccessHistory> GetActivity(DateTime begin, DateTime to)
         {
-        
+     
             using (BuildingSecurityContext SecurityContext = new BuildingSecurityContext())
             {
                 var dates = from total in SecurityContext.AccessHistories.Include("Door").Include("Employees")
@@ -63,43 +69,32 @@ namespace CompuskillsDatabaseProject
         {
             using (BuildingSecurityContext securityContext = new BuildingSecurityContext())
             {
-                var dates = from total in securityContext.AccessHistories.Include("Door").Include("Employees")
+
+                IQueryable<AccessHistory> result = Enumerable.Empty<AccessHistory>().AsQueryable();
+                var dates = from total in securityContext.AccessHistories
                             where total.AttemptDate >= begin && total.AttemptDate <= to
                             where total.Result == false
                             select total;
-                foreach (var item in dates)
+             //   var temp = securityContext.AccessHistories.Where(x => x.AttemptDate >= begin && x.AttemptDate <= to && x.Result == false);
+                foreach (var item in dates.ToList())
                 {
-                    //rerun the query and put the results of the if in the new query e.g dates=temp
-                    var w = item.AttemptDate.AddMinutes(2);
-                    if(item.AttemptDate==w)
-                    {
-                    
-                   }
+                    var res = item.AttemptDate.AddMinutes(2);
+                    result = dates.Where(x => x.AttemptDate == item.AttemptDate || x.AttemptDate > res && x.Result != true);
                 }
-                var a = dates.Any(x => x.AttemptDate == x.AttemptDate.AddMinutes(2));
-                string c = Convert.ToString(a);
-                DateTime D = Convert.ToDateTime(c);
-                //   var b = dates.Any(x => x.AttemptDate >= D && x.Result == false);
-                var b = from q in securityContext.AccessHistories.Include("Door").Include("Employees")
-                  
-                        where q.AttemptDate >= D
-                        where q.Result !=true
-                        select q;
-               foreach (var item in  b)
+                foreach (var item in result.ToList())
                 {
-          
-                        Console.WriteLine(item.AccessHistoryID);
-                        Console.WriteLine(item.AttemptDate);
-                        Console.WriteLine(item.Door.Room);
-                        Console.WriteLine(item.Employees.Name);
-                        Console.WriteLine(item.Result);
-                        
+                    Console.WriteLine(item.AccessHistoryID);
+                    Console.WriteLine(item.AttemptDate);
+                    Console.WriteLine(item.Door.Room + "\t" + item.DoorID);
+                    Console.WriteLine(item.Employees.Name + "\t" + item.EmployeeId);
+                    Console.WriteLine(item.Result);
                 }
-             
-                return b;
+                return result;
+                
             }
-        }
-
+               
+            }
+                  
         public void GrantAccess(string door, IQueryable<DoorSecurityDevice> credentials)
         {
             using (BuildingSecurityContext securityContext = new BuildingSecurityContext())
@@ -143,13 +138,13 @@ namespace CompuskillsDatabaseProject
             }
         }
         
-        public bool IsAuthorized(string door, IEnumerable<EmployeeCredential> credentials, string name)
+        public bool IsAuthorized(string name, IEnumerable<EmployeeCredential> credentials, string door)
         {
             
             using (BuildingSecurityContext securityContext = new BuildingSecurityContext())
             {
+                var id = GetEmployeeId(name);
                 var doorid = GetDoorId(door);
-                var id= GetEmployeeId(name);
                 bool Authorized = false;           
                 var DoorAccess = from access in securityContext.DoorSecurityDevices
                                  where access.DoorId == doorid

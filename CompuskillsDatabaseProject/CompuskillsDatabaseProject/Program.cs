@@ -82,10 +82,12 @@ namespace CompuskillsDatabaseProject
                 }
                     else if(option=="auth")
                     {
+                       //type name
                         string param = Console.ReadLine();
                         var Empcredentials = from credential in securityContext.EmployeeCredentials.Include("EmployeeSecurityDevices").Include("Employee")
                                              where credential.EmployeeSecurityDevices.Any(x => x.Employee.Name == param)
-                                             select credential;                      
+                                             select credential;     
+                       //type door
                         string param2 = Console.ReadLine();
                         securityRepository.IsAuthorized(param, Empcredentials, param2);
                     }
