@@ -1,0 +1,9 @@
+﻿
+@{
+    ViewBag.Title = "Select";
+}
+<h1> Hello @User.Identity.Name </h1>
+<h2> Please Select what you'd like to do</h2>
+<p>To add a client @Html.ActionLink("click here","Create","Clients")</p>
+<p>To view all jobs by date @Html.ActionLink("click here","GetJobsByDate","Projects")</p>
+<p>To add a job @Html.ActionLink("click here","Create","Projects")</p>

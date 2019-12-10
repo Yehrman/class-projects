@@ -6,6 +6,6 @@ namespace MvcProjectDbConn
     {    
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public virtual ICollection<Client> Clients { get; set; }
+        public virtual ICollection<Project> Projects { get; set; }
     }
 }

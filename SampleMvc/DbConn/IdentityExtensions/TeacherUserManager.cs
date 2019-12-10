@@ -6,23 +6,21 @@ using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 
-namespace MvcProjectDbConn.Identity
+namespace DbConn.IdentityExtensions
 {
-
     // Configure the application user manager used in this application. UserManager is defined in ASP.NET Identity and is used by the application.
-    //Dealing with the user in from the db point of view
-    public class TtpUserManager : UserManager<TtpUser>
+    public class TeacherUserManager : UserManager<Teacher>
     {
-        public TtpUserManager(IUserStore<TtpUser> store)
+        public TeacherUserManager(IUserStore<Teacher> store)
             : base(store)
         {
         }
-        //All the rules for what is needed for authentication
-        public static TtpUserManager Create(UserStore<TtpUser> userStore)
+
+        public static TeacherUserManager Create(UserStore<Teacher> userStore)
         {
-            var manager = new TtpUserManager(userStore);
+            var manager = new TeacherUserManager(userStore);
             // Configure validation logic for usernames
-            manager.UserValidator = new UserValidator<TtpUser>(manager)
+            manager.UserValidator = new UserValidator<Teacher>(manager)
             {
                 AllowOnlyAlphanumericUserNames = false,
                 RequireUniqueEmail = true
@@ -31,11 +29,11 @@ namespace MvcProjectDbConn.Identity
             // Configure validation logic for passwords
             manager.PasswordValidator = new PasswordValidator
             {
-                RequiredLength = 10,
-                RequireNonLetterOrDigit = false,
-                RequireDigit = false,
-                RequireLowercase = false,
-                RequireUppercase = false,
+                RequiredLength = 6,
+                RequireNonLetterOrDigit = true,
+                RequireDigit = true,
+                RequireLowercase = true,
+                RequireUppercase = true,
             };
 
             // Configure user lockout defaults
@@ -45,23 +43,23 @@ namespace MvcProjectDbConn.Identity
 
             // Register two factor authentication providers. This application uses Phone and Emails as a step of receiving a code for verifying the user
             // You can write your own provider and plug it in here.
-            manager.RegisterTwoFactorProvider("Phone Code", new PhoneNumberTokenProvider<TtpUser>
+            manager.RegisterTwoFactorProvider("Phone Code", new PhoneNumberTokenProvider<Teacher>
             {
                 MessageFormat = "Your security code is {0}"
             });
-            manager.RegisterTwoFactorProvider("Email Code", new EmailTokenProvider<TtpUser>
+            manager.RegisterTwoFactorProvider("Email Code", new EmailTokenProvider<Teacher>
             {
                 Subject = "Security Code",
                 BodyFormat = "Your security code is {0}"
             });
-           // manager.EmailService = new EmailService();
-            //manager.SmsService = new SmsService();
-            //var dataProtectionProvider = options.DataProtectionProvider;
-          //  if (dataProtectionProvider != null)
-            //{
-              //  manager.UserTokenProvider =
-                //    new DataProtectorTokenProvider<TtpUsersData>(dataProtectionProvider.Create("ASP.NET Identity"));
-            //}
+          /*  manager.EmailService = new EmailService();
+            manager.SmsService = new SmsService();
+            var dataProtectionProvider = options.DataProtectionProvider;
+            if (dataProtectionProvider != null)
+            {
+                manager.UserTokenProvider =
+                    new DataProtectorTokenProvider<Teacher>(dataProtectionProvider.Create("ASP.NET Identity"));
+            }*/
             return manager;
         }
     }

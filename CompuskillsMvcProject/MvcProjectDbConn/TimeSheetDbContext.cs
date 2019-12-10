@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 using System.Data.Entity;
 
 namespace MvcProjectDbConn
 {
-    public class TimeSheetDbContext:DbContext
+    public class TimeSheetDbContext: IdentityDbContext
     {
         public DbSet<TimeSheetEntry> TimeSheetEntries { get; set; }
         public DbSet<Client> Clients { get; set; }
@@ -12,5 +13,7 @@ namespace MvcProjectDbConn
         {
             return new TimeSheetDbContext();
         }
+
+        public System.Data.Entity.DbSet<MvcProjectDbConn.TtpUser> IdentityUsers { get; set; }
     }
 }

@@ -168,8 +168,12 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\ClientsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\ProjectsController.cs" />
+    <Compile Include="Controllers\TimeSheetEntriesController.cs" />
+    <Compile Include="Controllers\TtpUsersController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -236,6 +240,29 @@
     <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
+    <Content Include="Views\Clients\Create.cshtml" />
+    <Content Include="Views\Clients\Delete.cshtml" />
+    <Content Include="Views\Clients\Details.cshtml" />
+    <Content Include="Views\Clients\Edit.cshtml" />
+    <Content Include="Views\Clients\Index.cshtml" />
+    <Content Include="Views\TtpUsers\Create.cshtml" />
+    <Content Include="Views\TtpUsers\Delete.cshtml" />
+    <Content Include="Views\TtpUsers\Details.cshtml" />
+    <Content Include="Views\TtpUsers\Edit.cshtml" />
+    <Content Include="Views\TtpUsers\Index.cshtml" />
+    <Content Include="Views\Projects\Create.cshtml" />
+    <Content Include="Views\Projects\Delete.cshtml" />
+    <Content Include="Views\Projects\Details.cshtml" />
+    <Content Include="Views\Projects\Edit.cshtml" />
+    <Content Include="Views\Projects\Index.cshtml" />
+    <Content Include="Views\TimeSheetEntries\Create.cshtml" />
+    <Content Include="Views\TimeSheetEntries\Delete.cshtml" />
+    <Content Include="Views\TimeSheetEntries\Details.cshtml" />
+    <Content Include="Views\TimeSheetEntries\Edit.cshtml" />
+    <Content Include="Views\TimeSheetEntries\Index.cshtml" />
+    <Content Include="Views\TtpUsers\Select.cshtml" />
+    <Content Include="Views\Projects\GetJobsByDate.cshtml" />
+    <Content Include="Views\Projects\SeeJobsByDate.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
