@@ -15,13 +15,14 @@ namespace CompuskillsMvcProject.Controllers
         private TimeSheetDbContext db = new TimeSheetDbContext();
 
         // GET: TtpUsers
-        
+        [Authorize(Roles ="SystemAdmin")]
         public ActionResult Index()
         {
             return View(db.IdentityUsers.ToList());
         }
 
         // GET: TtpUsers/Details/5
+        [Authorize(Roles = "SystemAdmin")]
         public ActionResult Details(string id)
         {
             if (id == null)
@@ -36,28 +37,6 @@ namespace CompuskillsMvcProject.Controllers
             return View(ttpUser);
         }
 
-       /* // GET: TtpUsers/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: TtpUsers/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Email,EmailConfirmed,PasswordHash,SecurityStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEndDateUtc,LockoutEnabled,AccessFailedCount,UserName,FirstName,LastName")] TtpUser ttpUser)
-        {
-            if (ModelState.IsValid)
-            {
-                db.IdentityUsers.Add(ttpUser);
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-
-            return View(ttpUser);
-        }*/
 
         // GET: TtpUsers/Edit/5
         public ActionResult Edit(string id)

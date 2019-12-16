@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using Microsoft.AspNet.Identity;
 using MvcProjectDbConn;
 
 namespace CompuskillsMvcProject.Controllers
@@ -15,12 +16,18 @@ namespace CompuskillsMvcProject.Controllers
         private TimeSheetDbContext db = new TimeSheetDbContext();
 
         // GET: Clients
+        [Authorize(Roles ="SystemAdmin")]
         public ActionResult Index()
         {
             return View(db.Clients.ToList());
           
         }
-
+        public ActionResult UserIndex()
+        {
+            var FindUser = User.Identity.GetUserId();
+            var Clients = db.Projects.Where(x => x.TtpUserId == FindUser).Include("Client");
+            return View(Clients);
+        }
         // GET: Clients/Details/5
         public ActionResult Details(int? id)
         {
@@ -53,7 +60,7 @@ namespace CompuskillsMvcProject.Controllers
             {
                 db.Clients.Add(client);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("UserIndex");
             }
 
             return View(client);
@@ -85,7 +92,7 @@ namespace CompuskillsMvcProject.Controllers
             {
                 db.Entry(client).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("UserIndex");
             }
             return View(client);
         }
@@ -113,7 +120,7 @@ namespace CompuskillsMvcProject.Controllers
             Client client = db.Clients.Find(id);
             db.Clients.Remove(client);
             db.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("UserIndex");
         }
 
         protected override void Dispose(bool disposing)

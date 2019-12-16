@@ -81,6 +81,7 @@ namespace CompuskillsMvcProject.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
+                    ViewBag.Name ="Hello "+ User.Identity.Name;
                     return View(returnUrl);
                 case SignInStatus.LockedOut:
                     return View("Lockout");
@@ -165,7 +166,8 @@ namespace CompuskillsMvcProject.Controllers
                 UserName=model.Email,
                 FirstName=model.FirstName,
                 LastName=model.LastName,
-                Email=model.Email
+                Email=model.Email,
+                PhoneNumber=model.Phonenumber
             }, password: model.Password);
 
             if (user == IdentityResult.Success)
@@ -413,6 +415,7 @@ namespace CompuskillsMvcProject.Controllers
         public ActionResult LogOff()
         {
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+           // Session.Abandon();
             return RedirectToAction("Index", "Home");
         }
 
