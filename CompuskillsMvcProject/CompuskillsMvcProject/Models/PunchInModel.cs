@@ -19,10 +19,10 @@ namespace CompuskillsMvcProject.Models
     {
        [Required]
       public string Client { get; set; }
-      public List<Project> Clients { get; set; }
+    
         [Required]
     public string Project { get; set; }
-     public List<Project> Projects { get; set; }
+    
     }
    
     }

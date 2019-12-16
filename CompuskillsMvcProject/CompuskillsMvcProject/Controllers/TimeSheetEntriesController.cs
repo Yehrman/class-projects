@@ -46,21 +46,22 @@ namespace CompuskillsMvcProject.Controllers
                [HttpGet]
      public ActionResult PunchIn()
         {
-            var FindUser = User.Identity.GetUserId();
+           // var FindUser = User.Identity.GetUserId();
            
-            ViewBag.Project = new SelectList(db.Projects.Where(x=>x.TtpUserId==FindUser), "ProjectId", "ProjectName");
+            //ViewBag.Project = new SelectList(db.Projects.Where(x=>x.TtpUserId==FindUser), "ProjectId", "ProjectName");
           
             return View();
 
         }
         [HttpPost]
-        public ActionResult PunchIn(Project punchInModel)
+        public ActionResult PunchIn(PunchInOutModel punchInModel)
         {
             if (ModelState.IsValid)
             {
-                
-                    var project = db.Projects.FirstOrDefault(x => x.ProjectName == punchInModel.ProjectName);
-                   // var client = db.Clients.SingleOrDefault(x => x.ClientId==punchInModel.ClientID);
+                if (db.Projects.Any(x => x.Client.Name == punchInModel.Client && x.ProjectName == punchInModel.Project))
+                {
+                    var project = db.Projects.Include("Client").FirstOrDefault(x => x.ProjectName == punchInModel.Project && x.Client.Name == punchInModel.Client);
+                    // var client = db.Clients.SingleOrDefault(x => x.ClientId==punchInModel.ClientID);
                     var WorkerId = project.TtpUserId;
                     var ProjectId = project.ProjectId;
                     var clientId = project.ClientID;
@@ -68,35 +69,36 @@ namespace CompuskillsMvcProject.Controllers
                     db.SaveChanges();
                     return RedirectToAction("UserIndex");
                 }
-            var FindUser = User.Identity.GetUserId();
-            ViewBag.Project = new SelectList(db.Projects.Where(x=>x.TtpUserId==FindUser), "ProjectId", "ProjectName",punchInModel.ProjectName );
+                else
+                {
+                    ModelState.AddModelError("client,project", "The client or project does'nt exist in the database");
+                }
+                }
+           // var FindUser = User.Identity.GetUserId();
+           // ViewBag.Project = new SelectList(db.Projects.Where(x=>x.TtpUserId==FindUser), "ProjectId", "ProjectName",punchInModel.ProjectName );
 
 
-            return View(punchInModel);
+            return View();
         }
             
-        
+     
         [HttpGet]
         public ActionResult PunchOut()
         {
-             var FindUser = User.Identity.GetUserId();
-           
-       
-
-            ViewBag.Project = new SelectList(db.Projects.Where(x => x.TtpUserId == FindUser), "ProjectId", "ProjectName");
+           //  var FindUser = User.Identity.GetUserId();
+          //  ViewBag.Project = new SelectList(db.Projects.Where(x => x.TtpUserId == FindUser), "ProjectId", "ProjectName");
           //  ViewBag.ClientName = new SelectList(db.Projects.Where(x => x.TtpUserId == FindUser), "ClientName", "Client.Name");
             return View();
         }
         [HttpPost]
-        public ActionResult PunchOut(Project punchOutModel)
+        public ActionResult PunchOut(PunchInOutModel punchOutModel)
         {
             if (ModelState.IsValid)
             {
-                if (db.Projects.Any(x => x.ProjectName == punchOutModel.ProjectName))
+                if (db.Projects.Any(x => x.ProjectName == punchOutModel.Project&&x.Client.Name==punchOutModel.Client))
                 {
               
-                   var Entry = db.TimeSheetEntries.Include("Project").SingleOrDefault(x=>x.Project.ProjectName == punchOutModel.ProjectName);
-
+                   var Entry = db.TimeSheetEntries.Include("Project").Include("Client").SingleOrDefault(x=>x.Project.ProjectName== punchOutModel.Project&&x.Client.Name==punchOutModel.Client&&x.EndTime==null);
                     var entryId = Entry.TimeSheetEntryId;
                     var find = db.TimeSheetEntries.Find(entryId);
                     var end = find.EndTime = DateTime.Now;
@@ -106,10 +108,10 @@ namespace CompuskillsMvcProject.Controllers
                 }
                 else
                 {
-                    return HttpNotFound();
+                    ModelState.AddModelError("client,project", "The client or project does'nt exist in the database");
                 }
             }
-            else return View();
+            return View();
             }
         // GET: TimeSheetEntries/Create
       public ActionResult Create()
