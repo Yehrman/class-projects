@@ -138,7 +138,7 @@ namespace CompuskillsMvcProject.Controllers
             db.SaveChanges();
             return RedirectToAction("UserIndex");
         }
-
+     
         protected override void Dispose(bool disposing)
         {
             if (disposing)

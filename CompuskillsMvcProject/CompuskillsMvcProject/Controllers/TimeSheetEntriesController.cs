@@ -26,7 +26,7 @@ namespace CompuskillsMvcProject.Controllers
         public ActionResult UserIndex()
         {
             var FindUser = User.Identity.GetUserId();
-            var Entries = db.TimeSheetEntries.Where(x => x.TtpUserId == FindUser).Include("Client");
+            var Entries = db.TimeSheetEntries.Where(x => x.TtpUserId == FindUser).Include("Client").Include("Project");
             return View(Entries);
         }
         // GET: TimeSheetEntries/Details/5
@@ -168,7 +168,40 @@ namespace CompuskillsMvcProject.Controllers
             db.SaveChanges();
             return RedirectToAction("UserIndex");
         }
+         [HttpGet]
+        public ActionResult FindTimeEntriesByDate()
+        {
+            return View();
+        }
+        [HttpPost]
+        public ActionResult FindTimeEntriesByDate(FindDateModel dateModel)
+        {
+            var FindUser = User.Identity.GetUserId();
+            var userDates = db.TimeSheetEntries.Where(x => x.TtpUserId == FindUser && x.StartTime == dateModel.FindDate);
+            if (userDates != null)
+            {
+                TempData["dateModel"] = dateModel;
+                return RedirectToAction("GetTimeEntriesByDate");
+            }
+            else
+            {
+                ModelState.AddModelError("Dates", "There are no entries on this date");
+                return View();
+            }
 
+        }
+        [HttpGet]
+    public ActionResult GetTimeEntriesByDate()
+    {
+            FindDateModel dateModel = (FindDateModel)TempData["dateModel"];
+            var FindUser = User.Identity.GetUserId();
+            var Entries = db.TimeSheetEntries.Include("Client").Include("Project").Where(x => x.TtpUserId == FindUser && x.StartTime == dateModel.FindDate);
+                     
+                       
+            return View(Entries);
+        }
+      
+    
         protected override void Dispose(bool disposing)
         {
             if (disposing)

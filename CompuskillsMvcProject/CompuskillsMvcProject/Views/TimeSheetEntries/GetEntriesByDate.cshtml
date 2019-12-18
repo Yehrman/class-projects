@@ -1,16 +1,15 @@
-﻿@model IEnumerable<MvcProjectDbConn.TimeSheetEntry>
+﻿@model IEnumerable<CompuskillsMvcProject.Models.EntriesByDateModel>
 
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
-<h1>@User.Identity.Name's Entries</h1>
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Client.Name)
+            @Html.DisplayNameFor(model => model.ClientName)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Project.ProjectName)
+            @Html.DisplayNameFor(model => model.ProjectName)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.StartTime)
@@ -24,10 +23,10 @@
 @foreach (var item in Model) {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.Client.Name)
+            @Html.DisplayFor(modelItem => item.ClientName)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Project.ProjectName)
+            @Html.DisplayFor(modelItem => item.ProjectName)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.StartTime)
@@ -36,9 +35,9 @@
             @Html.DisplayFor(modelItem => item.EndTime)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id = item.TimeSheetEntryId }) |
-            @Html.ActionLink("Details", "Details", new { id = item.TimeSheetEntryId }) |
-            @Html.ActionLink("Delete", "Delete", new { id = item.TimeSheetEntryId })
+            @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+            @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+            @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
         </td>
     </tr>
 }

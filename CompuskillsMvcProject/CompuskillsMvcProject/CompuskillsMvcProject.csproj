@@ -179,6 +179,8 @@
     </Compile>
     <Compile Include="IdentietyExtensions\IdentityExtensions.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\EntriesByDateModel.cs" />
+    <Compile Include="Models\FindDateModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\PunchInModel.cs" />
@@ -266,10 +268,13 @@
     <Content Include="Views\TimeSheetEntries\UserIndex.cshtml" />
     <Content Include="Views\TimeSheetEntries\PunchIn.cshtml" />
     <Content Include="Views\TimeSheetEntries\PunchOut.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\DateTime.cshtml" />
+    <Content Include="Views\TimeSheetEntries\FindTimeEntriesByDate.cshtml" />
+    <Content Include="Views\TimeSheetEntries\GetEntriesByDate.cshtml" />
+    <Content Include="Views\TimeSheetEntries\GetTimeEntriesByDate.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\Shared\Editor\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
