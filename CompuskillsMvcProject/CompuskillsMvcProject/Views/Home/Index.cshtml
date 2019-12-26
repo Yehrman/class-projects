@@ -3,8 +3,22 @@
     Layout = "";
 }
 
+<div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
 
-    <h1 class="jumbotron">Welcome to Total Time Sheet Pro</h1>
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            @Html.ActionLink("TimeSheet Pro", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+        </div>
+       
+            @Html.Partial("_LoginPartial")
+        </div>
+        </div>
+        <h1 class="jumbotron">Welcome to Total Time Sheet Pro</h1>
 
- <p>To open a new account @Html.ActionLink("click here","Register","Account")</p>
-<p>To login @Html.ActionLink("click here","Login","Account")</p>
+        <p>To open a new account @Html.ActionLink("click here", "Register", "Account")</p>
+        <p>To login @Html.ActionLink("click here", "Login", "Account")</p>

@@ -81,8 +81,9 @@ namespace CompuskillsMvcProject.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
-                    ViewBag.Name ="Hello "+ User.Identity.Name;
-                    return View(returnUrl);
+                 //   ViewBag.Name ="Hello "+ User.Identity.Name;
+                    return RedirectToAction("Select", "TtpUsers");
+                    // return View(returnUrl);
                 case SignInStatus.LockedOut:
                     return View("Lockout");
                 case SignInStatus.RequiresVerification:

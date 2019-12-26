@@ -1,5 +1,7 @@
 ﻿@model MvcProjectDbConn.Project
-
+@section scripts{
+    @Scripts.Render("~/bundles/jqueryunobtrusive")
+}
 @{
     ViewBag.Title = "Details";
 }
@@ -52,5 +54,12 @@
 </div>
 <p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.ProjectId }) |
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Back to List", "UserIndex")|
 </p>
+@Ajax.ActionLink("Punch In", "PunchIn", "Project",new {id=Model.ProjectId }, new AjaxOptions { UpdateTargetId = "PunchIn" })|
+@Ajax.ActionLink("punch out", "PunchOut", "Project", new { id = Model.ProjectId }, new AjaxOptions { UpdateTargetId = "PunchOut" })|
+@Ajax.ActionLink("All Time Sheet Entries or this job", "ProjectEntries", "Project", new { id = Model.ProjectId }, new AjaxOptions {UpdateTargetId="Entries" })
+<div id="PunchIn">
+<div id="PunchOut"></div>
+<div id="Entries"></div>
+</div>

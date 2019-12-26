@@ -8,6 +8,8 @@ using System.Web;
 using System.Web.Mvc;
 using MvcProjectDbConn;
 using Microsoft.AspNet.Identity;
+using CompuskillsMvcProject.Models;
+
 namespace CompuskillsMvcProject.Controllers
 {
     public class ProjectController : Controller
@@ -42,7 +44,75 @@ namespace CompuskillsMvcProject.Controllers
             }
             return View(project);
         }
+        public ActionResult ProjectEntries(int id)
+        {
+            var userId = User.Identity.GetUserId();
+            var Entries = db.TimeSheetEntries.Include("Project").Include("Client").Where(x => x.TtpUserId == userId && x.ProjectId == id);
+            return PartialView(Entries);
+        }
+        /*  [HttpGet]
+          public ActionResult PunchIn(int id)
+          {
+              var project = db.Projects.Include("Client").FirstOrDefault(x => x.ProjectId == id);
+              return PartialView(project);
+          }
+  */      // [HttpPost]
+        public ActionResult PunchIn(int id)
+        {
 
+            var FindUser = User.Identity.GetUserId();
+            if (db.TimeSheetEntries.Any(x => x.TtpUserId == FindUser && x.StartTime != null && x.EndTime == null))
+            {
+                ModelState.AddModelError("Error", "You never punched out from your last job");
+                return View();
+
+            }
+            else
+            {
+                var project = db.Projects.Include("Client").FirstOrDefault(x => x.ProjectId == id);
+                // var client = db.Clients.SingleOrDefault(x => x.ClientId==punchInModel.ClientID);
+                var WorkerId = project.TtpUserId;
+                var ProjectId = project.ProjectId;
+                var clientId = project.ClientID;
+                db.TimeSheetEntries.Add(new TimeSheetEntry { TtpUserId = WorkerId, ProjectId = ProjectId, ClientId = clientId, StartTime = DateTime.Now });
+                db.SaveChanges();
+                return PartialView();
+            }
+        }
+               
+            
+
+        
+
+
+       /* [HttpGet]
+        public ActionResult PunchOut()
+        {
+            var FindUser = User.Identity.GetUserId();
+            var Entries = db.TimeSheetEntries.FirstOrDefault(x => x.TtpUserId == FindUser && x.EndTime == null);
+            return PartialView(Entries);
+        }*/
+      // [HttpPost]
+        public ActionResult PunchOut(int id)
+        {
+           
+               // if (db.Projects.Any(x => x.ProjectName == punchOutModel.Project && x.Client.Name == punchOutModel.Client))
+               // {
+
+                    var Entry = db.TimeSheetEntries.Include("Project").Include("Client").SingleOrDefault(x => x.ProjectId==id&& x.EndTime == null);
+                    var entryId = Entry.TimeSheetEntryId;
+                    var find = db.TimeSheetEntries.Find(entryId);
+                    var end = find.EndTime = DateTime.Now;
+                    db.Entry(find).CurrentValues.SetValues(end);
+                    db.SaveChanges();
+                    return PartialView();
+              //  }
+                //else
+               // {
+                 //   ModelState.AddModelError("client,project", "The client or project does'nt exist in the database");
+               // }
+           
+        }
         // GET: Project/Create
         public ActionResult Create()
         {

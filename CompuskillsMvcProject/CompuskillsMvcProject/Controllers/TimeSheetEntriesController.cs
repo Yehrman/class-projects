@@ -44,75 +44,7 @@ namespace CompuskillsMvcProject.Controllers
             return View(timeSheetEntry);
         }
                [HttpGet]
-     public ActionResult PunchIn()
-        {
-           // var FindUser = User.Identity.GetUserId();
-           
-            //ViewBag.Project = new SelectList(db.Projects.Where(x=>x.TtpUserId==FindUser), "ProjectId", "ProjectName");
-          
-            return View();
-
-        }
-        [HttpPost]
-        public ActionResult PunchIn(PunchInOutModel punchInModel)
-        {
-            if (ModelState.IsValid)
-            {
-                if (db.Projects.Any(x => x.Client.Name == punchInModel.Client && x.ProjectName == punchInModel.Project))
-                {
-                    var project = db.Projects.Include("Client").FirstOrDefault(x => x.ProjectName == punchInModel.Project && x.Client.Name == punchInModel.Client);
-                    // var client = db.Clients.SingleOrDefault(x => x.ClientId==punchInModel.ClientID);
-                    var WorkerId = project.TtpUserId;
-                    var ProjectId = project.ProjectId;
-                    var clientId = project.ClientID;
-                    db.TimeSheetEntries.Add(new TimeSheetEntry { TtpUserId = WorkerId, ProjectId = ProjectId, ClientId = clientId, StartTime = DateTime.Now });
-                    db.SaveChanges();
-                    return RedirectToAction("UserIndex");
-                }
-                else
-                {
-                    ModelState.AddModelError("client,project", "The client or project does'nt exist in the database");
-                }
-                }
-           // var FindUser = User.Identity.GetUserId();
-           // ViewBag.Project = new SelectList(db.Projects.Where(x=>x.TtpUserId==FindUser), "ProjectId", "ProjectName",punchInModel.ProjectName );
-
-
-            return View();
-        }
-            
-     
-        [HttpGet]
-        public ActionResult PunchOut()
-        {
-           //  var FindUser = User.Identity.GetUserId();
-          //  ViewBag.Project = new SelectList(db.Projects.Where(x => x.TtpUserId == FindUser), "ProjectId", "ProjectName");
-          //  ViewBag.ClientName = new SelectList(db.Projects.Where(x => x.TtpUserId == FindUser), "ClientName", "Client.Name");
-            return View();
-        }
-        [HttpPost]
-        public ActionResult PunchOut(PunchInOutModel punchOutModel)
-        {
-            if (ModelState.IsValid)
-            {
-                if (db.Projects.Any(x => x.ProjectName == punchOutModel.Project&&x.Client.Name==punchOutModel.Client))
-                {
-              
-                   var Entry = db.TimeSheetEntries.Include("Project").Include("Client").SingleOrDefault(x=>x.Project.ProjectName== punchOutModel.Project&&x.Client.Name==punchOutModel.Client&&x.EndTime==null);
-                    var entryId = Entry.TimeSheetEntryId;
-                    var find = db.TimeSheetEntries.Find(entryId);
-                    var end = find.EndTime = DateTime.Now;
-                    db.Entry(find).CurrentValues.SetValues(end);
-                    db.SaveChanges();
-                    return RedirectToAction("UserIndex");
-                }
-                else
-                {
-                    ModelState.AddModelError("client,project", "The client or project does'nt exist in the database");
-                }
-            }
-            return View();
-            }
+  
         // GET: TimeSheetEntries/Create
       public ActionResult Create()
         {

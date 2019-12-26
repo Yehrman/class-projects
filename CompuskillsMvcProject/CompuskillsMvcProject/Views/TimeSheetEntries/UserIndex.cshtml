@@ -21,26 +21,27 @@
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Client.Name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Project.ProjectName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.StartTime)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.EndTime)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id = item.TimeSheetEntryId }) |
-            @Html.ActionLink("Details", "Details", new { id = item.TimeSheetEntryId }) |
-            @Html.ActionLink("Delete", "Delete", new { id = item.TimeSheetEntryId })
-        </td>
-    </tr>
-}
-
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Client.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Project.ProjectName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StartTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EndTime)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.TimeSheetEntryId }) |
+                @Html.ActionLink("Details", "Details", new { id = item.TimeSheetEntryId }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.TimeSheetEntryId })
+            </td>
+        </tr>
+    }
+ 
 </table>

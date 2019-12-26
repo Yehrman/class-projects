@@ -3,7 +3,9 @@
 @{
     ViewBag.Title = "UserIndex";
 }
-
+@section scripts{
+    @Scripts.Render("~/bundles/jqueryunobtrusive")
+}
 <h2>UserIndex</h2>
 
 <p>
@@ -14,9 +16,9 @@
         <th>
             @Html.DisplayNameFor(model => model.Client.Name)
         </th>
-       <th>
-           @Html.DisplayNameFor(model=>model.ProjectName)
-       </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ProjectName)
+        </th>
         <th>
             @Html.DisplayNameFor(model => model.BillRate)
         </th>
@@ -26,26 +28,31 @@
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Client.Name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ProjectName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.BillRate)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.IsActive)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.ProjectId }) |
-            @Html.ActionLink("Details", "Details", new { id=item.ProjectId }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.ProjectId })
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Client.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProjectName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BillRate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsActive)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.ProjectId }) |
+                @Html.ActionLink("Details", "Details", new { id = item.ProjectId }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.ProjectId })|
+                @Ajax.ActionLink("punch In", "PunchIn", "Project", new { id = item.ProjectId }, new AjaxOptions { UpdateTargetId = "Punchin" })
+                @Ajax.ActionLink("punch out", "Punchout", "Project",new  {id=item.ProjectId }, new AjaxOptions { UpdateTargetId = "PunchOut" })
+            </td>
+        </tr>
+    }
 
 </table>
+<div id="Punchin"> </div>
+<div id="PunchOut"></div>

@@ -122,6 +122,39 @@ namespace CompuskillsMvcProject.Controllers
             db.SaveChanges();
             return RedirectToAction("UserIndex");
         }
+        [HttpGet]
+        public ActionResult Bill()
+        {
+            var findUser = User.Identity.GetUserId();
+            // ViewBag.ProjectId = new SelectList(db.Projects.Where(x => x.TtpUserId == currentUser), "ProjectId", "ProjectName");
+            ViewBag.Client = new SelectList(db.Projects.Include("Client").Where(x => x.TtpUserId == findUser), "Client.Name", "ClientId");
+            // ViewBag.Project = new SelectList(db.Projects.Where(x => x.TtpUserId == findUser), "ProjectName", "ProjectName");
+            return View();
+        }
+        [HttpPost]
+        public ActionResult BillTotal(string Client,string project)
+        {
+            var findUser = User.Identity.GetUserId();
+            var Project=   db.Projects.Include("Client").FirstOrDefault(x =>x.TtpUserId==findUser &&x.Client.Name==Client&&x.ProjectName == project);
+            var Rate = Project.BillRate;
+            var ProjectId = Project.ProjectId;
+            ViewBag.Client = Project.Client.Name;
+            var Entries = db.TimeSheetEntries.Where(x => x.TtpUserId == findUser && x.ProjectId == ProjectId);
+            TimeSpan? Hours;
+            decimal TotalHours=0;
+            decimal Total=0;
+            foreach (var item in Entries)
+            {
+                 Hours =item.EndTime - item.StartTime;
+                Total = Convert.ToDecimal(Hours);
+                TotalHours += TotalHours;
+            }
+            var Payment = TotalHours * Rate;
+            ViewBag.Total =  Payment;
+            return PartialView(Payment);
+
+        }
+    
 
         protected override void Dispose(bool disposing)
         {
