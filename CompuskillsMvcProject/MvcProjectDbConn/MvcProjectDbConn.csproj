@@ -67,6 +67,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TimeSheetEntry.cs" />
     <Compile Include="TtpUser.cs" />
+    <Compile Include="UserClient.cs" />
+    <Compile Include="WorkScheudule.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

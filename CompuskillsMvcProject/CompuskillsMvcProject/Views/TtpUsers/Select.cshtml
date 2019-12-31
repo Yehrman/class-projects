@@ -5,8 +5,7 @@
 
 <h1> Hello @User.Identity.Name </h1>
 <h2> Please Select what you'd like to do</h2>
-<p>To add a client @Html.ActionLink("click here", "Create", "Clients")</p>
-<p>To view all TimeEntriesByDate  @Html.ActionLink("click here", "UserIndex", "TimeSheetEntries")</p>
+<p>To manage clients @Html.ActionLink("click here", "UserIndex", "Clients")</p>
+<p>To view all TimeSheetEntries  @Html.ActionLink("click here", "UserIndex", "TimeSheetEntries")</p>
+<p>To manage Jobs @Html.ActionLink("click here", "UserIndex", "Projects")</p>
 
-<p>To view all TimeEntriesByDate by date @Html.ActionLink("click here", "FindTimeEntriesByDate", "TimeSheetEntries")</p>
-<p>To add a job @Html.ActionLink("click here", "Create", "Project")</p>

@@ -6,6 +6,7 @@ namespace MvcProjectDbConn
     {
         public int ProjectId { get; set; }
         public ICollection<TimeSheetEntry> TimeSheetEntries { get; set; }
+        public ICollection<WorkSchedule> WorkSchedules { get; set; }
         public string ProjectName { get; set; }
         public int ClientID { get; set; }
         public virtual Client Client { get; set; }

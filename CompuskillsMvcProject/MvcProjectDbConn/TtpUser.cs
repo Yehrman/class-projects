@@ -7,5 +7,7 @@ namespace MvcProjectDbConn
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public virtual ICollection<Project> Projects { get; set; }
+        public virtual  ICollection<UserClient> UserClients { get; set; }
+        public virtual ICollection<WorkSchedule> WorkSchedules { get; set; }
     }
 }
