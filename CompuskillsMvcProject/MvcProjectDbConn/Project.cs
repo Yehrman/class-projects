@@ -12,9 +12,9 @@ namespace MvcProjectDbConn
         public virtual Client Client { get; set; }
         public string TtpUserId { get; set; }
         public virtual TtpUser TtpUser { get; set; }
-        [Required]
+      
         public decimal BillRate { get; set; }
-        [Required]
+        
         public bool IsActive { get; set; }
     }
 }

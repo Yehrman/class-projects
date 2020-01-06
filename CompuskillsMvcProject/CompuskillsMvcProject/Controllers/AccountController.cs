@@ -155,7 +155,7 @@ namespace CompuskillsMvcProject.Controllers
         {
             if(model.Password!=model.ConfirmPassword)
             {
-                ModelState.AddModelError("password","Your conirmation does'nt match your password");
+                ModelState.AddModelError("password","Your confirmation does'nt match your password");
             }
             if (!ModelState.IsValid)
             {

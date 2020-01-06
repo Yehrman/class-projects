@@ -8,7 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using MvcProjectDbConn;
-
+using CompuskillsMvcProject.Models;
 namespace CompuskillsMvcProject.Controllers
 {
     public class ClientsController : Controller
@@ -16,16 +16,14 @@ namespace CompuskillsMvcProject.Controllers
         private TimeSheetDbContext db = new TimeSheetDbContext();
 
         // GET: Clients
-        [Authorize(Roles ="SystemAdmin")]
         public ActionResult Index()
         {
             return View(db.Clients.ToList());
-          
         }
         public ActionResult UserIndex()
         {
-            var FindUser = User.Identity.GetUserId();
-            var Clients = db.Projects.Where(x => x.TtpUserId == FindUser).Include("Client");
+            var UserId = User.Identity.GetUserId();
+            var Clients = db.UserClients.Include("Client").Where(x => x.TtpUserId == UserId);
             return View(Clients);
         }
         // GET: Clients/Details/5
@@ -54,13 +52,34 @@ namespace CompuskillsMvcProject.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ClientId,Name")] Client client)
+        public ActionResult Create( CreateClientModel client)
         {
+            var UserId = User.Identity.GetUserId();
+            
             if (ModelState.IsValid)
             {
-                db.Clients.Add(client);
-                db.SaveChanges();
-                return RedirectToAction("UserIndex");
+                if (db.Clients.Any(x => x.ClientEmail == client.ClientEmail&&x.ClientName==client.ClientName))
+                {
+                    var Customer = db.Clients.FirstOrDefault(x => x.ClientEmail == client.ClientEmail && x.ClientName == client.ClientName);
+                    var id = Customer.ClientId;
+                    db.UserClients.Add(new UserClient {  TtpUserId = UserId,ClientId=id });                 
+                    db.SaveChanges();
+                    return RedirectToAction("UserIndex");
+                }
+               else if(db.Clients.Any(x=>x.ClientEmail==client.ClientEmail&&x.ClientName!=client.ClientName))
+                {
+                    ModelState.AddModelError("ClientEmail", "That email is taken please add a unique email");
+                }
+                else
+                {
+                    db.Clients.Add(new Client { ClientName=client.ClientName,ClientEmail=client.ClientEmail});
+                    db.SaveChanges();
+                    var Customer = db.Clients.FirstOrDefault(x => x.ClientEmail == client.ClientEmail && x.ClientName == client.ClientName);
+                    var id = Customer.ClientId;
+                    db.UserClients.Add(new UserClient { TtpUserId = UserId,ClientId=id });
+                    db.SaveChanges();
+                    return RedirectToAction("UserIndex");
+                }
             }
 
             return View(client);
@@ -86,13 +105,13 @@ namespace CompuskillsMvcProject.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ClientId,Name")] Client client)
+        public ActionResult Edit([Bind(Include = "ClientId,ClientName,ClientEmail")] Client client)
         {
             if (ModelState.IsValid)
             {
                 db.Entry(client).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("UserIndex");
+                return RedirectToAction("Index");
             }
             return View(client);
         }
@@ -120,7 +139,7 @@ namespace CompuskillsMvcProject.Controllers
             Client client = db.Clients.Find(id);
             db.Clients.Remove(client);
             db.SaveChanges();
-            return RedirectToAction("UserIndex");
+            return RedirectToAction("Index");
         }
         [HttpGet]
         public ActionResult Bill()
@@ -132,30 +151,28 @@ namespace CompuskillsMvcProject.Controllers
             return View();
         }
         [HttpPost]
-        public ActionResult BillTotal(string Client,string project)
+        public ActionResult BillTotal(string Client, string project)
         {
             var findUser = User.Identity.GetUserId();
-            var Project=   db.Projects.Include("Client").FirstOrDefault(x =>x.TtpUserId==findUser &&x.Client.Name==Client&&x.ProjectName == project);
+            var Project = db.Projects.Include("Client").FirstOrDefault(x => x.TtpUserId == findUser && x.Client.ClientName == Client && x.ProjectName == project);
             var Rate = Project.BillRate;
             var ProjectId = Project.ProjectId;
-            ViewBag.Client = Project.Client.Name;
-            var Entries = db.TimeSheetEntries.Where(x => x.TtpUserId == findUser && x.ProjectId == ProjectId);
+            ViewBag.Client = Project.Client.ClientName;
+            var Entries = db.TimeSheetEntries.Where(x => x.UserId == findUser && x.ProjectId == ProjectId);
             TimeSpan? Hours;
-            decimal TotalHours=0;
-            decimal Total=0;
+            decimal TotalHours = 0;
+            decimal Total = 0;
             foreach (var item in Entries)
             {
-                 Hours =item.EndTime - item.StartTime;
+                Hours = item.EndTime - item.StartTime;
                 Total = Convert.ToDecimal(Hours);
                 TotalHours += TotalHours;
             }
             var Payment = TotalHours * Rate;
-            ViewBag.Total =  Payment;
+            ViewBag.Total = Payment;
             return PartialView(Payment);
 
         }
-    
-
         protected override void Dispose(bool disposing)
         {
             if (disposing)

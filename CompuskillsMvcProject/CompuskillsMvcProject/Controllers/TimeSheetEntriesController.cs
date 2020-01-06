@@ -17,16 +17,16 @@ namespace CompuskillsMvcProject.Controllers
         private TimeSheetDbContext db = new TimeSheetDbContext();
 
         // GET: TimeSheetEntries
-        [Authorize(Roles ="SystemAdmin")]
-        public ActionResult Index()
-        {
-            var timeSheetEntries = db.TimeSheetEntries.Include(t => t.Project).Include(t => t.TtpUser);
-            return View(timeSheetEntries.ToList());
-        }
+       // [Authorize(Roles ="SystemAdmin")]
+     //   public ActionResult Index()
+     //   {
+       //     var timeSheetEntries = db.TimeSheetEntries.Include(t => t.Project).Include(t => t.TtpUser);
+          //  return View(timeSheetEntries.ToList());
+      //  }
         public ActionResult UserIndex()
         {
             var FindUser = User.Identity.GetUserId();
-            var Entries = db.TimeSheetEntries.Where(x => x.TtpUserId == FindUser).Include("Client").Include("Project");
+            var Entries = db.TimeSheetEntries.Where(x => x.UserId == FindUser).Include("Client").Include("Project");
             return View(Entries);
         }
         // GET: TimeSheetEntries/Details/5
@@ -43,35 +43,38 @@ namespace CompuskillsMvcProject.Controllers
             }
             return View(timeSheetEntry);
         }
-               [HttpGet]
-  
-        // GET: TimeSheetEntries/Create
-      public ActionResult Create()
+        public ActionResult PunchIn(int id)
         {
-            string currentUser = User.Identity.GetUserId();
-           ViewBag.ProjectId = new SelectList(db.Projects.Where(x=>x.TtpUserId==currentUser), "ProjectId", "ProjectName");
-            
 
-            return View();
-        }
-
-        // POST: TimeSheetEntries/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "TimeSheetEntryId,TtpUserId,ProjectId,ClientId,StartTime,EndTime")] TimeSheetEntry timeSheetEntry)
-        {
-            if (ModelState.IsValid)
+            var FindUser = User.Identity.GetUserId();
+            if (db.TimeSheetEntries.Any(x => x.UserId == FindUser && x.StartTime != null && x.EndTime == null))
             {
-                db.TimeSheetEntries.Add(timeSheetEntry);
-                db.SaveChanges();
-                return RedirectToAction("UserIndex");
-            }
+                ModelState.AddModelError("Error", "You never punched out from your last job");
+                return View();
 
-            ViewBag.ProjectId = new SelectList(db.Projects, "ProjectId", "ProjectId", timeSheetEntry.ProjectId);
-            ViewBag.TtpUserId = new SelectList(db.IdentityUsers, "Id", "Email", timeSheetEntry.TtpUserId);
-            return View(timeSheetEntry);
+            }
+            else
+            {
+                var project = db.Projects.Include("Client").FirstOrDefault(x => x.ProjectId == id);
+                // var client = db.Clients.SingleOrDefault(x => x.ClientId==punchInModel.ClientID);
+                var WorkerId = project.TtpUserId;
+                var ProjectId = project.ProjectId;
+                var clientId = project.ClientID;
+                db.TimeSheetEntries.Add(new TimeSheetEntry { UserId = WorkerId, ProjectId = ProjectId, ClientId = clientId, StartTime = DateTime.Now });
+                db.SaveChanges();
+                return RedirectToAction("");
+            }
+        }
+        public ActionResult PunchOut(int id)
+        {
+            var Entry = db.TimeSheetEntries.Include("Project").Include("Client").SingleOrDefault(x => x.ProjectId == id && x.EndTime == null);
+            var entryId = Entry.TimeSheetEntryId;
+            var find = db.TimeSheetEntries.Find(entryId);
+            var end = find.EndTime = DateTime.Now;
+            db.Entry(find).CurrentValues.SetValues(end);
+            db.SaveChanges();
+            return PartialView();
+
         }
 
 
@@ -106,10 +109,10 @@ namespace CompuskillsMvcProject.Controllers
             return View();
         }
         [HttpPost]
-        public ActionResult FindTimeEntriesByDate(FindDateModel dateModel)
+        public ActionResult FindTimeEntriesByDate(ScheduleDateModel dateModel)
         {
             var FindUser = User.Identity.GetUserId();
-            var userDates = db.TimeSheetEntries.Where(x => x.TtpUserId == FindUser && x.StartTime == dateModel.FindDate);
+            var userDates = db.TimeSheetEntries.Where(x => x.UserId == FindUser && x.StartTime == dateModel.FindDate);
             if (userDates != null)
             {
                 TempData["dateModel"] = dateModel;
@@ -125,9 +128,9 @@ namespace CompuskillsMvcProject.Controllers
         [HttpGet]
     public ActionResult GetTimeEntriesByDate()
     {
-            FindDateModel dateModel = (FindDateModel)TempData["dateModel"];
+            ScheduleDateModel dateModel = (ScheduleDateModel)TempData["dateModel"];
             var FindUser = User.Identity.GetUserId();
-            var Entries = db.TimeSheetEntries.Include("Client").Include("Project").Where(x => x.TtpUserId == FindUser && x.StartTime == dateModel.FindDate);
+            var Entries = db.TimeSheetEntries.Include("Client").Include("Project").Where(x => x.UserId == FindUser && x.StartTime == dateModel.FindDate);
                      
                        
             return View(Entries);

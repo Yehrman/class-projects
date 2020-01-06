@@ -170,8 +170,8 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ClientsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\ProjectsController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
-    <Compile Include="Controllers\ProjectController.cs" />
     <Compile Include="Controllers\TimeSheetEntriesController.cs" />
     <Compile Include="Controllers\TtpUsersController.cs" />
     <Compile Include="Global.asax.cs">
@@ -179,8 +179,10 @@
     </Compile>
     <Compile Include="IdentietyExtensions\IdentityExtensions.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\CreateClientModel.cs" />
+    <Compile Include="Models\CreateProjectModel.cs" />
     <Compile Include="Models\EntriesByDateModel.cs" />
-    <Compile Include="Models\FindDateModel.cs" />
+    <Compile Include="Models\ScheduleDateModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\PunchInOutModel.cs" />
@@ -222,8 +224,6 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Home\About.cshtml" />
-    <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
     <Content Include="Views\Account\ConfirmEmail.cshtml" />
@@ -245,11 +245,6 @@
     <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
-    <Content Include="Views\Clients\Create.cshtml" />
-    <Content Include="Views\Clients\Delete.cshtml" />
-    <Content Include="Views\Clients\Details.cshtml" />
-    <Content Include="Views\Clients\Edit.cshtml" />
-    <Content Include="Views\Clients\Index.cshtml" />
     <Content Include="Views\TtpUsers\Delete.cshtml" />
     <Content Include="Views\TtpUsers\Details.cshtml" />
     <Content Include="Views\TtpUsers\Edit.cshtml" />
@@ -259,25 +254,27 @@
     <Content Include="Views\TimeSheetEntries\Details.cshtml" />
     <Content Include="Views\TimeSheetEntries\Edit.cshtml" />
     <Content Include="Views\TimeSheetEntries\Index.cshtml" />
-    <Content Include="Views\TtpUsers\Select.cshtml" />
-    <Content Include="Views\Project\Create.cshtml" />
-    <Content Include="Views\Project\Delete.cshtml" />
-    <Content Include="Views\Project\Details.cshtml" />
-    <Content Include="Views\Project\Edit.cshtml" />
-    <Content Include="Views\Project\Index.cshtml" />
-    <Content Include="Views\Project\UserIndex.cshtml" />
-    <Content Include="Views\Clients\UserIndex.cshtml" />
+    <Content Include="Views\Home\Select.cshtml" />
     <Content Include="Views\TimeSheetEntries\UserIndex.cshtml" />
-    <Content Include="Views\TimeSheetEntries\PunchIn.cshtml" />
     <Content Include="Views\TimeSheetEntries\PunchOut.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\DateTime.cshtml" />
     <Content Include="Views\TimeSheetEntries\FindTimeEntriesByDate.cshtml" />
     <Content Include="Views\TimeSheetEntries\GetTimeEntriesByDate.cshtml" />
-    <Content Include="Views\Clients\Bill.cshtml" />
-    <Content Include="Views\Clients\BillTotal.cshtml" />
-    <Content Include="Views\Project\ProjectEntries.cshtml" />
-    <Content Include="Views\Project\PunchIn.cshtml" />
-    <Content Include="Views\Project\PunchOut.cshtml" />
+    <Content Include="Views\Clients\Create.cshtml" />
+    <Content Include="Views\Clients\Delete.cshtml" />
+    <Content Include="Views\Clients\Details.cshtml" />
+    <Content Include="Views\Clients\Edit.cshtml" />
+    <Content Include="Views\Clients\Index.cshtml" />
+    <Content Include="Views\Clients\UserIndex.cshtml" />
+    <Content Include="Views\Projects\Create.cshtml" />
+    <Content Include="Views\Projects\Delete.cshtml" />
+    <Content Include="Views\Projects\Details.cshtml" />
+    <Content Include="Views\Projects\Edit.cshtml" />
+    <Content Include="Views\Projects\Index.cshtml" />
+    <Content Include="Views\Projects\UserIndex.cshtml" />
+    <Content Include="Views\Projects\ScheduleJobs.cshtml" />
+    <Content Include="Views\Projects\JobSchedule.cshtml" />
+    <Content Include="Views\Projects\TodaysJobs.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

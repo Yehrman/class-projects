@@ -18,7 +18,7 @@ namespace CompuskillsMvcProject.Models
             var FindUser = HttpContext.Current.User.Identity.GetUserId();
             using (TimeSheetDbContext db = new TimeSheetDbContext())
             {
-                var Entry = db.TimeSheetEntries.Include("Client").Include("Project").Where(x => x.TtpUserId == FindUser && x.StartTime == startTime);
+                var Entry = db.TimeSheetEntries.Include("Client").Include("Project").Where(x => x.UserId == FindUser && x.StartTime == startTime);
                 return Entry.ToList();
             }
             
