@@ -42,14 +42,14 @@ namespace CompuskillsMvcProject.Controllers
         }
 
         // GET: WorkSchedules/Create
-        public ActionResult Create()
+        public ActionResult Schedule(int id)
         {
-            var currentUser = User.Identity.GetUserId();
-            ViewBag.ClientId = new SelectList(db.UserClients.Include("Client").Where(x=>x.TtpUserId==currentUser), "ClientId", "Client.ClientName");
-            ViewBag.ProjectId = new SelectList(db.Projects.Where(x=>x.TtpUserId==currentUser), "ProjectId", "ProjectName");
-          //  ViewBag.TtpUserId = new SelectList(db.Users, "Id", "Email");
-       
-            return View();
+           // var currentUser = User.Identity.GetUserId();
+            //ViewBag.ClientId = new SelectList(db.UserClients.Include("Client").Where(x=>x.TtpUserId==currentUser), "ClientId", "Client.ClientName");
+            //  ViewBag.ProjectId = new SelectList(db.Projects.Where(x=>x.TtpUserId==currentUser), "ProjectId", "ProjectName");
+            //  ViewBag.TtpUserId = new SelectList(db.Users, "Id", "Email");
+            var Job = db.WorkScheudules.Where(x => x.ProjectId == id).OrderByDescending(x => x.id).FirstOrDefault();
+            return View(Job);
         }
 
         // POST: WorkSchedules/Create
@@ -57,20 +57,20 @@ namespace CompuskillsMvcProject.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(/*[Bind(Include = "id,TtpUserId,ProjectId,ClientId,Date")]*/ WorkSchedule workSchedule)
+        public ActionResult Schedule(int id, WorkSchedule schedule)
         {
-            var currentUser = User.Identity.GetUserId();
-            if (ModelState.IsValid)
-            {
-                db.WorkScheudules.Add(new WorkSchedule { TtpUserId=currentUser,ProjectId=workSchedule.ProjectId,ClientId=workSchedule.ClientId,Date=workSchedule.Date});
+           if (ModelState.IsValid)
+            { 
+                var job = db.WorkScheudules.FirstOrDefault(x => x.ProjectId==id);
+                job.Date = schedule.Date;
                 db.SaveChanges();
                 return RedirectToAction("UserIndex");
             }
           
-            ViewBag.ClientId = new SelectList(db.UserClients.Include("Client").Where(x=>x.TtpUserId==currentUser), "ClientId", "Client.ClientName", workSchedule.ClientId);
-            ViewBag.ProjectId = new SelectList(db.Projects.Where(x=>x.TtpUserId==currentUser), "ProjectId", "ProjectName", workSchedule.ProjectId);
+         //   ViewBag.ClientId = new SelectList(db.UserClients.Include("Client").Where(x=>x.TtpUserId==currentUser), "ClientId", "Client.ClientName", workSchedule.ClientId);
+           // ViewBag.ProjectId = new SelectList(db.Projects.Where(x=>x.TtpUserId==currentUser), "ProjectId", "ProjectName", workSchedule.ProjectId);
             //ViewBag.TtpUserId = new SelectList(db.Users, "Id", "Email", workSchedule.TtpUserId);
-            return View(workSchedule);
+            return View(schedule);
         }
 
         // GET: WorkSchedules/Edit/5

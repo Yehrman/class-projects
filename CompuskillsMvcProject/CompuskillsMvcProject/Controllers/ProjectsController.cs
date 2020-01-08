@@ -61,7 +61,7 @@ namespace CompuskillsMvcProject.Controllers
                 db.SaveChanges();
                 var Job = db.Projects.FirstOrDefault(x =>x.ProjectName==project.ProjectName&&x.ClientID==project.ClientID&& x.TtpUserId == currentUser && x.BillRate==project.BillRate&&x.IsActive==true);
                 var Id = Job.ProjectId;
-                db.WorkScheudules.Add(new WorkSchedule { TtpUserId = currentUser, ProjectId = Id, ClientId = Job.ClientID});
+                db.WorkScheudules.Add(new WorkSchedule { TtpUserId = currentUser, ProjectId = Id, ClientId = Job.ClientID,Date=DateTime.Today});
                 db.SaveChanges();
                 return RedirectToAction("UserIndex");
             }
