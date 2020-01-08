@@ -5,11 +5,11 @@ using System.Web;
 using System.ComponentModel.DataAnnotations;
 namespace CompuskillsMvcProject.Models
 {
-    public class ScheduleDateModel
+    public class ScheduleJobModel
     {
-        public string TtpUserId { get; set; }
-        public int ProjectId { get; set; }
-        public int ClientId { get; set; }
+            
+        public int ProjectName { get; set; }
+        public int ClientName { get; set; }
             [UIHint("DateTime")]
         public DateTime FindDate { get; set; }
     } 

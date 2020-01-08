@@ -109,7 +109,7 @@ namespace CompuskillsMvcProject.Controllers
             return View();
         }
         [HttpPost]
-        public ActionResult FindTimeEntriesByDate(ScheduleDateModel dateModel)
+        public ActionResult FindTimeEntriesByDate(ScheduleJobModel dateModel)
         {
             var FindUser = User.Identity.GetUserId();
             var userDates = db.TimeSheetEntries.Where(x => x.UserId == FindUser && x.StartTime == dateModel.FindDate);
@@ -128,7 +128,7 @@ namespace CompuskillsMvcProject.Controllers
         [HttpGet]
     public ActionResult GetTimeEntriesByDate()
     {
-            ScheduleDateModel dateModel = (ScheduleDateModel)TempData["dateModel"];
+            ScheduleJobModel dateModel = (ScheduleJobModel)TempData["dateModel"];
             var FindUser = User.Identity.GetUserId();
             var Entries = db.TimeSheetEntries.Include("Client").Include("Project").Where(x => x.UserId == FindUser && x.StartTime == dateModel.FindDate);
                      

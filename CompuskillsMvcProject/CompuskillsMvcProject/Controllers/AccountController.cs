@@ -82,7 +82,7 @@ namespace CompuskillsMvcProject.Controllers
             {
                 case SignInStatus.Success:
                  //   ViewBag.Name ="Hello "+ User.Identity.Name;
-                    return RedirectToAction("Select", "TtpUsers");
+                    return RedirectToAction("Select", "Home");
                     // return View(returnUrl);
                 case SignInStatus.LockedOut:
                     return View("Lockout");

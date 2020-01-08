@@ -28,6 +28,9 @@ namespace CompuskillsMvcProject
            // bundles.Add(new StyleBundle("~/path/to/calendar-style.css"));
             bundles.Add(new ScriptBundle("~/bundles/jqueryunobtrusive")
                 .Include("~/Scripts/jquery.unobtrusive-ajax.js"));
+         //   bundles.Add(new ScriptBundle("~/Content/themes/base/jquery-ui.min.css").Include
+           //     ("~/ Scripts / jquery - 3.1.1.min.js").Include
+             //  ("~/Scripts/jquery-ui-1.12.1.min.js"));
         }
     }
 }

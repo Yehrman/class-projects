@@ -157,30 +157,18 @@ namespace CompuskillsMvcProject.Controllers
             return View(ToDo);
         }
         [HttpGet]
-        public ActionResult ScheduleJobs(int id)
+        public ActionResult ScheduleJobs()
         {
-              var Job = db.WorkScheudules.Where(x => x.ProjectId == id).OrderByDescending(x => x.id).FirstOrDefault();
-           //var Job = db.WorkScheudules.FirstOrDefault(x => x.ProjectId == id);
-            return View(Job);
+            var currentUser = User.Identity.GetUserId();
+            /// var Job = db.WorkScheudules.Where(x => x.ProjectId == id).OrderByDescending(x => x.id).FirstOrDefault();
+            ViewBag.ClientID = new SelectList(db.UserClients.Include("Client").Where(x => x.TtpUserId == currentUser), "ClientId", "Client.ClientName");
+            return View();
         }
         [HttpPost]
-        public ActionResult ScheduleJobs(WorkSchedule workSchedule)
+        public ActionResult ScheduleJobs(int id,Project schedule)
         {
-            var id = db.WorkScheudules.Find(workSchedule.id);
-            if(id!=null)
-            {
-                // id.TtpUserId = workSchedule.TtpUserId;
-                //id.ProjectId = workSchedule.ProjectId;
-                //id.ClientId = workSchedule.ClientId;
-                db.Entry(id).CurrentValues.SetValues(workSchedule);
-                db.SaveChanges();
-            }
-            //var Job = db.WorkScheudules.FirstOrDefault(x => x.id == id);
-            //Job.Date = workSchedule.Date;
-            //db.Entry(Job).State = EntityState.Modified;
-           // db.WorkScheudules.Attach(workSchedule);
-            //var entry = db.Entry(workSchedule);
-            //entry.Property(x => x.Date).IsModified = true;
+
+
           
             return RedirectToAction("JobSchedule");
         }
