@@ -72,51 +72,17 @@ namespace CompuskillsMvcProject.Controllers
             //ViewBag.TtpUserId = new SelectList(db.Users, "Id", "Email", workSchedule.TtpUserId);
             return View(schedule);
         }
-
-        // GET: WorkSchedules/Edit/5
-        public ActionResult Edit(int? id)
+        public ActionResult JobSchedule()
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            WorkSchedule workSchedule = db.WorkScheudules.Find(id);
-            if (workSchedule == null)
-            {
-                return HttpNotFound();
-            }
-            var currentUser = User.Identity.GetUserId();
-          //  ViewBag.ClientId = new SelectList(db.UserClients.Include("Client").Where(x=>x.TtpUserId==currentUser), "ClientId", "Client.ClientName", workSchedule.ClientId);
-           // ViewBag.ProjectId = new SelectList(db.Projects.Where(x=>x.TtpUserId==currentUser), "ProjectId", "ProjectName", workSchedule.ProjectId);
-           // ViewBag.TtpUserId = new SelectList(db.Users, "Id", "Email", workSchedule.TtpUserId);
-         
-            return View(workSchedule);
+            var userid = User.Identity.GetUserId();
+            var Schedule = db.WorkScheudules.Include("Project").Where(x => x.TtpUserId == userid);
+            return View(Schedule);
         }
-
-        // POST: WorkSchedules/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(/*[Bind(Include = "id,TtpUserId,ProjectId,ClientId,Date")]*/ WorkSchedule workSchedule)
+        public ActionResult TodaysJobs()
         {
-            if (ModelState.IsValid)
-            {
-                var currentUser = User.Identity.GetUserId();
-                var job = db.WorkScheudules.FirstOrDefault(x => x.id == workSchedule.id);
-                job.TtpUserId = currentUser;
-                job.ProjectId = workSchedule.ProjectId;
-                job.ClientId = workSchedule.ClientId;
-                job.Date = workSchedule.Date;
-                db.Entry(job).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-           
-          //  ViewBag.ClientId = new SelectList(db.UserClients.Include("Client").Where(x=>x.TtpUserId==currentUser), "ClientId", "Client.ClientName", workSchedule.ClientId);
-            //ViewBag.ProjectId = new SelectList(db.Projects.Where(x=>x.TtpUserId==currentUser), "ProjectId", "ProjectName", workSchedule.ProjectId);
-         //   ViewBag.TtpUserId = new SelectList(db.Users, "Id", "Email", workSchedule.TtpUserId);
-            return View(workSchedule);
+            var userid = User.Identity.GetUserId();
+            var ToDo = db.WorkScheudules.Where(x => x.TtpUserId == userid && x.Date == DateTime.Today);
+            return View(ToDo);
         }
 
         // GET: WorkSchedules/Delete/5

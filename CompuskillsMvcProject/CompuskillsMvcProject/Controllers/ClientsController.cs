@@ -158,7 +158,7 @@ namespace CompuskillsMvcProject.Controllers
             var Rate = Project.BillRate;
             var ProjectId = Project.ProjectId;
             ViewBag.Client = Project.Client.ClientName;
-            var Entries = db.TimeSheetEntries.Where(x => x.UserId == findUser && x.ProjectId == ProjectId);
+            var Entries = db.TimeSheetEntries.Where(x => x.TtpUserId == findUser && x.ProjectId == ProjectId);
             TimeSpan? Hours;
             decimal TotalHours = 0;
             decimal Total = 0;

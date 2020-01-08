@@ -146,32 +146,8 @@ namespace CompuskillsMvcProject.Controllers
             
             return RedirectToAction("UserIndex");
         }
-        public ActionResult JobSchedule()
-        {
-            var Schedule = db.WorkScheudules.Include("Project");
-            return View(Schedule);
-        }
-        public ActionResult TodaysJobs()
-        {
-            var ToDo = db.WorkScheudules.Where(x => x.Date == DateTime.Today);
-            return View(ToDo);
-        }
-        [HttpGet]
-        public ActionResult ScheduleJobs()
-        {
-            var currentUser = User.Identity.GetUserId();
-            /// var Job = db.WorkScheudules.Where(x => x.ProjectId == id).OrderByDescending(x => x.id).FirstOrDefault();
-            ViewBag.ClientID = new SelectList(db.UserClients.Include("Client").Where(x => x.TtpUserId == currentUser), "ClientId", "Client.ClientName");
-            return View();
-        }
-        [HttpPost]
-        public ActionResult ScheduleJobs(int id,Project schedule)
-        {
-
-
-          
-            return RedirectToAction("JobSchedule");
-        }
+  
+    
 
        
         protected override void Dispose(bool disposing)

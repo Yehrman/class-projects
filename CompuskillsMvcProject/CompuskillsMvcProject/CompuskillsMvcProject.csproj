@@ -316,19 +316,19 @@
     <Content Include="Views\Projects\Edit.cshtml" />
     <Content Include="Views\Projects\Index.cshtml" />
     <Content Include="Views\Projects\UserIndex.cshtml" />
-    <Content Include="Views\Projects\ScheduleJobs.cshtml" />
-    <Content Include="Views\Projects\JobSchedule.cshtml" />
-    <Content Include="Views\Projects\TodaysJobs.cshtml" />
+    <Content Include="Views\WorkSchedules\JobSchedule.cshtml" />
+    <Content Include="Views\WorkSchedules\TodaysJobs.cshtml" />
     <Content Include="Views\WorkSchedules\Schedule.cshtml" />
     <Content Include="Views\WorkSchedules\Delete.cshtml" />
     <Content Include="Views\WorkSchedules\Details.cshtml" />
-    <Content Include="Views\WorkSchedules\Edit.cshtml" />
     <Content Include="Views\WorkSchedules\Index.cshtml" />
     <Content Include="Views\WorkSchedules\UserIndex.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\PickDate.cshtml" />
+    <Content Include="Views\TimeSheetEntries\TodaysTimeSheetEntries.cshtml" />
+    <Content Include="Views\TimeSheetEntries\PunchIn.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Shared\EditorTemplates\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
