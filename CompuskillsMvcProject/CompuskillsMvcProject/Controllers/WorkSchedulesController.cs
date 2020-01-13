@@ -23,7 +23,13 @@ namespace CompuskillsMvcProject.Controllers
         public ActionResult UserIndex()
         {
             var currentUser = User.Identity.GetUserId();
-            var schedules = db.WorkScheudules.Include("Client").Include("Project").Where(x => x.TtpUserId == currentUser);
+            var schedules = db.WorkScheudules.Include("Client").Include("Project").Where(x => x.TtpUserId == currentUser&&x.Date>=DateTime.Today);
+            return View(schedules);
+        }
+        public ActionResult PastSchedule()
+        {
+            var currentUser = User.Identity.GetUserId();
+            var schedules = db.WorkScheudules.Include("Client").Include("Project").Where(x => x.TtpUserId == currentUser && x.Date < DateTime.Today);
             return View(schedules);
         }
         // GET: WorkSchedules/Details/5
@@ -40,42 +46,70 @@ namespace CompuskillsMvcProject.Controllers
             }
             return View(workSchedule);
         }
-
-        // GET: WorkSchedules/Create
-        public ActionResult Schedule(int id)
+        [HttpGet]
+        public ActionResult ScheduleJob(int id)
         {
-           // var currentUser = User.Identity.GetUserId();
-            //ViewBag.ClientId = new SelectList(db.UserClients.Include("Client").Where(x=>x.TtpUserId==currentUser), "ClientId", "Client.ClientName");
-            //  ViewBag.ProjectId = new SelectList(db.Projects.Where(x=>x.TtpUserId==currentUser), "ProjectId", "ProjectName");
-            //  ViewBag.TtpUserId = new SelectList(db.Users, "Id", "Email");
-            var Job = db.WorkScheudules.Where(x => x.ProjectId == id).OrderByDescending(x => x.id).FirstOrDefault();
+            var CurrentUser = User.Identity.GetUserId();
+            var Job=db.WorkScheudules.Where(x => x.ProjectId == id&&x.TtpUserId==CurrentUser).OrderByDescending(x => x.id).FirstOrDefault();
             return View(Job);
         }
-
-        // POST: WorkSchedules/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Schedule(int id, WorkSchedule schedule)
+        public ActionResult ScheduleJob(int id,WorkSchedule schedule)
         {
-           if (ModelState.IsValid)
-            { 
-                var job = db.WorkScheudules.FirstOrDefault(x => x.ProjectId==id);
-                job.Date = schedule.Date;
-                db.SaveChanges();
+            if (ModelState.IsValid)
+            {
+                var CurrentUser = User.Identity.GetUserId();
+                var Job = db.WorkScheudules.Where(x => x.ProjectId == id && x.TtpUserId == CurrentUser).OrderByDescending(x => x.id).FirstOrDefault();
+                if (schedule.Date >= DateTime.Today)
+                {
+                    db.WorkScheudules.Add(new WorkSchedule { TtpUserId = CurrentUser, ProjectId = Job.ProjectId, ClientId = Job.ClientId, Date = schedule.Date });
+                    db.SaveChanges();
+                }
+                else
+                {
+                    ModelState.AddModelError("Error", "You're can't schedule for date that already passed.");
+                    return View();
+                }
                 return RedirectToAction("UserIndex");
             }
-          
-         //   ViewBag.ClientId = new SelectList(db.UserClients.Include("Client").Where(x=>x.TtpUserId==currentUser), "ClientId", "Client.ClientName", workSchedule.ClientId);
-           // ViewBag.ProjectId = new SelectList(db.Projects.Where(x=>x.TtpUserId==currentUser), "ProjectId", "ProjectName", workSchedule.ProjectId);
-            //ViewBag.TtpUserId = new SelectList(db.Users, "Id", "Email", workSchedule.TtpUserId);
             return View(schedule);
         }
-        public ActionResult JobSchedule()
+        public ActionResult ReSchedule(int id)
+        {
+            var Job = db.WorkScheudules.Find(id);
+
+            if (Job.Date >= DateTime.Today)
+            {
+                return View(Job);
+            }
+            return View();
+        }
+
+       
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult ReSchedule(int id, WorkSchedule schedule)
+        {
+           if (ModelState.IsValid)
+            {  if (schedule.Date >= DateTime.Today)
+                {
+                    var job = db.WorkScheudules.Find(id);
+                    job.Date = schedule.Date;
+                    db.SaveChanges();
+                    return RedirectToAction("UserIndex");
+                }
+                else
+                {
+                    ModelState.AddModelError("Error", "You're can't reschedule for date that already passed.");
+                    return View();
+                }
+            }
+            return View(schedule);
+        }
+        public ActionResult JobSchedule(int id)
         {
             var userid = User.Identity.GetUserId();
-            var Schedule = db.WorkScheudules.Include("Project").Where(x => x.TtpUserId == userid);
+            var Schedule = db.WorkScheudules.Include("Client").Where(x=>x.Date>=DateTime.Today&&x.ProjectId==id&&x.TtpUserId==userid);
             return View(Schedule);
         }
         public ActionResult TodaysJobs()

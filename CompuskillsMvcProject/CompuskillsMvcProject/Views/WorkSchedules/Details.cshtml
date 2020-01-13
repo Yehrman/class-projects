@@ -4,11 +4,16 @@
     ViewBag.Title = "Details";
 }
 
+@section scripts{
+    @Scripts.Render("~/bundles/jqueryunobtrusive")
+}
 <h2>Details</h2>
 
 <div>
     <h4>WorkSchedule</h4>
     <hr />
+
+    <p>Are you sure you want to punch in for this job</p>
     <dl class="dl-horizontal">
         <dt>
             @Html.DisplayNameFor(model => model.Client.ClientName)
@@ -27,14 +32,6 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.TtpUser.Email)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.TtpUser.Email)
-        </dd>
-
-        <dt>
             @Html.DisplayNameFor(model => model.Date)
         </dt>
 
@@ -45,6 +42,8 @@
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.id }) |
-    @Html.ActionLink("Back to List", "Index")
+    <%=@Ajax.ActionLink("Punch in","PunchIn","TimeSheetEntries",new { id=Model.ProjectId},
+new AjaxOptions { UpdateTargetId="PunchIn"})%>
+    @Html.ActionLink("Back to List", "UserIndex")
 </p>
+<div id="PunchIn"></div>

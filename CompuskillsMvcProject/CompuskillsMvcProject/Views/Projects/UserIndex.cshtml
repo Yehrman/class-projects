@@ -44,9 +44,10 @@
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.ProjectId }) |
-            @Html.ActionLink("Details", "Details", new { id=item.ProjectId }) |
+            @Html.ActionLink("View more details of this job", "Details", new { id=item.ProjectId }) |
             @Html.ActionLink("Delete", "Delete", new { id=item.ProjectId })|
-           <%= @Html.ActionLink("Schedule this job", "Schedule", "WorkSchedules",new { id=item.ProjectId},null)%>
+           <% @Html.ActionLink("Bill", "BillTotal", "Clients", new { id=item.ProjectId},null)%>
+          
         </td>
     </tr>
 }

@@ -1,2 +1,14 @@
-﻿
-@Html.ValidationMessage("Error")
+﻿@model MvcProjectDbConn.TimeSheetEntry
+
+
+
+@{ if (ViewBag.Error == true)
+    {
+        @Html.ValidationMessage("Error")
+    }
+    else
+    {
+        <p>You punched in at @DateTime.Now</p>
+    }
+}
+@Html.ActionLink("Punch out","UserIndex")

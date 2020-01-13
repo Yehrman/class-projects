@@ -8,12 +8,26 @@ namespace CompuskillsMvcProject.Models
 {
     public class EntriesByDateModel
     {
-        public string ClientName { get; set; }
-         public string ProjectName { get; set; }
-        public DateTime? StartTime { get; set; }
-         public DateTime? EndTime { get; set; }
+        public void PunchOut()
+        {
 
-        public List<TimeSheetEntry> Entries(DateTime startTime)
+            using (TimeSheetDbContext db = new TimeSheetDbContext())
+            {
+
+                TimeSpan span = new TimeSpan(10, 0, 0);
+                var End = db.TimeSheetEntries.Where(x => x.EndTime == null && x.StartTime == DateTime.Now - span);
+                foreach (var item in End)
+                {
+                    var Id = db.TimeSheetEntries.Find(item.TimeSheetEntryId);
+                    var Stop = Id.EndTime = DateTime.Now;
+                    db.Entry(Id).CurrentValues.SetValues(Stop);
+                }
+                db.SaveChanges();
+            }
+        }
+    }
+}
+      /*  public List<TimeSheetEntry> Entries(DateTime startTime)
         {
             var FindUser = HttpContext.Current.User.Identity.GetUserId();
             using (TimeSheetDbContext db = new TimeSheetDbContext())
@@ -24,4 +38,4 @@ namespace CompuskillsMvcProject.Models
             
         }
     }
-}
+}*/

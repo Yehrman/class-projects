@@ -37,8 +37,32 @@ namespace CompuskillsMvcProject.Controllers
             }
             return View(project);
         }
-
-        // GET: Project/Create
+        //Test out Create1
+        [HttpGet]
+        public ActionResult Create()
+        {
+            var currentUser = User.Identity.GetUserId();
+            ViewBag.ClientID = new SelectList(db.UserClients.Include("Client").Where(x => x.TtpUserId == currentUser), "ClientId", "Client.ClientName");
+            return View();
+        }
+        [HttpPost]
+        public ActionResult Create(CreateProjectModel projectModel)
+        {
+            var currentUser = User.Identity.GetUserId();
+            if (ModelState.IsValid)
+            {             
+                db.Projects.Add(new Project { ProjectName = projectModel.ProjectName, ClientID = projectModel.ClientID, TtpUserId = currentUser, BillRate = projectModel.BillRate, IsActive = true });
+                db.SaveChanges();
+                var job = db.Projects.FirstOrDefault(x => x.ProjectName == projectModel.ProjectName && x.ClientID == projectModel.ClientID && x.TtpUserId == currentUser);
+                var id = job.ProjectId;
+                db.WorkScheudules.Add(new WorkSchedule { TtpUserId = currentUser, ProjectId = id, ClientId = projectModel.ClientID, Date = projectModel.ScheduleDate });
+                db.SaveChanges();
+                return RedirectToAction("UserIndex");
+            }
+            ViewBag.ClientID = new SelectList(db.UserClients.Include("Client").Where(x => x.TtpUserId == currentUser), "ClientId", "Client.ClientName", projectModel.ClientID);
+            return View(projectModel);
+        }
+        /* GET: Project/Create
         public ActionResult Create()
         {
             var currentUser = User.Identity.GetUserId();
@@ -46,15 +70,15 @@ namespace CompuskillsMvcProject.Controllers
            
             return View();
         }
-
-        // POST: Project/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        
+         POST: Project/Create
+         To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+         more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(/*[Bind(Include = "ProjectId,ProjectName,TtpUserId,ClientID,BillRate,IsActive")]*/ Project project)
+        public ActionResult Create(/*[Bind(Include = "ProjectId,ProjectName,TtpUserId,ClientID,BillRate,IsActive")] Project project)
         {
-            var currentUser = User.Identity.GetUserId();
+           var currentUser = User.Identity.GetUserId();
             if (ModelState.IsValid)
             {
                 db.Projects.Add(new Project { ProjectName=project.ProjectName,ClientID=project.ClientID,TtpUserId=currentUser,BillRate=project.BillRate,IsActive=true});
@@ -68,7 +92,7 @@ namespace CompuskillsMvcProject.Controllers
               ViewBag.ClientID = new SelectList(db.UserClients.Include("Client").Where(x => x.TtpUserId == currentUser), "ClientId", "Client.ClientName", project.ClientID);
          
             return View(project);
-        }
+        }*/
 
         // GET: Project/Edit/5
         public ActionResult Edit(int? id)

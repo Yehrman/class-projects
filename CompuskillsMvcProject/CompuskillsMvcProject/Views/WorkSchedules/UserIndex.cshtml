@@ -7,11 +7,11 @@
 <h2>UserIndex</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+  
 </p>
 <table class="table">
     <tr>
-      
+
         <th>
             @Html.DisplayNameFor(model => model.Project.ProjectName)
         </th>
@@ -24,23 +24,25 @@
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-       
-        <td>
-            @Html.DisplayFor(modelItem => item.Project.ProjectName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Client.ClientName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Date)
-        </td>
-        <td>
-            @Html.ActionLink("Details", "Details", new { id=item.id }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.id })
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
 
+            <td>
+                @Html.DisplayFor(modelItem => item.Project.ProjectName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Client.ClientName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Date)
+            </td>
+            <td>
+                @Html.ActionLink("Details", "Details", new { id = item.id }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.id })|
+                @Html.ActionLink("Reschedule", "ReSchedule", new { id = item.id })
+            </td>
+        </tr>
+    }
+   
 </table>

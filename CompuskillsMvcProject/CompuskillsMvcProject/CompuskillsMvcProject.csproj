@@ -182,10 +182,9 @@
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\CreateClientModel.cs" />
     <Compile Include="Models\EntriesByDateModel.cs" />
-    <Compile Include="Models\ScheduleJobModel.cs" />
+    <Compile Include="Models\CreateProjectModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
-    <Compile Include="Models\PunchInOutModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -310,7 +309,7 @@
     <Content Include="Views\Clients\Edit.cshtml" />
     <Content Include="Views\Clients\Index.cshtml" />
     <Content Include="Views\Clients\UserIndex.cshtml" />
-    <Content Include="Views\Projects\Create.cshtml" />
+    <Content Include="Views\Projects\Crate.cshtml" />
     <Content Include="Views\Projects\Delete.cshtml" />
     <Content Include="Views\Projects\Details.cshtml" />
     <Content Include="Views\Projects\Edit.cshtml" />
@@ -318,13 +317,16 @@
     <Content Include="Views\Projects\UserIndex.cshtml" />
     <Content Include="Views\WorkSchedules\JobSchedule.cshtml" />
     <Content Include="Views\WorkSchedules\TodaysJobs.cshtml" />
-    <Content Include="Views\WorkSchedules\Schedule.cshtml" />
+    <Content Include="Views\WorkSchedules\ReSchedule.cshtml" />
     <Content Include="Views\WorkSchedules\Delete.cshtml" />
     <Content Include="Views\WorkSchedules\Details.cshtml" />
     <Content Include="Views\WorkSchedules\Index.cshtml" />
     <Content Include="Views\WorkSchedules\UserIndex.cshtml" />
-    <Content Include="Views\TimeSheetEntries\TodaysTimeSheetEntries.cshtml" />
     <Content Include="Views\TimeSheetEntries\PunchIn.cshtml" />
+    <Content Include="Views\Projects\Create.cshtml" />
+    <Content Include="Views\WorkSchedules\ScheduleJob.cshtml" />
+    <Content Include="Views\WorkSchedules\PastSchedule.cshtml" />
+    <Content Include="Views\Clients\BillTotal.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

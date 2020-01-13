@@ -3,7 +3,6 @@
 @{
     ViewBag.Title = "TodaysJobs";
 }
-@Scripts.Render("~/ bundles / jqueryunobtrusive")
 
 <h2>TodaysJobs</h2>
 
@@ -41,12 +40,10 @@
             <td>
 
                 @Html.ActionLink("Reschedule", "Schedule", new { id = item.id }) |
-                <%= @Ajax.ActionLink("Punch In for this job", "PunchIn", "TimeSheetEntries", new { id = item.ProjectId },new
-        AjaxOptions{UpdateTargetId="Punchin" })%>
+                 @Html.ActionLink("Punchin","Details",new { id=item.id})
 
             </td>
         </tr>
     }
 
 </table>
-<div id="Punchin"> </div>

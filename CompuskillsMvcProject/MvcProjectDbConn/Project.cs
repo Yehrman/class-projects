@@ -12,9 +12,11 @@ namespace MvcProjectDbConn
         public virtual Client Client { get; set; }
         public string TtpUserId { get; set; }
         public virtual TtpUser TtpUser { get; set; }
-      
-        public decimal BillRate { get; set; }
-        
-        public bool IsActive { get; set; }
+        [DataType(DataType.Currency)]
+        public decimal BillRate { get; set; }      
+        public bool IsActive { get; set; }      
+    //    public decimal? TotalHours { get; set; }
+        [DataType(DataType.Currency)]
+        public decimal? TotalBill { get; set; }
     }
 }

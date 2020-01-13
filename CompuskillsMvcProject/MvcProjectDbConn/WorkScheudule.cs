@@ -12,8 +12,9 @@ namespace MvcProjectDbConn
         public virtual Project Project { get; set; }
         public int ClientId { get; set; }
         public virtual Client Client { get; set; }
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy/MM/dd H:mm:ss tt}"), DataType(DataType.DateTime)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy/MM/dd }"), DataType(DataType.Date)]
         //[UIHint("PickDate")]
         public DateTime? Date { get; set; }
+      
     }
 } 

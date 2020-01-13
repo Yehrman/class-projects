@@ -9,6 +9,7 @@ using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using MvcProjectDbConn;
 using CompuskillsMvcProject.Models;
+
 namespace CompuskillsMvcProject.Controllers
 {
     public class ClientsController : Controller
@@ -139,38 +140,52 @@ namespace CompuskillsMvcProject.Controllers
             Client client = db.Clients.Find(id);
             db.Clients.Remove(client);
             db.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("UserIndex");
         }
-        [HttpGet]
-        public ActionResult Bill()
+        //Must calculate parts of hours and count hours and pay accordingly
+        public ActionResult BillTotal(int id)
         {
             var findUser = User.Identity.GetUserId();
-            // ViewBag.ProjectId = new SelectList(db.Projects.Where(x => x.TtpUserId == currentUser), "ProjectId", "ProjectName");
-            ViewBag.Client = new SelectList(db.Projects.Include("Client").Where(x => x.TtpUserId == findUser), "Client.Name", "ClientId");
-            // ViewBag.Project = new SelectList(db.Projects.Where(x => x.TtpUserId == findUser), "ProjectName", "ProjectName");
-            return View();
-        }
-        [HttpPost]
-        public ActionResult BillTotal(string Client, string project)
-        {
-            var findUser = User.Identity.GetUserId();
-            var Project = db.Projects.Include("Client").FirstOrDefault(x => x.TtpUserId == findUser && x.Client.ClientName == Client && x.ProjectName == project);
+            var Project = db.Projects.Find(id);
             var Rate = Project.BillRate;
             var ProjectId = Project.ProjectId;
-            ViewBag.Client = Project.Client.ClientName;
             var Entries = db.TimeSheetEntries.Where(x => x.TtpUserId == findUser && x.ProjectId == ProjectId);
             TimeSpan? Hours;
-            decimal TotalHours = 0;
-            decimal Total = 0;
+            TimeSpan TotalTimeWorked = new TimeSpan();
+            decimal TotalHours=0;
+            decimal Minutes = 0;
+            TimeSpan nonNull = new TimeSpan();
             foreach (var item in Entries)
-            {
-                Hours = item.EndTime - item.StartTime;
-                Total = Convert.ToDecimal(Hours);
-                TotalHours += TotalHours;
+            {            
+               Hours = item.EndTime - item.StartTime;
+                if(Hours.HasValue)
+                {
+                    nonNull = Hours.Value;
+                     Hours=nonNull;
+                }
+                TotalTimeWorked += nonNull;
+                string s = Convert.ToString(TotalTimeWorked);
+                decimal Total = Convert.ToDecimal(TimeSpan.Parse(s).Hours);
+                decimal minutes = Convert.ToDecimal(TimeSpan.Parse(s).Minutes);
+                  TotalHours += Total;
+                Minutes += minutes;
             }
-            var Payment = TotalHours * Rate;
-            ViewBag.Total = Payment;
-            return PartialView(Payment);
+            string TotalTime = string.Format(" {0} hours, {1} minutes, {2} seconds",
+TotalTimeWorked.Hours, TotalTimeWorked.Minutes, TotalTimeWorked.Seconds);
+            var PayHours = TotalHours * Project.BillRate;
+             var PayForMinutes = Project.BillRate / 60;
+            var PayMinutes = Minutes * PayForMinutes;
+            var Pay = PayHours + PayMinutes;
+            var bill = Project.TotalBill = Pay;
+          //  var hours = Project.TotalHours = TotalHours;
+            db.Entry(Project).CurrentValues.SetValues(bill);
+          //  db.Entry(Project).CurrentValues.SetValues(hours);
+            db.SaveChanges();
+            ViewBag.Hours = TotalTime;
+            ViewBag.Client = Project.Client.ClientName;
+            ViewBag.Project = Project.ProjectName;
+            ViewBag.Total = Project.TotalBill;
+            return View();
 
         }
         protected override void Dispose(bool disposing)
