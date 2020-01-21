@@ -15,7 +15,7 @@ namespace MvcProjectDbConn
         [DataType(DataType.Currency)]
         public decimal BillRate { get; set; }      
         public bool IsActive { get; set; }      
-    //    public decimal? TotalHours { get; set; }
+       public decimal? TotalHours { get; set; }
         [DataType(DataType.Currency)]
         public decimal? TotalBill { get; set; }
     }

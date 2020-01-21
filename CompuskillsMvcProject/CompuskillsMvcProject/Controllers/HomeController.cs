@@ -29,7 +29,7 @@ namespace CompuskillsMvcProject.Controllers
             }
         }
         [Authorize]
-        public ActionResult NewUser()
+        public ActionResult Add()
         {
             if (User.Identity.IsAuthenticated)
             {
@@ -40,6 +40,5 @@ namespace CompuskillsMvcProject.Controllers
                 return RedirectToAction("Login", "Acount");
             }
         }
-
     }
 }

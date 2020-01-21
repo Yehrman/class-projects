@@ -54,10 +54,9 @@ namespace CompuskillsMvcProject.Controllers
             else
             {
                 var project = db.Projects.FirstOrDefault(x => x.ProjectId == id);
-                var WorkerId = project.TtpUserId;
                 var ProjectId = project.ProjectId;
                 var clientId = project.ClientID;
-                db.TimeSheetEntries.Add(new TimeSheetEntry { TtpUserId = WorkerId, ProjectId = ProjectId, ClientId = clientId, StartTime = DateTime.Now });
+                db.TimeSheetEntries.Add(new TimeSheetEntry { TtpUserId = FindUser, ProjectId = ProjectId, ClientId = clientId, StartTime = DateTime.Now });
                 db.SaveChanges();
                 return PartialView();
             }
@@ -65,24 +64,25 @@ namespace CompuskillsMvcProject.Controllers
         public ActionResult PunchOut()
         {
             var FindUser = User.Identity.GetUserId();
+           
             DateTime date = DateTime.Now;
             TimeSpan span = new TimeSpan(10, 0, 0);
             DateTime time = date - span;
-            var Entry = db.TimeSheetEntries.FirstOrDefault(x => x.TtpUserId == FindUser && x.StartTime>=time && x.EndTime == null);
-            var start = Entry.StartTime;
-           // TimeSpan timeSpan = new TimeSpan(10, 0, 0);        
+            var Entry = db.TimeSheetEntries.FirstOrDefault(x => x.TtpUserId == FindUser && x.StartTime>=time && x.EndTime == null);          
+            var start = Entry.StartTime;        
             ViewBag.Error = DateTime.Now - start > span;
             if (DateTime.Now - start < span)
             {
                 var end = Entry.EndTime = DateTime.Now;
                 db.Entry(Entry).CurrentValues.SetValues(end);
                 db.SaveChanges();
-                return PartialView();
+                return View();
             }
+          
             else
             { 
                 ModelState.AddModelError("punchout", "The system does'nt handle such long work interval's please contact your administartor");
-                return PartialView();
+                return View();
             }
         }
   

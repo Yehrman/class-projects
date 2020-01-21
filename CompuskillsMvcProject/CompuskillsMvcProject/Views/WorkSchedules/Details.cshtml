@@ -4,15 +4,7 @@
     ViewBag.Title = "Details";
 }
 
-@section scripts{
-    @Scripts.Render("~/bundles/jqueryunobtrusive")
-    <script>
-        $("p#out").hide();
-        $("p#in").on("click", function () {
-            $("p#out").show();
-        });
-    </script>
-}
+
 @{
     if (ViewBag.error == true)
     {
@@ -25,50 +17,42 @@
     else
     {
 
-    <h2>Details</h2>
+        <h2>Details</h2>
 
-    <div>
-        <h4>WorkSchedule</h4>
-        <hr />
+        <div>
+            <h4>WorkSchedule</h4>
+            <hr />
 
-        <p>Are you sure you want to punch in for this job</p>
-        <dl class="dl-horizontal">
-            <dt>
-                @Html.DisplayNameFor(model => model.Client.ClientName)
-            </dt>
+        
+            <dl class="dl-horizontal">
+                <dt>
+                    @Html.DisplayNameFor(model => model.Client.ClientName)
+                </dt>
 
-            <dd>
-                @Html.DisplayFor(model => model.Client.ClientName)
-            </dd>
+                <dd>
+                    @Html.DisplayFor(model => model.Client.ClientName)
+                </dd>
 
-            <dt>
-                @Html.DisplayNameFor(model => model.Project.ProjectName)
-            </dt>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Project.ProjectName)
+                </dt>
 
-            <dd>
-                @Html.DisplayFor(model => model.Project.ProjectName)
-            </dd>
+                <dd>
+                    @Html.DisplayFor(model => model.Project.ProjectName)
+                </dd>
 
-            <dt>
-                @Html.DisplayNameFor(model => model.Date)
-            </dt>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Date)
+                </dt>
 
-            <dd>
-                @Html.DisplayFor(model => model.Date)
-            </dd>
+                <dd>
+                    @Html.DisplayFor(model => model.Date)
+                </dd>
 
-        </dl>
-    </div>
-    <p id="in">
-        <%=@Ajax.ActionLink("Punch in", "PunchIn", "TimeSheetEntries", new { id = Model.ProjectId },
-         new AjaxOptions { UpdateTargetId = "PunchIn" })%>
-    </p>
-    <p id="out">
-        <%=@Ajax.ActionLink("Punch out", "PunchOut", "TimeSheetEntries", new { id = Model.ProjectId },
-         new AjaxOptions { UpdateTargetId = "PunchOut" })%>
-        @Html.ActionLink("Back to List", "TodaysJobs")
-    </p>
-    <div id="PunchIn"></div>
-    <div id="PunchOut"></div>
+            </dl>
+        </div>
+     
+        @Html.ActionLink("Reschedule","ReSchedule")
         }
     }
+

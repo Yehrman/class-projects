@@ -1,14 +1,21 @@
-﻿
+﻿@model MvcProjectDbConn.TimeSheetEntry
+@{
+    ViewBag.Title = "PunchOut";
+}
+
+<h2>PunchOut</h2>
+
 @{
 
     if (ViewBag.Error == true)
     {
         @Html.ValidationMessage("punchout")
     }
+  
     else
     {
-        < p > You punched out at @DateTime.Now </ p >
+        <P> You punched out at @DateTime.Now </p>
     }
 }
 
-        < p > @Html.ActionLink("click here to see all TimeSheetEntries", "UserIndex") </ p >
+      <p>@Html.ActionLink("cick here ","UserIndex")to  see all time entries  </p>

@@ -123,48 +123,83 @@ namespace CompuskillsMvcProject.Controllers
          
             var findUser = User.Identity.GetUserId();
             var Project = db.Projects.Find(id);
-            var Rate = Project.BillRate;
-            var ProjectId = Project.ProjectId;
-            var Entries = db.TimeSheetEntries.Where(x => x.TtpUserId == findUser && x.ProjectId == ProjectId);
-            TimeSpan? Hours;
-            TimeSpan TotalTimeWorked = new TimeSpan();
-            decimal TotalHours=0;
-            decimal Minutes = 0;
-            TimeSpan nonNull = new TimeSpan();
-            foreach (var item in Entries)
-            {            
-               Hours = item.EndTime - item.StartTime;
-                if(Hours.HasValue)
+            ViewBag.Error = Project.IsActive == true;
+            if (Project.IsActive == false)
+            {
+                var ProjectId = Project.ProjectId;
+                var Entries = db.TimeSheetEntries.Where(x => x.TtpUserId == findUser && x.ProjectId == ProjectId);
+                TimeSpan? Interval;         
+              //  decimal TotalHours = 0;
+                //decimal Minutes = 0;
+                TimeSpan NonNull = new TimeSpan();
+                TimeSpan TotalTimeWorked = new TimeSpan();
+                foreach (var item in Entries)
                 {
-                    nonNull = Hours.Value;
-                     Hours=nonNull;
+                    Interval = item.EndTime - item.StartTime;
+                    if (Interval.HasValue)
+                    {
+                        NonNull = Interval.Value;
+                        Interval = NonNull;
+                    }
+                   TotalTimeWorked += NonNull;                
                 }
-                TotalTimeWorked += nonNull;
                 string s = Convert.ToString(TotalTimeWorked);
-                decimal Total = Convert.ToDecimal(TimeSpan.Parse(s).Hours);
+                decimal Hours = Convert.ToDecimal(TimeSpan.Parse(s).Hours);
                 decimal minutes = Convert.ToDecimal(TimeSpan.Parse(s).Minutes);
-                  TotalHours += Total;
-                Minutes += minutes;
+                decimal seconds = Convert.ToDecimal(TimeSpan.Parse(s).Seconds);
+                string TotalTime = string.Format(" {0} hours, {1} minutes, {2} seconds",
+    TotalTimeWorked.Hours, TotalTimeWorked.Minutes, TotalTimeWorked.Seconds);
+                var PayHours = Hours * Project.BillRate;
+                var PayPerMinute = Project.BillRate / 60;
+                var PayMinutes = minutes * PayPerMinute;
+                var PayPerSecond = Project.BillRate / 3600;
+                var paySeconds = seconds * PayPerSecond;
+                var Pay = PayHours + PayMinutes + paySeconds;
+                var bill = Project.TotalBill = Pay;
+                //    decimal TimeTally = TotalHours + Minutes;
+                //  var hours = Project.TotalHours = TimeTally;
+                db.Entry(Project).CurrentValues.SetValues(bill);
+                //db.Entry(Project).CurrentValues.SetValues(hours);
+                db.SaveChanges();
+                ViewBag.Hours = TotalTime;
+                ViewBag.Client = Project.Client.ClientName;
+                ViewBag.Project = Project.ProjectName;
+                ViewBag.Total = Project.TotalBill;
+                return View();
             }
-            
-            string TotalTime = string.Format(" {0} hours, {1} minutes, {2} seconds",
-TotalTimeWorked.Hours, TotalTimeWorked.Minutes, TotalTimeWorked.Seconds);
-            var PayHours = TotalHours * Project.BillRate;
-             var PayForMinutes = Project.BillRate / 60;
-            var PayMinutes = Minutes * PayForMinutes;
-            var Pay = PayHours + PayMinutes;
-            var bill = Project.TotalBill = Pay;
-          //  var hours = Project.TotalHours = TotalHours;
-            db.Entry(Project).CurrentValues.SetValues(bill);
-          //  db.Entry(Project).CurrentValues.SetValues(hours);
-            db.SaveChanges();
-            ViewBag.Hours = TotalTime;
-            ViewBag.Client = Project.Client.ClientName;
-            ViewBag.Project = Project.ProjectName;
-            ViewBag.Total = Project.TotalBill;
-            return View();
+            else
+            {
+                var ProjectId = Project.ProjectId;
+                var Entries = db.TimeSheetEntries.Where(x => x.TtpUserId == findUser && x.ProjectId == ProjectId);
+                TimeSpan? Hours;
+                TimeSpan TotalTimeWorked = new TimeSpan();
+                decimal TotalHours = 0;
+                decimal Minutes = 0;
+                TimeSpan nonNull = new TimeSpan();
+                foreach (var item in Entries)
+                {
+                    Hours = item.EndTime - item.StartTime;
+                    if (Hours.HasValue)
+                    {
+                        nonNull = Hours.Value;
+                        Hours = nonNull;
+                    }
+                    TotalTimeWorked += nonNull;
+                    string s = Convert.ToString(TotalTimeWorked);
+                    decimal Total = Convert.ToDecimal(TimeSpan.Parse(s).Hours);
+                    decimal minutes = Convert.ToDecimal(TimeSpan.Parse(s).Minutes);
+                    TotalHours += Total;
+                    Minutes += minutes;
+                }
 
+                string TotalTime = string.Format(" {0} hours, {1} minutes, {2} seconds",
+    TotalTimeWorked.Hours, TotalTimeWorked.Minutes, TotalTimeWorked.Seconds);
+               // ModelState.AddModelError("error", "You can't bill a project that is still active");
+                ViewBag.Hours = TotalTime;
+                return View();
+            }
         }
+       
         protected override void Dispose(bool disposing)
         {
             if (disposing)

@@ -321,7 +321,7 @@
     <Content Include="Views\WorkSchedules\ScheduleJob.cshtml" />
     <Content Include="Views\WorkSchedules\PastSchedule.cshtml" />
     <Content Include="Views\Clients\BillTotal.cshtml" />
-    <Content Include="Views\Home\NewUser.cshtml" />
+    <Content Include="Views\Home\Add.cshtml" />
     <Content Include="Views\Home\About.cshtml" />
   </ItemGroup>
   <ItemGroup>
