@@ -10,11 +10,16 @@ using Microsoft.AspNet.Identity;
 using MvcProjectDbConn;
 using CompuskillsMvcProject.Models;
 namespace CompuskillsMvcProject.Controllers
-{
+{   [Authorize]
     public class ProjectsController : Controller
     {
         private TimeSheetDbContext db = new TimeSheetDbContext();
-
+        [Authorize (Roles ="CEO")]
+        public ActionResult Index()
+        {
+            var Projects = db.Projects.Include("Client");
+            return View(Projects);
+        }
         // GET: Project
         public ActionResult UserIndex()
         {
@@ -26,18 +31,11 @@ namespace CompuskillsMvcProject.Controllers
         // GET: Project/Details/5
         public ActionResult Details(int? id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
+            ViewBag.error = id == null;
             Project project = db.Projects.Find(id);
-            if (project == null)
-            {
-                return HttpNotFound();
-            }
+            ViewBag.clientError = project== null;
             return View(project);
         }
-        //Test out Create1
         [HttpGet]
         public ActionResult Create()
         {
@@ -62,52 +60,14 @@ namespace CompuskillsMvcProject.Controllers
             ViewBag.ClientID = new SelectList(db.UserClients.Include("Client").Where(x => x.TtpUserId == currentUser), "ClientId", "Client.ClientName", projectModel.ClientID);
             return View(projectModel);
         }
-        /* GET: Project/Create
-        public ActionResult Create()
-        {
-            var currentUser = User.Identity.GetUserId();
-            ViewBag.ClientID = new SelectList(db.UserClients.Include("Client").Where(x=>x.TtpUserId==currentUser), "ClientId", "Client.ClientName");
-           
-            return View();
-        }
-        
-         POST: Project/Create
-         To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-         more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(/*[Bind(Include = "ProjectId,ProjectName,TtpUserId,ClientID,BillRate,IsActive")] Project project)
-        {
-           var currentUser = User.Identity.GetUserId();
-            if (ModelState.IsValid)
-            {
-                db.Projects.Add(new Project { ProjectName=project.ProjectName,ClientID=project.ClientID,TtpUserId=currentUser,BillRate=project.BillRate,IsActive=true});
-                db.SaveChanges();
-                var Job = db.Projects.FirstOrDefault(x =>x.ProjectName==project.ProjectName&&x.ClientID==project.ClientID&& x.TtpUserId == currentUser && x.BillRate==project.BillRate&&x.IsActive==true);
-                var Id = Job.ProjectId;
-                db.WorkScheudules.Add(new WorkSchedule { TtpUserId = currentUser, ProjectId = Id, ClientId = Job.ClientID,Date=DateTime.Today});
-                db.SaveChanges();
-                return RedirectToAction("UserIndex");
-            }
-              ViewBag.ClientID = new SelectList(db.UserClients.Include("Client").Where(x => x.TtpUserId == currentUser), "ClientId", "Client.ClientName", project.ClientID);
-         
-            return View(project);
-        }*/
+    
 
         // GET: Project/Edit/5
         public ActionResult Edit(int? id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
+            ViewBag.error = id == null;
             Project project = db.Projects.Find(id);
-            if (project == null)
-            {
-                return HttpNotFound();
-            }
-          //  ViewBag.ClientID = new SelectList(db.Clients, "ClientId", "ClientName", project.ClientID);
-     
+            ViewBag.clientError = project == null;
             return View(project);
         }
 
@@ -116,7 +76,7 @@ namespace CompuskillsMvcProject.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id,/*[Bind(Include = "ProjectName,BillRate,IsActive")]*/ Project project)
+        public ActionResult Edit(int id, Project project)
         {
             if (ModelState.IsValid)
             {
@@ -138,15 +98,9 @@ namespace CompuskillsMvcProject.Controllers
         // GET: Project/Delete/5
         public ActionResult Delete(int? id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
+            ViewBag.error = id == null;
             Project project = db.Projects.Find(id);
-            if (project == null)
-            {
-                return HttpNotFound();
-            }
+            ViewBag.clientError = project == null;
             return View(project);
         }
 

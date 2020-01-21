@@ -15,25 +15,19 @@ namespace CompuskillsMvcProject.Controllers
         private TimeSheetDbContext db = new TimeSheetDbContext();
 
         // GET: TtpUsers
-        [Authorize(Roles ="SystemAdmin")]
+        [Authorize(Roles = "Administrator")]
         public ActionResult Index()
         {
             return View(db.IdentityUsers.ToList());
         }
 
         // GET: TtpUsers/Details/5
-        [Authorize(Roles = "SystemAdmin")]
+       
         public ActionResult Details(string id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
+            ViewBag.error = id == null;
             TtpUser ttpUser = db.IdentityUsers.Find(id);
-            if (ttpUser == null)
-            {
-                return HttpNotFound();
-            }
+            ViewBag.clientError = ttpUser == null;
             return View(ttpUser);
         }
 
@@ -41,15 +35,9 @@ namespace CompuskillsMvcProject.Controllers
         // GET: TtpUsers/Edit/5
         public ActionResult Edit(string id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
+            ViewBag.error = id == null;
             TtpUser ttpUser = db.IdentityUsers.Find(id);
-            if (ttpUser == null)
-            {
-                return HttpNotFound();
-            }
+            ViewBag.clientError = ttpUser == null;
             return View(ttpUser);
         }
 
@@ -72,15 +60,9 @@ namespace CompuskillsMvcProject.Controllers
         // GET: TtpUsers/Delete/5
         public ActionResult Delete(string id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
+            ViewBag.error = id == null;
             TtpUser ttpUser = db.IdentityUsers.Find(id);
-            if (ttpUser == null)
-            {
-                return HttpNotFound();
-            }
+            ViewBag.clientError = ttpUser == null;
             return View(ttpUser);
         }
 

@@ -11,12 +11,12 @@ using MvcProjectDbConn;
 using CompuskillsMvcProject.Models;
 
 namespace CompuskillsMvcProject.Controllers
-{
+{     [Authorize]
     public class ClientsController : Controller
     {
         private TimeSheetDbContext db = new TimeSheetDbContext();
 
-        // GET: Clients
+        [Authorize(Roles = "Administrator")]
         public ActionResult Index()
         {
             return View(db.Clients.ToList());
@@ -30,15 +30,10 @@ namespace CompuskillsMvcProject.Controllers
         // GET: Clients/Details/5
         public ActionResult Details(int? id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Client client = db.Clients.Find(id);
-            if (client == null)
-            {
-                return HttpNotFound();
-            }
+            
+            ViewBag.error = id == null;
+            Client client = db.Clients.FirstOrDefault(x =>  x.ClientId == id);
+            ViewBag.clientError = client == null;
             return View(client);
         }
 
@@ -85,66 +80,47 @@ namespace CompuskillsMvcProject.Controllers
 
             return View(client);
         }
-
-        // GET: Clients/Edit/5
-        public ActionResult Edit(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Client client = db.Clients.Find(id);
-            if (client == null)
-            {
-                return HttpNotFound();
-            }
-            return View(client);
+//Can't edit since the clients table is all users clients 1 user can't edit without the other
+        public ActionResult Edit()
+        {           
+            return View();
         }
 
-        // POST: Clients/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ClientId,ClientName,ClientEmail")] Client client)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Entry(client).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(client);
-        }
+     
 
         // GET: Clients/Delete/5
         public ActionResult Delete(int? id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
+                ViewBag.error = id == null;
             Client client = db.Clients.Find(id);
-            if (client == null)
-            {
-                return HttpNotFound();
-            }
+            ViewBag.clientError = client == null; 
             return View(client);
         }
 
         // POST: Clients/Delete/5
+        //make sure to 1st check userclients if there is thos client more then once
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Client client = db.Clients.Find(id);
-            db.Clients.Remove(client);
+            var currentUser = User.Identity.GetUserId();
+            var userClient = db.UserClients.FirstOrDefault(x => x.TtpUserId == currentUser && x.ClientId == id);
+            db.UserClients.Remove(userClient);
+      
+            var multipleClient = db.UserClients.Where(x => x.ClientId == id).Count();
+            if(multipleClient<=1)
+            {
+                Client client = db.Clients.Find(id);
+                db.Clients.Remove(client);
+            }     
             db.SaveChanges();
+
             return RedirectToAction("UserIndex");
         }
         //Must calculate parts of hours and count hours and pay accordingly
         public ActionResult BillTotal(int id)
         {
+         
             var findUser = User.Identity.GetUserId();
             var Project = db.Projects.Find(id);
             var Rate = Project.BillRate;
@@ -170,6 +146,7 @@ namespace CompuskillsMvcProject.Controllers
                   TotalHours += Total;
                 Minutes += minutes;
             }
+            
             string TotalTime = string.Format(" {0} hours, {1} minutes, {2} seconds",
 TotalTimeWorked.Hours, TotalTimeWorked.Minutes, TotalTimeWorked.Seconds);
             var PayHours = TotalHours * Project.BillRate;

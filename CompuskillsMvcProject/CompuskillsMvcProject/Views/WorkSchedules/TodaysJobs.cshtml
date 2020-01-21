@@ -4,46 +4,47 @@
     ViewBag.Title = "TodaysJobs";
 }
 
-<h2>TodaysJobs</h2>
-
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-
-        <th>
-            @Html.DisplayNameFor(model => model.Project.ProjectName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Client.ClientName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Date)
-        </th>
-        <th></th>
-    </tr>
-
-    @foreach (var item in Model)
-    {
+<h2>Todays Jobs</h2>
+@section scripts{
+    @Scripts.Render("~/bundles/jqueryunobtrusive")
+}
+    <table class="table">
         <tr>
 
-            <td>
-                @Html.DisplayFor(modelItem => item.Project.ProjectName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Client.ClientName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Date)
-            </td>
-            <td>
-
-                @Html.ActionLink("Reschedule", "Schedule", new { id = item.id }) |
-                 @Html.ActionLink("Punchin","Details",new { id=item.id})
-
-            </td>
+            <th>
+                @Html.DisplayNameFor(model => model.Project.ProjectName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Client.ClientName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Date)
+            </th>
+            <th></th>
         </tr>
-    }
 
-</table>
+        @foreach (var item in Model)
+        {
+            <tr>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.Project.ProjectName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Client.ClientName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Date)
+                </td>
+                <td>
+
+                    @Html.ActionLink("Reschedule", "ReSchedule", new { id = item.id }) |
+                   @Html.ActionLink("Punchin", "Details", new { id = item.id })
+                   <% @Ajax.ActionLink("PunchOut","PunchOut","TimeSheetEntries",new AjaxOptions { UpdateTargetId="PunchOut"})%>
+
+                </td>
+            </tr>
+        }
+
+    </table>
+<div id="PunchOut"></div>

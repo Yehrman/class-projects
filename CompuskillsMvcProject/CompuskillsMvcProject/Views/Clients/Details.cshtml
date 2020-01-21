@@ -3,32 +3,43 @@
 @{
     ViewBag.Title = "Details";
 }
+@{ if (ViewBag.error == true)
+    {
+        <p>Please ensure that there is a number at the end of the url</p>
+    }
+    else if (ViewBag.clientError == true)
+    {
+        <p>We don't have a client with that id number in our system</p>
+    }
+    else
+    {
+        <h2>Details</h2>
 
-<h2>Details</h2>
+        <div>
+            <h4>Client</h4>
+            <hr />
+            <dl class="dl-horizontal">
+                <dt>
+                    @Html.DisplayNameFor(model => model.ClientName)
+                </dt>
 
-<div>
-    <h4>Client</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.ClientName)
-        </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.ClientName)
+                </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.ClientName)
-        </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.ClientEmail)
+                </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.ClientEmail)
-        </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.ClientEmail)
+                </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.ClientEmail)
-        </dd>
-
-    </dl>
-</div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.ClientId }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>
+            </dl>
+        </div>
+        <p>
+            
+            @Html.ActionLink("Back to List", "UserIndex")
+        </p>
+        }
+    }

@@ -1,14 +1,20 @@
-﻿@model MvcProjectDbConn.TimeSheetEntry
-
-
+﻿
 
 @{ if (ViewBag.Error == true)
     {
         @Html.ValidationMessage("Error")
+
     }
+    else if (ViewBag.DifferentDate == true)
+    {
+    
+                <p>You never punched out yesterday.please contact your supervisor</p>      
+        <p>You punched in at @DateTime.Now</p>
+    }
+
     else
     {
         <p>You punched in at @DateTime.Now</p>
     }
 }
-@Html.ActionLink("Punch out","UserIndex")
+@Html.ActionLink("View all timesheet entries", "UserIndex")

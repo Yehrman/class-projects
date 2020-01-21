@@ -4,33 +4,44 @@
     ViewBag.Title = "UserIndex";
 }
 
-<h2>UserIndex</h2>
-
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Client.ClientName)
-        </th>
-       
-        <th></th>
-    </tr>
-
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Client.ClientName)
-        </td>
-        
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.id }) |
-            @Html.ActionLink("Details", "Details", new { id=item.id }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.id })|
-            @Html.ActionLink("Do job for this client", "Create", "Projects", new { id=item.ClientId})
-        </td>
-    </tr>
+@section scripts{
+    @Scripts.Render("~/bundles/jqueryunobtrusive")
 }
+    <h2>UserIndex</h2>
 
-</table>
+    <p>
+        @Html.ActionLink("Add New client", "Create")
+    </p>
+
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Client.ClientName)
+            </th>
+
+            <th>
+                @Html.DisplayNameFor(model => model.Client.ClientEmail)
+            </th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Client.ClientName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Client.ClientEmail)
+                </td>
+
+                <td>
+                    @Ajax.ActionLink("Edit","Edit",new AjaxOptions { UpdateTargetId="Edit"}) |
+                    @Html.ActionLink("Details", "Details", new { id = item.ClientId }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.ClientId })|
+
+                </td>
+            </tr>
+        }
+
+    </table>
+<div id="Edit"></div>

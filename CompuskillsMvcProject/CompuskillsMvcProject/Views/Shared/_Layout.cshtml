@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using MvcProjectDbConn
+@using Microsoft.AspNet.Identity
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -6,7 +8,7 @@
     <title>@ViewBag.Title - Total TimeSheet Pro</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
-
+  
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top">
@@ -22,19 +24,37 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
+
                     <li>@Html.ActionLink("Home", "Index", "Home")</li>
                     <li>@Html.ActionLink("Select", "Select", "Home")</li>
-                    
+                    <li>@Html.ActionLink("About","About","Home")</li>
+                    <li>@Html.ActionLink("Todays Jobs", "TodaysJobs", "WorkSchedules")</li>
+                    @{
+                        DateTime date = DateTime.Now;
+                        TimeSpan span = new TimeSpan(10, 0, 0);
+                        DateTime time = date - span;
+
+                        using (TimeSheetDbContext db = new TimeSheetDbContext())
+                        {
+                            var currentUser = User.Identity.GetUserId();
+                            if (db.TimeSheetEntries.Any(x=>x.TtpUserId==currentUser&&x.StartTime>=time&&x.EndTime==null))
+                            {
+                    <li>  @Html.ActionLink("Punchout","PunchOut","TimeSheetEntries")</li>
+                            }
+                        }
+                    }
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>
-           
+
         </div>
     </div>
     <div class="container body-content">
         <h1> TimeSheet Pro</h1>
+     
         @RenderBody()
         <hr />
+     
         <footer>
             <p>&copy; @DateTime.Now.Year - TimeSheetPro</p>
         </footer>
@@ -43,6 +63,6 @@
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
-  
+
 </body>
 </html>

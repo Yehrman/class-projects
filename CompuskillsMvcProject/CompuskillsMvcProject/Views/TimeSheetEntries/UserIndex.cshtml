@@ -1,9 +1,7 @@
 ﻿@model IEnumerable<MvcProjectDbConn.TimeSheetEntry>
 
-@Scripts.Render("~/ bundles / jqueryunobtrusive")
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
+
+
 <h1>@User.Identity.Name's Entries</h1>
 <table class="table">
     <tr>
@@ -34,14 +32,11 @@
                 @Html.DisplayFor(modelItem => item.EndTime)
             </td>
             <td>
-                <%= @Ajax.ActionLink("Punch out for this job", "PunchOut", "TimeSheetEntries", new { id = item.ProjectId },new
-  AjaxOptions{UpdateTargetId="Punchout" })%>
+
 
                 @Html.ActionLink("Details", "Details", new { id = item.TimeSheetEntryId }) |
                 @Html.ActionLink("Delete", "Delete", new { id = item.TimeSheetEntryId })
             </td>
         </tr>
     }
-
 </table>
-<div id="Punchout"></div>

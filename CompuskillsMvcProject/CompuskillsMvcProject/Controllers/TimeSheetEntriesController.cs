@@ -9,55 +9,51 @@ using System.Web.Mvc;
 using MvcProjectDbConn;
 using Microsoft.AspNet.Identity;
 using CompuskillsMvcProject.Models;
-
+using System.Timers;
 namespace CompuskillsMvcProject.Controllers
-{
+{     [Authorize]
     public class TimeSheetEntriesController : Controller
     {
-        private TimeSheetDbContext db = new TimeSheetDbContext();
 
+        private TimeSheetDbContext db = new TimeSheetDbContext();
         // GET: TimeSheetEntries
-       // [Authorize(Roles ="SystemAdmin")]
-     //   public ActionResult Index()
-     //   {
-       //     var timeSheetEntries = db.TimeSheetEntries.Include(t => t.Project).Include(t => t.TtpUser);
-          //  return View(timeSheetEntries.ToList());
-      //  }
+        [Authorize(Roles = "Administrator")]
+        public ActionResult Index()
+        {
+            var timeSheetEntries = db.TimeSheetEntries.Include(t => t.Project).Include(t => t.TtpUser);
+           return View(timeSheetEntries.ToList());
+        }
         public ActionResult UserIndex()
         {
             var FindUser = User.Identity.GetUserId();
+            
             var Entries = db.TimeSheetEntries.Where(x => x.TtpUserId == FindUser).Include("Client").Include("Project");
             return View(Entries);
         }
         // GET: TimeSheetEntries/Details/5
         public ActionResult Details(int? id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
+            ViewBag.error = id == null;
             TimeSheetEntry timeSheetEntry = db.TimeSheetEntries.Find(id);
-            if (timeSheetEntry == null)
-            {
-                return HttpNotFound();
-            }
+            ViewBag.clientError = timeSheetEntry == null;
             return View(timeSheetEntry);
         }
         public ActionResult PunchIn(int id)
         {
             var FindUser = User.Identity.GetUserId();
-            ViewBag.Error = db.TimeSheetEntries.Any(x => x.TtpUserId == FindUser && x.StartTime != null && x.EndTime == null);
-           
-            if (db.TimeSheetEntries.Any(x => x.TtpUserId == FindUser && x.StartTime != null && x.EndTime == null))
+            DateTime date = DateTime.Now;
+            TimeSpan span = new TimeSpan(16, 0, 0);
+            DateTime time = date - span;
+            ViewBag.Error = db.TimeSheetEntries.Any(x => x.TtpUserId == FindUser && x.StartTime <date &&x.StartTime>time&& x.EndTime == null);
+            ViewBag.DifferentDate = db.TimeSheetEntries.Any(x => x.TtpUserId == FindUser && x.StartTime <time && x.EndTime == null);
+            if (db.TimeSheetEntries.Any(x => x.TtpUserId == FindUser && x.StartTime <date&&x.StartTime>time && x.EndTime == null))
             {
-                ModelState.AddModelError("Error", "You never punched out from your last job");
+                ModelState.AddModelError("Error", "You never punched out from your last job");               
                 return PartialView();
-
             }
             else
-            {           
-                var project = db.Projects.Include("Client").FirstOrDefault(x => x.ProjectId == id);
-                // var client = db.Clients.SingleOrDefault(x => x.ClientId==punchInModel.ClientID);
+            {
+                var project = db.Projects.FirstOrDefault(x => x.ProjectId == id);
                 var WorkerId = project.TtpUserId;
                 var ProjectId = project.ProjectId;
                 var clientId = project.ClientID;
@@ -66,37 +62,39 @@ namespace CompuskillsMvcProject.Controllers
                 return PartialView();
             }
         }
-        public ActionResult PunchOut(int id)
+        public ActionResult PunchOut()
         {
             var FindUser = User.Identity.GetUserId();
-            ViewBag.Error = db.TimeSheetEntries.All(x => x.TtpUserId == FindUser && x.ProjectId == id && x.StartTime == null);
-            //{
-            // ModelState.AddModelError("Error", "You never punched in");
-            // return PartialView();
-            // 
-         var Entry = db.TimeSheetEntries.Include("Project").Include("Client").FirstOrDefault(x => x.ProjectId==id&&x.TtpUserId == FindUser &&x.StartTime!=null &&x.EndTime == null);
-         var entryId = Entry.TimeSheetEntryId;
-         var find = db.TimeSheetEntries.Find(entryId);
-         var end = find.EndTime = DateTime.Now;
-            db.Entry(find).CurrentValues.SetValues(end);
-            db.SaveChanges();
-            return RedirectToAction("UserIndex");
+            DateTime date = DateTime.Now;
+            TimeSpan span = new TimeSpan(10, 0, 0);
+            DateTime time = date - span;
+            var Entry = db.TimeSheetEntries.FirstOrDefault(x => x.TtpUserId == FindUser && x.StartTime>=time && x.EndTime == null);
+            var start = Entry.StartTime;
+           // TimeSpan timeSpan = new TimeSpan(10, 0, 0);        
+            ViewBag.Error = DateTime.Now - start > span;
+            if (DateTime.Now - start < span)
+            {
+                var end = Entry.EndTime = DateTime.Now;
+                db.Entry(Entry).CurrentValues.SetValues(end);
+                db.SaveChanges();
+                return PartialView();
+            }
+            else
+            { 
+                ModelState.AddModelError("punchout", "The system does'nt handle such long work interval's please contact your administartor");
+                return PartialView();
+            }
         }
-     
+  
 
         // GET: TimeSheetEntries/Delete/5
         public ActionResult Delete(int? id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
+            ViewBag.error = id == null;
             TimeSheetEntry timeSheetEntry = db.TimeSheetEntries.Find(id);
-            if (timeSheetEntry == null)
-            {
-                return HttpNotFound();
-            }
+            ViewBag.clientError = timeSheetEntry == null;
             return View(timeSheetEntry);
+         
         }
 
         // POST: TimeSheetEntries/Delete/5
@@ -109,39 +107,6 @@ namespace CompuskillsMvcProject.Controllers
             db.SaveChanges();
             return RedirectToAction("UserIndex");
         }
-         [HttpGet]
-        public ActionResult FindTimeEntriesByDate()
-        {
-            return View();
-        }
-        [HttpPost]
-        public ActionResult FindTimeEntriesByDate(CreateProjectModel dateModel)
-        {
-            var FindUser = User.Identity.GetUserId();
-            var userDates = db.TimeSheetEntries.Where(x => x.TtpUserId == FindUser && x.StartTime == dateModel.ScheduleDate);
-            if (userDates != null)
-            {
-                TempData["dateModel"] = dateModel;
-                return RedirectToAction("GetTimeEntriesByDate");
-            }
-            else
-            {
-                ModelState.AddModelError("Dates", "There are no entries on this date");
-                return View();
-            }
-
-        }
-        [HttpGet]
-    public ActionResult GetTimeEntriesByDate()
-    {
-            CreateProjectModel dateModel = (CreateProjectModel)TempData["dateModel"];
-            var FindUser = User.Identity.GetUserId();
-            var Entries = db.TimeSheetEntries.Include("Client").Include("Project").Where(x => x.TtpUserId == FindUser && x.StartTime == dateModel.ScheduleDate);
-                     
-                       
-            return View(Entries);
-        }
-      
     
         protected override void Dispose(bool disposing)
         {

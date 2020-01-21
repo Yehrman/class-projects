@@ -19,7 +19,7 @@ namespace CompuskillsMvcProject.Controllers
     {
         private TtpSignInManager _signInManager;
         private TtpUserManager _userManager;
-
+        private TimeSheetDbContext db = new TimeSheetDbContext();
         public AccountController()
         {
         }
@@ -62,7 +62,7 @@ namespace CompuskillsMvcProject.Controllers
             ViewBag.ReturnUrl = returnUrl;
             return View();
         }
-
+       
         //
         // POST: /Account/Login
         [HttpPost]
@@ -70,29 +70,31 @@ namespace CompuskillsMvcProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
         {
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
-            
+    
+                if (!ModelState.IsValid)
+                {
+                    return View(model);
+                }
+            var a = User.Identity.GetUserId();
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, change to shouldLockout: true
-            var result = await SignInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, shouldLockout: false);
-            switch (result)
+            using (TimeSheetDbContext DB = new TimeSheetDbContext())
             {
-                case SignInStatus.Success:
-                 //   ViewBag.Name ="Hello "+ User.Identity.Name;
-                    return RedirectToAction("Select", "Home");
-                    // return View(returnUrl);
-                case SignInStatus.LockedOut:
-                    return View("Lockout");
-                case SignInStatus.RequiresVerification:
-                    return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
-                case SignInStatus.Failure:
-                default:
-                    ModelState.AddModelError("", "Invalid login attempt.");
-                    return View(model);
-            }
+                var result = await SignInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, shouldLockout: false);
+                switch (result)
+                {
+                    case SignInStatus.Success:
+                            return RedirectToAction("Select", "Home");                      
+                    case SignInStatus.LockedOut:
+                        return View("Lockout");
+                    case SignInStatus.RequiresVerification:
+                        return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
+                    case SignInStatus.Failure:
+                    default:
+                        ModelState.AddModelError("", "Invalid login attempt.");
+                        return View(model);
+                }
+            }  
         }
 
         //
@@ -415,9 +417,10 @@ namespace CompuskillsMvcProject.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult LogOff()
         {
-            AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-           // Session.Abandon();
-            return RedirectToAction("Index", "Home");
+          
+             
+                    AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+                    return RedirectToAction("Index", "Home");            
         }
 
         //
@@ -427,7 +430,7 @@ namespace CompuskillsMvcProject.Controllers
         {
             return View();
         }
-
+     
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -444,9 +447,10 @@ namespace CompuskillsMvcProject.Controllers
                     _signInManager = null;
                 }
             }
-
+          
             base.Dispose(disposing);
         }
+      
 
         #region Helpers
         // Used for XSRF protection when adding external logins

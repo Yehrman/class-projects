@@ -5,8 +5,9 @@
 
 <h1> Hello @User.Identity.Name </h1>
 <h2> Please Select what you'd like to do</h2>
-<p>To view all jobs for scheduled for today @Html.ActionLink(" click here","TodaysJobs","WorkSchedules")</p>
+<p>If you are new and unused to Total Time Sheet Pro @Html.ActionLink("click here","NewUser")
+<p>To view all jobs scheduled for today @Html.ActionLink(" click here","TodaysJobs","WorkSchedules")</p>
 <p>To manage clients @Html.ActionLink("click here", "UserIndex", "Clients")</p>
-<p>To view all TimeSheetEntries  @Html.ActionLink("click here", "UserIndex", "TimeSheetEntries")</p>
-<p>To manage Jobs @Html.ActionLink("click here", "UserIndex", "Projects")</p>
 
+<p>To manage Jobs @Html.ActionLink("click here", "UserIndex", "Projects")</p>
+<p>To view all TimeSheetEntries  @Html.ActionLink("click here", "UserIndex", "TimeSheetEntries")</p>

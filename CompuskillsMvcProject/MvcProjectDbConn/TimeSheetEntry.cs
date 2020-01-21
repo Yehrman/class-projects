@@ -1,4 +1,5 @@
 ﻿using System;
+
 namespace MvcProjectDbConn
 {
     public class TimeSheetEntry

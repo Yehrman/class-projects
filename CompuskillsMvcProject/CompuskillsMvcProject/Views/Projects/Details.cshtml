@@ -3,7 +3,17 @@
 @{
     ViewBag.Title = "Details";
 }
-
+@{
+    if (ViewBag.error == true)
+    {
+        <p>Please ensure that there is a number at the end of the url</p>
+    }
+    else if (ViewBag.clientError == true)
+    {
+        <p>We don't have a project with that id number in our system</p>
+    }
+    else
+    {
 <h2>Details</h2>
 
 <div>
@@ -54,9 +64,11 @@
 </div>
 <p>
     <%= @Html.ActionLink("Schedule this job", "ScheduleJob", "WorkSchedules", new { id = Model.ProjectId }, null)%>|
-    <%=@Html.ActionLink("View all times scheduled for this job ", "JobSchedule", "WorkSchedules",new {id=Model.ProjectId },null)%>
+    <%=@Html.ActionLink("View all times scheduled for this job ", "JobSchedule", "WorkSchedules", new { id = Model.ProjectId }, null)%>
 </p>
- <p>
+<p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.ProjectId }) |
     @Html.ActionLink("Back to List", "UserIndex")
 </p>
+        }
+    }

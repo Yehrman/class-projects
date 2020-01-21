@@ -181,7 +181,6 @@
     <Compile Include="IdentietyExtensions\IdentityExtensions.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\CreateClientModel.cs" />
-    <Compile Include="Models\EntriesByDateModel.cs" />
     <Compile Include="Models\CreateProjectModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
@@ -293,23 +292,18 @@
     <Content Include="Views\TtpUsers\Details.cshtml" />
     <Content Include="Views\TtpUsers\Edit.cshtml" />
     <Content Include="Views\TtpUsers\Index.cshtml" />
-    <Content Include="Views\TimeSheetEntries\Create.cshtml" />
     <Content Include="Views\TimeSheetEntries\Delete.cshtml" />
     <Content Include="Views\TimeSheetEntries\Details.cshtml" />
-    <Content Include="Views\TimeSheetEntries\Edit.cshtml" />
     <Content Include="Views\TimeSheetEntries\Index.cshtml" />
     <Content Include="Views\Home\Select.cshtml" />
     <Content Include="Views\TimeSheetEntries\UserIndex.cshtml" />
     <Content Include="Views\TimeSheetEntries\PunchOut.cshtml" />
-    <Content Include="Views\TimeSheetEntries\FindTimeEntriesByDate.cshtml" />
-    <Content Include="Views\TimeSheetEntries\GetTimeEntriesByDate.cshtml" />
     <Content Include="Views\Clients\Create.cshtml" />
     <Content Include="Views\Clients\Delete.cshtml" />
     <Content Include="Views\Clients\Details.cshtml" />
     <Content Include="Views\Clients\Edit.cshtml" />
     <Content Include="Views\Clients\Index.cshtml" />
     <Content Include="Views\Clients\UserIndex.cshtml" />
-    <Content Include="Views\Projects\Crate.cshtml" />
     <Content Include="Views\Projects\Delete.cshtml" />
     <Content Include="Views\Projects\Details.cshtml" />
     <Content Include="Views\Projects\Edit.cshtml" />
@@ -327,6 +321,8 @@
     <Content Include="Views\WorkSchedules\ScheduleJob.cshtml" />
     <Content Include="Views\WorkSchedules\PastSchedule.cshtml" />
     <Content Include="Views\Clients\BillTotal.cshtml" />
+    <Content Include="Views\Home\NewUser.cshtml" />
+    <Content Include="Views\Home\About.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -12,9 +12,33 @@ namespace CompuskillsMvcProject.Controllers
         {
             return View();
         }
-        public ActionResult Select()
+        public ActionResult About()
         {
             return View();
+        }
+        [Authorize]
+        public ActionResult Select()
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("Login", "Acount");
+            }
+        }
+        [Authorize]
+        public ActionResult NewUser()
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("Login", "Acount");
+            }
         }
 
     }

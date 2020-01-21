@@ -10,16 +10,19 @@ using MvcProjectDbConn;
 using Microsoft.AspNet.Identity;
 namespace CompuskillsMvcProject.Controllers
 {
+    [Authorize]
     public class WorkSchedulesController : Controller
     {
         private TimeSheetDbContext db = new TimeSheetDbContext();
 
-        // GET: WorkSchedules
-      /*  public ActionResult Index()
+       //  GET: WorkSchedules
+       [Authorize(Roles ="CEO")]
+        public ActionResult Index()
         {
             var workScheudules = db.WorkScheudules.Include(w => w.Client).Include(w => w.Project).Include(w => w.TtpUser);
             return View(workScheudules.ToList());
-        }*/
+        }
+        //All future scheduled jobs
         public ActionResult UserIndex()
         {
             var currentUser = User.Identity.GetUserId();
@@ -32,18 +35,32 @@ namespace CompuskillsMvcProject.Controllers
             var schedules = db.WorkScheudules.Include("Client").Include("Project").Where(x => x.TtpUserId == currentUser && x.Date < DateTime.Today);
             return View(schedules);
         }
+        //Future scheduled jobs for 1  job
+        public ActionResult JobSchedule(int id)
+        {
+            var userid = User.Identity.GetUserId();
+            var Schedule = db.WorkScheudules.Include("Client").Where(x => x.ProjectId == id && x.TtpUserId == userid && x.Date >= DateTime.Today);
+            return View(Schedule);
+        }
+        public ActionResult TodaysJobs()
+        {
+            var userid = User.Identity.GetUserId();
+            if (User.Identity.IsAuthenticated)
+            {
+                var ToDo = db.WorkScheudules.Where(x => x.TtpUserId == userid && x.Date == DateTime.Today);
+                return View(ToDo);
+            }
+            else
+            {
+                return RedirectToAction("Login", "Account");
+            }
+        }
         // GET: WorkSchedules/Details/5
         public ActionResult Details(int? id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
+            ViewBag.error = id == null;
             WorkSchedule workSchedule = db.WorkScheudules.Find(id);
-            if (workSchedule == null)
-            {
-                return HttpNotFound();
-            }
+            ViewBag.clientError = workSchedule == null;
             return View(workSchedule);
         }
         [HttpGet]
@@ -74,6 +91,7 @@ namespace CompuskillsMvcProject.Controllers
             }
             return View(schedule);
         }
+        [HttpGet]
         public ActionResult ReSchedule(int id)
         {
             var Job = db.WorkScheudules.Find(id);
@@ -85,7 +103,6 @@ namespace CompuskillsMvcProject.Controllers
             return View();
         }
 
-       
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult ReSchedule(int id, WorkSchedule schedule)
@@ -106,31 +123,14 @@ namespace CompuskillsMvcProject.Controllers
             }
             return View(schedule);
         }
-        public ActionResult JobSchedule(int id)
-        {
-            var userid = User.Identity.GetUserId();
-            var Schedule = db.WorkScheudules.Include("Client").Where(x=>x.Date>=DateTime.Today&&x.ProjectId==id&&x.TtpUserId==userid);
-            return View(Schedule);
-        }
-        public ActionResult TodaysJobs()
-        {
-            var userid = User.Identity.GetUserId();
-            var ToDo = db.WorkScheudules.Where(x => x.TtpUserId == userid && x.Date == DateTime.Today);
-            return View(ToDo);
-        }
+  
 
         // GET: WorkSchedules/Delete/5
         public ActionResult Delete(int? id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
+            ViewBag.error = id == null;
             WorkSchedule workSchedule = db.WorkScheudules.Find(id);
-            if (workSchedule == null)
-            {
-                return HttpNotFound();
-            }
+            ViewBag.clientError = workSchedule == null;
             return View(workSchedule);
         }
 

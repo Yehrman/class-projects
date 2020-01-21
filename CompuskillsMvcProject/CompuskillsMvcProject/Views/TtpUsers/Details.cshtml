@@ -5,6 +5,17 @@
 }
 
 <h2>Details</h2>
+@{
+    if (ViewBag.error == true)
+    {
+        <p>Please ensure that there is a number at the end of the url</p>
+    }
+    else if (ViewBag.clientError == true)
+    {
+        <p>We don't have a User Id with that id  in our system</p>
+    }
+    else
+    {
 
 <div>
     <h4>TtpUser</h4>
@@ -118,5 +129,7 @@
 </div>
 <p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Back to personal setings", "Details")
 </p>
+        }
+    }
