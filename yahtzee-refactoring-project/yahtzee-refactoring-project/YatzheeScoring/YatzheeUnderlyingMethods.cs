@@ -33,6 +33,10 @@ namespace Yahtzee
                 {
                     count++;
                 }
+                else
+                {
+                    break;
+                }
             }
             return count;
         }

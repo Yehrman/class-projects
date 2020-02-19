@@ -47,16 +47,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="YatzheeExecution.cs" />
-    <Compile Include="Class2.cs" />
-    <Compile Include="Interface1.cs" />
-    <Compile Include="YatzheeUnderlyingMethods.cs" />
-    <Compile Include="IDiceScoreCalculator.cs" />
-    <Compile Include="YatzheeNumberOfAKind.cs" />
-    <Compile Include="YahtzeeScoreCalculator.cs" />
+    <Compile Include="YatzheeObjects\GetSetScoringOptions.cs" />
+    <Compile Include="YatzheeObjects\GetSetYatzheeDiceLists.cs" />
+    <Compile Include="YatzheeObjects\ShowYatzheeDiceLists.cs" />
+    <Compile Include="YatzheeObjects\YatzheeCollections.cs" />
+    <Compile Include="YatzheeScoring\YatzheeUnderlyingMethods.cs" />
+    <Compile Include="YatzheeScoring\IDiceScoreCalculator.cs" />
+    <Compile Include="YatzheeScoring\YatzheeNumberOfAKind.cs" />
+    <Compile Include="YatzheeScoring\YahtzeeScoreCalculator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="YahtzeeTest.cs" />
-    <Compile Include="YatzheeRightNumberChecker.cs" />
+    <Compile Include="TestFile\YahtzeeTest.cs" />
+    <Compile Include="YatzheeScoring\YatzheeRightNumberChecker.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
