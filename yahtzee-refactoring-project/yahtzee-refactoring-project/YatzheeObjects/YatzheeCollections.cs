@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 
 namespace Yahtzee
 {
+    //I made this class be inherited by the classes that will set/get them simply for orginization to not  overcrowd the set/get
+    //classes
     public class YatzheeCollections
     {
         protected static List<int> SpinResult { get; set; } = new List<int>();
@@ -32,9 +34,10 @@ namespace Yahtzee
                 { "three of a kind", score.ThreeOfAKind(getSet.GetSelectedDice) },
                 { "four of a kind", score.FourOfAKind(getSet.GetSelectedDice)},
                 { "chance", score.Chance(getSet.GetSelectedDice) },
-                { "yatzhee", score.Yahtzee(getSet.GetSelectedDice)}
+                { "yatzhee", score.Yatzhee(getSet.GetSelectedDice)}
              };
         }
 
     }
+  
 }

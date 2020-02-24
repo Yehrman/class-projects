@@ -49,9 +49,9 @@
   <ItemGroup>
     <Compile Include="YatzheeObjects\GetSetScoringOptions.cs" />
     <Compile Include="YatzheeObjects\GetSetYatzheeDiceLists.cs" />
-    <Compile Include="YatzheeObjects\ShowYatzheeDiceLists.cs" />
+    <Compile Include="YatzheeObjects\ShowYatzheeCollections.cs" />
     <Compile Include="YatzheeObjects\YatzheeCollections.cs" />
-    <Compile Include="YatzheeScoring\YatzheeUnderlyingMethods.cs" />
+    <Compile Include="YatzheeScoring\YatzheeAmountOfDice.cs" />
     <Compile Include="YatzheeScoring\IDiceScoreCalculator.cs" />
     <Compile Include="YatzheeScoring\YatzheeNumberOfAKind.cs" />
     <Compile Include="YatzheeScoring\YahtzeeScoreCalculator.cs" />

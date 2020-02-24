@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Yahtzee
+namespace Yahtzee.YatzheeObjects
 {
-    interface IDiceScoreCalculator
+    interface IGetSetGameCollections
     {
-        int CalculateScore(int number,List<int> Dice);
     }
 }

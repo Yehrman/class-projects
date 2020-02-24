@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Yahtzee
 {
-    class YatzheeUnderlyingMethods
+ internal abstract   class YatzheeAmountOfDice
     {
-        public int AmountOfDiceWithSameNumber(int number, List<int> dice)
+        internal  int AmountOfDiceWithSameNumber(int number, List<int> dice)
         {
             int count = 0;
             for (int i = 1; i <= 6; i++)
@@ -22,7 +20,7 @@ namespace Yahtzee
             }
             return 0;
         }
-        public int SequentialNumbersChecker( List<int> dice)
+        internal int AmountOfDiceInSequence( List<int> dice)
         {
             int count = 1;
             for (int i = 0; i < dice.Count - 1; i++)

@@ -5,12 +5,13 @@ using System.Linq;
 namespace Yahtzee
 {
     [TestFixture]
-    public class YahtzeeTest
+    internal class YahtzeeTest:YatzheeAmountOfDice
     {
+      //  YatzheeAmountOfDice AmountOfDice = new YatzheeAmountOfDice();
         YahtzeeScoreCalculator yahtzee = new YahtzeeScoreCalculator();
         YatzheeNumberOfAKind numberOfAKind = new YatzheeNumberOfAKind();
         YatzheeRightNumberChecker numberChecker = new YatzheeRightNumberChecker();
-        YatzheeUnderlyingMethods underlyingMethods = new YatzheeUnderlyingMethods();
+    
         [Test]
         public void Check_If_NumberOfKind_works()
         {
@@ -43,8 +44,8 @@ namespace Yahtzee
             var list = arr.ToList();
             int[] arr2 = { 3, 5, 3, 3, 3 };
             var list2 = arr2.ToList();
-            Assert.AreEqual(50, yahtzee.Yahtzee(list));
-            Assert.AreEqual(0, yahtzee.Yahtzee(list2));
+            Assert.AreEqual(50, yahtzee.Yatzhee(list));
+            Assert.AreEqual(0, yahtzee.Yatzhee(list2));
         }
       
         public void Check_If_HowManyNumbersOfAkind_works()
@@ -53,8 +54,8 @@ namespace Yahtzee
             var list = arr.ToList();
             int[] arr2 = { 3, 5, 3, 3, 3 };
             var list2 = arr.ToList();
-            Assert.AreEqual(0, underlyingMethods.AmountOfDiceWithSameNumber(3, list));
-            Assert.AreEqual(4, underlyingMethods.AmountOfDiceWithSameNumber(4, list2));
+            Assert.AreEqual(0,AmountOfDiceWithSameNumber(3, list));
+            Assert.AreEqual(4,AmountOfDiceWithSameNumber(4, list2));
         }
             [Test]
             public void Test_1s()
@@ -84,7 +85,7 @@ namespace Yahtzee
 
 
         [Test]
-            public void Three_of_a_kind()
+            public void Test_Three_of_a_kind()
             {
             int[] arr = { 1, 3, 3, 4, 3 };
             var list = arr.ToList();
@@ -100,7 +101,7 @@ namespace Yahtzee
             }
 
             [Test]
-            public void Four_of_a_kind()
+            public void Test_Four_of_a_kind()
             {
             int[] arr = { 3, 3, 3, 4, 3 };
             var list = arr.ToList();
@@ -116,7 +117,7 @@ namespace Yahtzee
             }
 
         [Test]
-        public void SmallStraight()
+        public void Test_SmallStraight()
         {
             int[] arr = { 2, 3, 4, 5, 2 };
             var list = arr.ToList();
@@ -127,7 +128,7 @@ namespace Yahtzee
         }
         
         [Test]
-        public void LargeStraight()
+        public void Test_LargeStraight()
         {
             int[] arr = { 2, 3, 4, 5, 6 };
             var list = arr.ToList();
@@ -138,7 +139,7 @@ namespace Yahtzee
         }
         
         [Test]
-        public void FullHouse()
+        public void Test_FullHouse()
         {
             int[] arr = { 3, 3, 2, 3, 2 };
             var list = arr.ToList();
@@ -154,8 +155,8 @@ namespace Yahtzee
             var list = arr.ToList();
             int[] arr2 = { 1, 2, 3, 4, 2 };
             var list2 = arr2.ToList();
-            Assert.AreEqual(5, underlyingMethods.SequentialNumbersChecker(list));
-            Assert.AreEqual(4, underlyingMethods.SequentialNumbersChecker(list2));
+            Assert.AreEqual(5,AmountOfDiceInSequence(list));
+            Assert.AreEqual(4,AmountOfDiceInSequence(list2));
         }
     }
 

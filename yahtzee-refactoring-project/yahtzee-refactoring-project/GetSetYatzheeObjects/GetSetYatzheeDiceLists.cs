@@ -10,6 +10,7 @@ namespace Yahtzee
     {
         Random random = new Random();
 
+        public List<int> GetSpinResult { get => SpinResult; }
        public int GetDiceCount { get; private set; } = 5;
 
         public void ThrowDice()
@@ -18,6 +19,11 @@ namespace Yahtzee
             {
                 SpinResult.Add(random.Next(1, 7));
             }
+        }
+
+        public void SetDiceCount()
+        {
+            GetDiceCount = SpinResult.Count();
         }
 
         public void ResetDiceCount()
@@ -30,7 +36,7 @@ namespace Yahtzee
             SpinResult.RemoveAll(x => x > 0);
         }
 
-        public void AddDice(int dice)
+        public void AddToSelectedDice_RemoveFromSpinResult(int dice)
         {
             //1,3.2,5,6
             SelectedDice.Add(dice);
@@ -43,11 +49,7 @@ namespace Yahtzee
         {
             SelectedDice.RemoveAll(x => x > 0);
         }
-        public void SetDiceCount()
-        {
-            GetDiceCount = SpinResult.Count();
-        }
-      
+     
         public  List<int> GetSelectedDice { get => SelectedDice; }      
     }
 }
