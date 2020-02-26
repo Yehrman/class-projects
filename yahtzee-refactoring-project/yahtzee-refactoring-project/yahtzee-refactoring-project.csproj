@@ -47,9 +47,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="YatzheeObjects\GetSetScoringOptions.cs" />
-    <Compile Include="YatzheeObjects\GetSetYatzheeDiceLists.cs" />
-    <Compile Include="YatzheeObjects\ShowYatzheeCollections.cs" />
+    <Compile Include="YatzheeScoringOptions\GetSetScoringOptions.cs" />
+    <Compile Include="GetSetYatzheeObjects\GetSetYatzheeDiceLists.cs" />
+    <Compile Include="YatzheeScoringOptions\IGameScoringOptions.cs" />
+    <Compile Include="GetSetYatzheeObjects\IGetSetGameCollections.cs" />
+    <Compile Include="YatzheeShowCollections\IShowGameCollections.cs" />
+    <Compile Include="YatzheeShowCollections\ShowYatzheeCollections.cs" />
     <Compile Include="YatzheeObjects\YatzheeCollections.cs" />
     <Compile Include="YatzheeScoring\YatzheeAmountOfDice.cs" />
     <Compile Include="YatzheeScoring\IDiceScoreCalculator.cs" />
@@ -62,6 +65,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

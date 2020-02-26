@@ -8,5 +8,8 @@ namespace Yahtzee.YatzheeObjects
 {
     interface IShowGameCollections
     {
+     void PrintSpinresult();
+        void PrintSelectedDice();
+        void ShowScoringOptions(Dictionary<string, int> options);
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Yahtzee.YatzheeObjects
 {
-    interface IGameScoringOptions
+   public interface IGameScoringOptions
     {
         Dictionary<string, int> GetScoringOptionsPlayer1 { get; }
 

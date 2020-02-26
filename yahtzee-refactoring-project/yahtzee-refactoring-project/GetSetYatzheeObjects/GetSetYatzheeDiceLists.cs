@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Yahtzee.YatzheeObjects;
 
 namespace Yahtzee
 {
-    public class GetSetYatzheeObjects : YatzheeCollections
+    public class GetSetYatzheeDiceLists : YatzheeCollections, IGetSetGameCollections 
     {
         Random random = new Random();
 
@@ -31,25 +32,32 @@ namespace Yahtzee
             GetDiceCount = 5;
         }
 
-        public void RemoveAllDiceFromSpinResult()
+        public void RemoveAllDiceFromDiceList(List<int>dice)
         {
-            SpinResult.RemoveAll(x => x > 0);
-        }
-
-        public void AddToSelectedDice_RemoveFromSpinResult(int dice)
-        {
-            //1,3.2,5,6
-            SelectedDice.Add(dice);
-            SelectedDice.Sort();
-            SpinResult.Remove(dice);
+            dice.RemoveAll(x => x > 0);
         }
        
-
-        public void RemoveAllDiceFromSelectedDice()
-        {
-            SelectedDice.RemoveAll(x => x > 0);
+    
+        public void AddToSelectedDice_RemoveFromSpinResult(int die)
+        {       
+            SpinResult.Remove(die);
+                
+            if(SelectedDice.Count()<1)
+            {
+                SelectedDice.Add(die);
+            }
+            else if(SelectedDice.All(x=>x!=die))
+            {
+                SelectedDice.Add(die);
+                SelectedDice.Sort();
+            }
+            else 
+            {
+                SelectedDice.Add(die);
+            }
+         
         }
-     
+           
         public  List<int> GetSelectedDice { get => SelectedDice; }      
     }
 }

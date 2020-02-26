@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using Yahtzee.YatzheeObjects;
 namespace Yahtzee
 {
-   public class ShowYatzheeCollections:YatzheeCollections
+   public class ShowYatzheeCollections:YatzheeCollections,IShowGameCollections
     {
         public void PrintSpinresult()
         {
@@ -29,6 +29,17 @@ namespace Yahtzee
             foreach (var item in options)
             {
                 Console.WriteLine(item);
+            }
+        }
+        public void ShowPossibleMoves(List<string> moves)
+        {
+            if (moves.Count() <= 12)
+            {
+                Console.WriteLine("These are the moves you can do ");
+                foreach (var item in moves)
+                {
+                    Console.WriteLine(item);
+                }
             }
         }
     }

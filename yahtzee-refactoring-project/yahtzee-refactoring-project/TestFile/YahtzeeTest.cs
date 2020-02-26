@@ -11,7 +11,7 @@ namespace Yahtzee
         YahtzeeScoreCalculator yahtzee = new YahtzeeScoreCalculator();
         YatzheeNumberOfAKind numberOfAKind = new YatzheeNumberOfAKind();
         YatzheeRightNumberChecker numberChecker = new YatzheeRightNumberChecker();
-    
+        GetSetYatzheeDiceLists getSet = new GetSetYatzheeDiceLists();
         [Test]
         public void Check_If_NumberOfKind_works()
         {
@@ -158,6 +158,7 @@ namespace Yahtzee
             Assert.AreEqual(5,AmountOfDiceInSequence(list));
             Assert.AreEqual(4,AmountOfDiceInSequence(list2));
         }
+     
     }
 
 }

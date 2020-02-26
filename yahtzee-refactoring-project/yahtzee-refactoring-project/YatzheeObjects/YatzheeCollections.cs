@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Yahtzee.YatzheeObjects;
 
 namespace Yahtzee
 {
     //I made this class be inherited by the classes that will set/get them simply for orginization to not  overcrowd the set/get
     //classes
-    public class YatzheeCollections
+    public class YatzheeCollections 
     {
         protected static List<int> SpinResult { get; set; } = new List<int>();
 
@@ -16,25 +17,25 @@ namespace Yahtzee
 
         protected static Dictionary<string, int> ScoringOptions()
         {
-            GetSetYatzheeObjects getSet = new GetSetYatzheeObjects();
+            GetSetYatzheeDiceLists getSet = new GetSetYatzheeDiceLists();
 
             YahtzeeScoreCalculator score = new YahtzeeScoreCalculator();
 
             return new Dictionary<string, int>()
             {
-                {    "ones", score.Ones(getSet.GetSelectedDice) },
-                { "twos", score.Twos(getSet.GetSelectedDice) },
-                { "threes", score.Threes(getSet.GetSelectedDice)},
-                { "fours", score.Fours(getSet.GetSelectedDice) },
-                { "fives", score.Fives(getSet.GetSelectedDice)},
-                { "sixes", score.sixes(getSet.GetSelectedDice) },
-                { "large straight", score.LargeStraight(getSet.GetSelectedDice) },
-                { "small straght", score.SmallStraight(getSet.GetSelectedDice)},
-                { "full house", score.FullHouse(getSet.GetSelectedDice) },
-                { "three of a kind", score.ThreeOfAKind(getSet.GetSelectedDice) },
-                { "four of a kind", score.FourOfAKind(getSet.GetSelectedDice)},
-                { "chance", score.Chance(getSet.GetSelectedDice) },
-                { "yatzhee", score.Yatzhee(getSet.GetSelectedDice)}
+                {    "(on)es", score.Ones(getSet.GetSelectedDice) },
+                { "(tw)os", score.Twos(getSet.GetSelectedDice) },
+                { "(th)rees", score.Threes(getSet.GetSelectedDice)},
+                { "(fo)urs", score.Fours(getSet.GetSelectedDice) },
+                { "(fi)ves", score.Fives(getSet.GetSelectedDice)},
+                { "(si)xes", score.sixes(getSet.GetSelectedDice) },
+                { "(la)rge straight", score.LargeStraight(getSet.GetSelectedDice) },
+                { "(sm)all straight", score.SmallStraight(getSet.GetSelectedDice)},
+                { "(fu)ll house", score.FullHouse(getSet.GetSelectedDice) },
+                { "(Th)ree of a kind", score.ThreeOfAKind(getSet.GetSelectedDice) },
+                { "(Fo)ur of a kind", score.FourOfAKind(getSet.GetSelectedDice)},
+                { "(ch)ance", score.Chance(getSet.GetSelectedDice) },
+                { "(ya)tzhee", score.Yatzhee(getSet.GetSelectedDice)}
              };
         }
 
