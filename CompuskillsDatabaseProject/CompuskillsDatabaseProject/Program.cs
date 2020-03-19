@@ -60,8 +60,9 @@ namespace CompuskillsDatabaseProject
                         Console.WriteLine("Please type a date from and a date to in mth-dd-year format");
                         string from = Console.ReadLine();
                         string till = Console.ReadLine();
-                       securityRepository.GetSuspiciousActivity(TimeFrom(from),TimeTo(till));
-                }
+                      var result= securityRepository.GetSuspiciousActivity(TimeFrom(from),TimeTo(till));
+                  
+                    }
                 else if(option=="ga")
                 {
                         Console.WriteLine("Please type the door name to add credentials to");

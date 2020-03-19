@@ -32,13 +32,18 @@ namespace CompuskillsDatabaseProject
                 var dates = from total in SecurityContext.AccessHistories.Include("Door").Include("Employees")
                             where total.AttemptDate >= begin && total.AttemptDate <= to
                             select total;
-                foreach (var item in dates)
+                Console.WriteLine("To print the results type the word print");
+                string print = Console.ReadLine();
+                if (print == "print")
                 {
-                    Console.WriteLine(item.AccessHistoryID);
-                    Console.WriteLine(item.AttemptDate);
-                    Console.WriteLine(item.Door.Room);
-                    Console.WriteLine(item.Employees.Name);
-                    Console.WriteLine(item.Result);
+                    foreach (var item in dates)
+                    {
+                        Console.WriteLine(item.AccessHistoryID);
+                        Console.WriteLine(item.AttemptDate);
+                        Console.WriteLine(item.Door.Room);
+                        Console.WriteLine(item.Employees.Name);
+                        Console.WriteLine(item.Result);
+                    }
                 }
                 return dates;
             }
@@ -53,13 +58,18 @@ namespace CompuskillsDatabaseProject
                             where total.AttemptDate >= begin && total.AttemptDate <= to
                             where total.DoorID == id
                 select total;
-                foreach (var item in dates)
+                Console.WriteLine("To print the results type the word print");
+                string print = Console.ReadLine();
+                if (print == "print")
                 {
-                    Console.WriteLine(item.AccessHistoryID);
-                    Console.WriteLine(item.AttemptDate);
-                    Console.WriteLine(item.Door.Room);
-                    Console.WriteLine(item.Employees.Name);
-                    Console.WriteLine(item.Result);
+                    foreach (var item in dates)
+                    {
+                        Console.WriteLine(item.AccessHistoryID);
+                        Console.WriteLine(item.AttemptDate);
+                        Console.WriteLine(item.Door.Room);
+                        Console.WriteLine(item.Employees.Name);
+                        Console.WriteLine(item.Result);
+                    }
                 }
                 return dates;
             }
@@ -81,14 +91,20 @@ namespace CompuskillsDatabaseProject
                     var res = item.AttemptDate.AddMinutes(2);
                     result = dates.Where(x => x.AttemptDate == item.AttemptDate || x.AttemptDate > res && x.Result != true);
                 }
-                foreach (var item in result.ToList())
+                Console.WriteLine("To print the results type the word print");
+                string print = Console.ReadLine();
+                if (print == "print")
                 {
-                    Console.WriteLine(item.AccessHistoryID);
-                    Console.WriteLine(item.AttemptDate);
-                    Console.WriteLine(item.Door.Room + "\t" + item.DoorID);
-                    Console.WriteLine(item.Employees.Name + "\t" + item.EmployeeId);
-                    Console.WriteLine(item.Result);
+                    foreach (var item in result.ToList())
+                    {
+                        Console.WriteLine(item.AccessHistoryID);
+                        Console.WriteLine(item.AttemptDate);
+                        Console.WriteLine(item.Door.Room + "\t" + item.DoorID);
+                        Console.WriteLine(item.Employees.Name + "\t" + item.EmployeeId);
+                        Console.WriteLine(item.Result);
+                    }
                 }
+
                 return result;
                 
             }
