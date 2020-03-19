@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.645
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CalculatorUsingMxParser", "CalculatorWithEnum\CalculatorUsingMxParser.csproj", "{D0097484-DFEA-41CD-A7AE-93796A678464}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BalancedOpenAndClosing", "ConsoleApp10\BalancedOpenAndClosing.csproj", "{772741D4-9FCB-4A76-882D-F7B07D2F50E4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{D0097484-DFEA-41CD-A7AE-93796A678464}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D0097484-DFEA-41CD-A7AE-93796A678464}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D0097484-DFEA-41CD-A7AE-93796A678464}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D0097484-DFEA-41CD-A7AE-93796A678464}.Release|Any CPU.Build.0 = Release|Any CPU
+		{772741D4-9FCB-4A76-882D-F7B07D2F50E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{772741D4-9FCB-4A76-882D-F7B07D2F50E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{772741D4-9FCB-4A76-882D-F7B07D2F50E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{772741D4-9FCB-4A76-882D-F7B07D2F50E4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {D9F7A193-2344-41BF-A304-61F49857D21C}
+		SolutionGuid = {ACB37491-C0BC-4495-A13E-AA843166663F}
 	EndGlobalSection
 EndGlobal

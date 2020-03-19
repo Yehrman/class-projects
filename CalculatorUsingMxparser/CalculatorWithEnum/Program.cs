@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using org.mariuszgromada.math.mxparser;
 
-namespace CalculatorWithEnum
+namespace CalculatorUsingMxParser
 {
     class Program
     {
