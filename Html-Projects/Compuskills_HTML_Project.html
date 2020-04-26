@@ -1,0 +1,391 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>The Online Toy Shop</title>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+            integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            "use strict";
+
+            $("form").hide();
+            $("figcaption ").on("click", function () {
+                $("figcaption").hide();
+                $("i").hide();
+                $("img").hide(); 
+
+                var button1 = $(this);  
+                var nextElement = button1.next("form");
+                $(nextElement).show();
+                var pre = button1.prev("img");
+                $(pre).show();
+            });
+            var i = []
+
+            $("i").on("click", function () {
+                $(this).css("background-color", "green");
+                $.ajax({
+                    url: "www.TheOnlineToyShop.com/Reviews" ,
+                    type: "post",
+                    data: Console.log(i),
+                });
+            });
+
+            var Reviews = [];
+            $("button:last-child").on("click", function () {
+                var cancel = $(this);
+                $(cancel).parent().hide();
+                $("figcaption").show();
+                $("i").show();
+                $("img").show();
+            });
+            $("form").on("submit", function () {
+                $("figcaption").show();
+                $("i").show();
+                $("img").show();
+                $.ajax({
+                    url: "www.TheOnlineToyShop.com/Reviews",
+                    type: "post",
+                    data: $(this).serialize()
+                });
+            });
+                $("form").each(function () {
+                    Reviews.push($(this).val());
+                    Console.log(Reviews)                              
+                });
+            
+
+
+ 
+            $("form#1").validate();
+            $("form#2").validate();
+            $("form#3").validate();
+            $("form#4").validate();
+            $("form#5").validate();
+            $("form#6").validate();
+            $("form#7").validate();
+            $("form#8").validate();
+            $("form#9").validate();
+            $("form#10").validate();
+            $("form#11").validate();
+            $("form#12").validate();
+
+        });
+    </script>
+
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <style>
+
+
+        .figure {
+            float: left;
+            margin-left: 40px;
+        }
+
+        .imgButton {
+            text-align: center;
+        }
+
+        .overlay {
+            position: relative;
+            display: none;
+            width: 50%;
+            height: 50%;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: lightgoldenrodyellow;
+            z-index: 2;
+            cursor: pointer;
+        }
+        img{
+            object-fit:cover;
+            width:300px;
+            height:300px;
+        }
+    </style>
+
+
+</head>
+<body>
+    <h1>The Online Toy Shop</h1>
+
+
+    <div class="container">
+        <div class="row">
+            <figure class="figure">
+                <img src="https://images.unsplash.com/photo-1535572290543-960a8046f5af?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60" />
+                <figcaption> <button> write review </button> </figcaption>
+                <form id="1" class="overlay">
+                    <label for="name">name</label>
+                    <input name="name" min="2" type="text" required id="name" />
+                    <label for="email">email<span>(required)</span></label>
+                    <input type="email" name="email" id="email" required />
+                    <label for="Review">Your Review</label>
+                    <textarea name="Review" id="Review" required></textarea>
+                    <input class="imgButton" type="submit" value="Submit">
+                    <button>Cancel</button>
+                </form>
+                <i class="far fa-star"></i>
+                <i class="far fa-star"></i>
+                <i class="far fa-star"></i>
+                <i class="far fa-star"></i>
+                <i class="far fa-star"></i>
+            </figure>
+
+            <figure class="figure">
+                <img src="https://images.unsplash.com/photo-1550009375-99bb7e3bf4d2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60" />
+                <figcaption> <button> write review </button></figcaption>
+                <form id="2" class="overlay">
+                    <label for="name">name</label>
+                    <input name="name" min="2" type="text" required id="name" />
+                    <label for="email">email<span>(required)</span></label>
+                    <input type="email" name="email" id="email" required />
+                    <label for="Review">Your Review</label>
+                    <textarea name="Review" id="Review" required></textarea>
+                    <input class="imgButton" type="submit" value="Submit">
+                    <button>Cancel</button>
+                </form>
+               
+                <i class="far fa-star"></i>
+                <i class="far fa-star"></i>
+                <i class="far fa-star"></i>
+                <i class="far fa-star"></i>
+                <i class="far fa-star"></i>
+            </figure>
+
+            <figure class="figure">
+                <img src="https://images.unsplash.com/photo-1560961911-ba7ef651a56c?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60" />
+                <figcaption> <button> write review </button></figcaption>
+                <form id="3" class="overlay">
+                    <label for="name">name</label>
+                    <input name="name" min="2" type="text" required id="name" />
+                    <label for="email">email<span>(required)</span></label>
+                    <input type="email" name="email" id="email" required />
+                    <label for="Review">Your Review</label>
+                    <textarea name="Review" id="Review" required></textarea>
+
+                    <input class="imgButton" type="submit" value="Submit">
+                    <button>Cancel</button>
+                </form>
+              
+                <i class="far fa-star"></i>
+                <i class="far fa-star"></i>
+                <i class="far fa-star"></i>
+                <i class="far fa-star"></i>
+                <i class="far fa-star"></i>
+            </figure>
+
+        </div>
+
+        <div class="row">
+            <figure class="figure">
+                <img src="https://images.unsplash.com/photo-1545558014-8692077e9b5c?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60" />
+                <figcaption>   <button> write review </button>  </figcaption>
+                <form id="4" class="overlay">
+                    <label for="name">name</label>
+                    <input name="name" min="2" type="text" required id="name" />
+                    <label for="email">email<span>(required)</span></label>
+                    <input type="email" name="email" id="email" required />
+                    <label for="Review">Your Review</label>
+                    <textarea name="Review" id="Review" required></textarea>
+                    <input class="imgButton" type="submit" value="Submit">
+                    <img src="https://images.unsplash.com/photo-1545558014-8692077e9b5c?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60" />
+                    <button>Cancel</button>
+                </form>
+                <i class="far fa-star"></i>
+                <i class="far fa-star"></i>
+                <i class="far fa-star"></i>
+                <i class="far fa-star"></i>
+                <i class="far fa-star"></i>
+            </figure>
+
+            <figure class="figure">
+                <img src="https://images.unsplash.com/photo-1555448049-f8657e9fc8f3?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60" />
+                <figcaption><button> write review for</button>  </figcaption>
+                <form id="12" class="overlay">
+                    <label for="name">name</label>
+                    <input name="name" min="2" type="text" required id="name" />
+                    <label for="email">email<span>(required)</span></label>
+                    <input type="email" name="email" id="email" required />
+                    <label for="Review">Your Review</label>
+                    <textarea name="Review" id="Review" required></textarea>                  
+                    <img src="https://images.unsplash.com/photo-1555448049-f8657e9fc8f3?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60" />
+                    <input class="imgButton" type="submit" value="Submit">
+                    <button>Cancel</button>
+                </form>
+                <i class="far fa-star"></i>
+                <i class="far fa-star"></i>
+                <i class="far fa-star"></i>
+                <i class="far fa-star"></i>
+                <i class="far fa-star"></i>
+            </figure>
+            <figure class="figure">
+                <img src="https://images.unsplash.com/photo-1555980550-e97f3f6c96c7?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60" />
+                <figcaption>   <button> write review </button></figcaption>
+                <form id="5" class="overlay">
+                    <label for="name">name<span>2 characters required </span></label>
+                    <input name="name" min="2" type="text" required id="name" />
+                    <label for="email">email<span>(required)</span></label>
+                    <input type="email" name="email" id="email" required />
+                    <label for="Review">Your Review</label>
+                    <textarea name="Review" id="Review" required></textarea>
+                    <img src="https://images.unsplash.com/photo-1555980550-e97f3f6c96c7?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60" />
+                    <input class="imgButton" type="submit" value="Submit">
+                    <button>Cancel</button>
+                </form>
+                <i class="far fa-star"></i>
+                <i class="far fa-star"></i>
+                <i class="far fa-star"></i>
+                <i class="far fa-star"></i>
+                <i class="far fa-star"></i>
+
+            </figure>
+        </div>
+
+        <div class="row">
+            <figure class="figure">
+                <img src="https://images.unsplash.com/photo-1559590931-85b80ed51a89?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60" />
+                <figcaption>  <button> write review</button> </figcaption>
+                <form id="6" class="overlay">
+                    <label for="name">name</label>
+                    <input name="name" min="2" type="text" required id="name" />
+                    <label for="email">email<span>(required)</span></label>
+                    <input type="email" name="email" id="email" required />
+                    <label for="Review">Your Review</label>
+                    <textarea name="Review" id="Review" required></textarea>
+                    <img src="https://images.unsplash.com/photo-1559590931-85b80ed51a89?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60" />
+                    <input class="imgButton" type="submit" value="Submit">
+                    <button>Cancel</button>
+                </form>
+                <i class="far fa-star"></i>
+                <i class="far fa-star"></i>
+                <i class="far fa-star"></i>
+                <i class="far fa-star"></i>
+                <i class="far fa-star"></i>
+                </figure>
+            
+            <figure class="figure">
+                <img src="https://images.unsplash.com/photo-1529651490292-99f6f9ade9e8?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60" />
+                <figcaption>  <button> write review</button> </figcaption>
+                <form id="7" class="overlay">
+                    <label for="name">name</label>
+                    <input name="name" min="2" type="text" required id="name" />
+                    <label for="email">email<span>(required)</span></label>
+                    <input type="email" name="email" id="email" required />
+                    <label for="Review">Your Review</label>
+                    <textarea name="Review" id="Review" required></textarea>
+                    <img src="https://images.unsplash.com/photo-1529651490292-99f6f9ade9e8?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60" />
+                    <input class="imgButton" type="submit" value="Submit">
+                    <button>Cancel</button>
+                </form>
+                <i class="far fa-star"></i>
+                <i class="far fa-star"></i>
+                <i class="far fa-star"></i>
+                <i class="far fa-star"></i>
+                <i class="far fa-star"></i>
+            </figure>
+
+            <figure class="figure">
+                <img src="https://images.unsplash.com/photo-1423686946622-cc584d79aa25?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60" />
+                <figcaption>  <button> write review </button> </figcaption>
+                <form id="8" class="overlay">
+                    <label for="name">name</label>
+                    <input name="name" min="2" type="text" required id="name" />
+                    <label for="email">email<span>(required)</span></label>
+                    <input type="email" name="email" id="email" required />
+                    <label for="Review">Your Review</label>
+                    <textarea name="Review" id="Review" required></textarea>
+                    <img src="https://images.unsplash.com/photo-1423686946622-cc584d79aa25?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60" />
+                    <input class="imgButton" type="submit" value="Submit">
+                    <button>Cancel</button>
+                </form>
+                <i class="far fa-star"></i>
+                <i class="far fa-star"></i>
+                <i class="far fa-star"></i>
+                <i class="far fa-star"></i>
+                <i class="far fa-star"></i>
+            </figure>
+
+        </div>
+
+        <div class="row">
+            <figure class="figure">
+                <img src="https://images.unsplash.com/photo-1538292999061-16ca3647ab1c?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60" />
+                <figcaption>  <button> write review </button> </figcaption>
+                <form id="9" class="overlay">
+                    <label for="name">name</label>
+                    <input name="name" min="2" type="text" required id="name" />
+                    <label for="email">email<span>(required)</span></label>
+                    <input type="email" name="email" id="email" required />
+                    <label for="Review">Your Review</label>
+                    <textarea name="Review" id="Review" required></textarea>
+                    <img src="https://images.unsplash.com/photo-1538292999061-16ca3647ab1c?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60" />
+                    <input class="imgButton" type="submit" value="Submit">
+                    <button>Cancel</button>
+                </form>
+                <i class="far fa-star"></i>
+                <i class="far fa-star"></i>
+                <i class="far fa-star"></i>
+                <i class="far fa-star"></i>
+                <i class="far fa-star"></i>
+            </figure>
+
+            <figure class="figure">
+                <img src="https://images.unsplash.com/photo-1469037784699-75dcff1cbf75?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60" />
+                <figcaption>   <button> write review</button> </figcaption>
+                <form id="10" class="overlay">
+                    <label for="name">name</label>
+                    <input name="name" min="2" type="text" required id="name" />
+                    <label for="email">email<span>(required)</span></label>
+                    <input type="email" name="email" id="email" required />
+                    <label for="Review">Your Review</label>
+                    <textarea name="Review" id="Review" required></textarea>
+                  <img src=" https://images.unsplash.com/photo-1469037784699-75dcff1cbf75?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60" />
+                    <input class="imgButton" type="submit" value="Submit">
+                    <button>Cancel</button>
+                </form>
+                <i class="far fa-star"></i>
+                <i class="far fa-star"></i>
+                <i class="far fa-star"></i>
+                <i class="far fa-star"></i>
+                <i class="far fa-star"></i>
+            </figure>
+
+
+            <figure class="figure">
+                <img src="https://images.unsplash.com/photo-1503739171234-327ce271626f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60" />
+                <figcaption>  <button> write review </button> </figcaption>
+                <form id="11" class="overlay">
+                    <label for="name">name</label>
+                    <input name="name" min="2" type="text" required id="name" />
+                    <label for="email">email<span>(required)</span></label>
+                    <input type="email" name="email" id="email" required />
+                    <label for="Review">Your Review</label>
+                    <textarea name="Review" id="Review" required></textarea>
+                    <img src="https://images.unsplash.com/photo-1503739171234-327ce271626f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60" />
+                    <figcaption>  <button> write review </button> </figcaption>
+                    <input class="imgButton" type="submit" value="Submit">
+                    <button>Cancel</button>
+                </form>
+                <i class="far fa-star"></i>
+                <i class="far fa-star"></i>
+                <i class="far fa-star"></i>
+                <i class="far fa-star"></i>
+                <i class="far fa-star"></i>
+            </figure>
+
+
+
+        </div>
+    </div>
+
+</body>
+</html >

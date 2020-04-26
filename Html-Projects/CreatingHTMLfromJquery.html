@@ -1,0 +1,64 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+            integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+            crossorigin="anonymous"></script>
+    <script>
+        var shop = [{
+            "itemId": 1,
+            "name": "Marukin Low Salt Soy Sauce",
+            "price": 4.88
+        },
+        {
+            "itemId": 2,
+            "name": "Ajishima Katsuo Furikake",
+            "price": 2.38
+        },
+        {
+            "itemId": 3,
+            "name": "Marukin Teriyaki Sauce",
+            "price": 3.58
+        },
+        {
+            "itemId": 4,
+            "name": "S&B Golden Curry",
+            "price": 4.99
+        },
+        {
+            "itemId": 5,
+            "name": "Lameizi Chili Paste - 10 Oz",
+            "price": 2.89
+        }
+        ];
+        $(document).ready(function () {
+            "use strict";
+            // Download the content
+            var head = $("<h1>Aisan Market</h1>");
+            var dl = $("<dl>");
+            $("body")
+                .append(head)
+                .append(dl)
+            for (var i = 0; i <shop. length; i++) {
+                var item = shop[i];
+                var dt=$("<dt>").text(item.itemId)
+                var dt1 = $("<dt>").text(item.name)
+                var dd = $("<dd>").text(item.price)
+                dl
+                    .append(dt)
+                    .append(dt1)
+                    .append(dd);
+            }
+        });
+
+    </script>
+</head>
+<body>
+    <div>
+        
+    </div>
+</body>
+</html>
