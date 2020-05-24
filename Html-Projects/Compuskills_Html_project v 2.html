@@ -1,0 +1,153 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+            integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.js"></script>
+    
+    <script>
+        var pics = [
+            ["https://images.unsplash.com/photo-1535572290543-960a8046f5af?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60"],
+            ["https://images.unsplash.com/photo-1550009375-99bb7e3bf4d2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60"],
+            ["https://images.unsplash.com/photo-1560961911-ba7ef651a56c?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60"],
+            ["https://images.unsplash.com/photo-1545558014-8692077e9b5c?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60"],
+            ["https://images.unsplash.com/photo-1555448049-f8657e9fc8f3?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60"],
+            ["https://images.unsplash.com/photo-1555448049-f8657e9fc8f3?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60"],
+            ["https://images.unsplash.com/photo-1555980550-e97f3f6c96c7?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60"],
+            ["https://images.unsplash.com/photo-1555980550-e97f3f6c96c7?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60"],
+            ["https://images.unsplash.com/photo-1559590931-85b80ed51a89?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60"],
+            ["https://images.unsplash.com/photo-1559590931-85b80ed51a89?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60"],
+            ["https://images.unsplash.com/photo-1529651490292-99f6f9ade9e8?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60"],
+            ["https://images.unsplash.com/photo-1529651490292-99f6f9ade9e8?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60"],
+            ["https://images.unsplash.com/photo-1423686946622-cc584d79aa25?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60"],
+            ["https://images.unsplash.com/photo-1423686946622-cc584d79aa25?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60"],
+            ["https://images.unsplash.com/photo-1538292999061-16ca3647ab1c?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60"],
+            ["https://images.unsplash.com/photo-1538292999061-16ca3647ab1c?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60"],
+            ["https://images.unsplash.com/photo-1469037784699-75dcff1cbf75?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60"],
+            [" https://images.unsplash.com/photo-1469037784699-75dcff1cbf75?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60"]
+        ];
+        $(document).ready(function () {
+            "use strict";
+            $("i").hide();
+            var container = $("<div>");
+            container.addClass("container");
+            $("body").append(container);
+            //   $(container).append(row);
+            for (var i = 0; i < pics.length; i++) {
+                var pic = pics[i];
+
+                var figure = $("<figure>");
+                container.append(figure);
+                var image = $("<img>");
+                image.attr("src", pic);
+                figure.append(image);
+                var caption = $("<figcaption>");
+                figure.append(caption);
+                var review = $("<button>write review</button>");
+                review.addClass("btn btn - primary");
+                caption.append(review);
+               
+                var form = $("<form>");
+                form.addClass("overlay");
+                figure.append(form);
+                var labelname = $(" <label for=name>name</label>");
+             
+                var name = $("<input name=name min=2 type=text required id=name />");
+                form.append(labelname);
+                form.append(name);
+                var labelEmail = $("<label for=email>email<span>(required)</span></label>");
+                var email = $("  <input type=email name=email id=email required />");
+                form.append(labelEmail);
+                form.append(email);
+                var labelReview = $("   <label for=Review>Your Review</label>");
+                var review = $(" <textarea name=Review id=Review required></textarea>");
+                form.append(labelReview);
+                form.append(review);
+                var submit = $("  <input class=imgButton type=submit value=Submit > ");
+                form.append(submit);
+                var cancel = $("<button>Cancel</button>");
+                form.append(cancel);
+               
+            }
+            $("form").hide();
+            $("figcaption ").on("click", function () {
+                $("figcaption").hide();
+              
+                $("img").hide();
+
+                var button1 = $(this);
+                var nextElement = button1.next("form");
+                $(nextElement).show();
+                var pre = button1.prev("img");
+                $(pre).show();
+            });
+            var Reviews = [];
+            $("button:last-child").on("click", function () {
+                var cancel = $(this);
+                $(cancel).parent().hide();
+                $("figcaption").show();
+               
+                $("img").show();
+            });
+        
+            $("form").on("submit", function () {
+                $("figcaption").show();
+                $("img").show();
+                $.ajax({
+                    url: "www.TheOnlineToyShop.com/Reviews",
+                    type: "post",
+                    data: $(this).serialize()
+                });
+            });
+            $("form").each(function () {
+                $(this).validate();
+                Reviews.push($(this).val());
+                Console.log(Reviews)
+            });
+
+        })
+    </script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <style>
+        figure {
+            float: left;
+            margin-left: 40px;
+        }
+
+        .overlay {
+            position: relative;
+            display: none;
+            width: 50%;
+            height: 50%;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: lightgoldenrodyellow;
+            z-index: 2;
+            cursor: pointer;
+        }
+
+        img {
+            object-fit: cover;
+            width: 300px;
+            height: 300px;
+        }
+
+        figcaption {
+            margin-bottom: 8px;
+        }
+        .imgButton {
+            text-align: center;
+        }
+    </style>
+    <title></title>
+</head>
+<body>
+   <h1 class="imgButton">The Online Toy Shop</h1>
+  
+</body>
+</html>
