@@ -7,5 +7,5 @@ My final projects of each of the courses in my .Net full stack development cours
 
 3)Yatzhee Refactoring Project- a c# command line game of Yatzhee in which I got a badly designed program and refactored it.The game had to  be refactored to comply with the core software design principles of encapsulation,delegation,and contract with attention given to Bob martin's SOLID principles where they apply.I also added an implementation to play the game(The original project just had the scoring methods without a program to play the game) 
 
-4)Html Project-This is a  product review web page  which uses Html for structure, Css for style and Jquery for interactivity.
-I  added a 2nd version in which html is loaded dynamically from Jquery as opposed to the 1st version in which the html is hard coded.
+4)Html Project-This is a  product review web page  which uses Html for structure, Css for style and JavaScript for interactivity.
+There  are 2 versions that use Jquery, 1 version in which the which the the html is hard coded and a 2nd version in which html is loaded dynamically from Jquery.Then there is a 3rd version which uses AngularJs.
