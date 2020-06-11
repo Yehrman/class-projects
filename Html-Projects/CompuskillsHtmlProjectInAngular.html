@@ -1,0 +1,173 @@
+﻿﻿﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <script src="http://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
+
+    <title>Product Review</title>
+
+    <style>
+
+
+        .figure {
+            float: left;
+            margin-left: 40px;
+        }
+
+        .imgButton {
+            text-align: center;
+        }
+
+        .overlay {
+            position: relative;
+            display: none;
+            width: 50%;
+            height: 50%;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: lightgoldenrodyellow;
+            z-index: 2;
+            cursor: pointer;
+        }
+
+        img {
+            object-fit: cover;
+            width: 300px;
+            height: 300px;
+        }
+
+        .hide {
+            display: none;
+        }
+
+        .show {
+            display: block;
+        }
+
+     
+    </style>
+    <script>
+
+        angular.module("app", [])
+            .controller("productReview", function ($http) {
+                "use strict"
+                var vm = this;
+                vm.WriteReview = WriteReview;
+           
+                vm.stars = [1, 2, 3, 4, 5];
+                vm.cancel = cancel;
+                vm.submit = submit;
+              
+                vm.box = {"background-color":"green"}
+             vm.starColor = starColor;
+            
+                vm.pics = [
+                    "https://images.unsplash.com/photo-1535572290543-960a8046f5af?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
+                    "https://images.unsplash.com/photo-1550009375-99bb7e3bf4d2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
+                    "https://images.unsplash.com/photo-1560961911-ba7ef651a56c?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
+                    "https://images.unsplash.com/photo-1545558014-8692077e9b5c?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
+                    "https://images.unsplash.com/photo-1555448049-f8657e9fc8f3?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
+                    "https://images.unsplash.com/photo-1555448049-f8657e9fc8f3?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
+                    "https://images.unsplash.com/photo-1555980550-e97f3f6c96c7?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
+                    "https://images.unsplash.com/photo-1555980550-e97f3f6c96c7?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
+                    "https://images.unsplash.com/photo-1559590931-85b80ed51a89?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
+                    "https://images.unsplash.com/photo-1559590931-85b80ed51a89?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
+                    "https://images.unsplash.com/photo-1529651490292-99f6f9ade9e8?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
+                    "https://images.unsplash.com/photo-1529651490292-99f6f9ade9e8?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
+                    "https://images.unsplash.com/photo-1423686946622-cc584d79aa25?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
+                    "https://images.unsplash.com/photo-1423686946622-cc584d79aa25?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
+                    "https://images.unsplash.com/photo-1538292999061-16ca3647ab1c?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
+                    "https://images.unsplash.com/photo-1538292999061-16ca3647ab1c?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
+                    "https://images.unsplash.com/photo-1469037784699-75dcff1cbf75?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
+                    " https://images.unsplash.com/photo-1469037784699-75dcff1cbf75?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60"
+                ];
+
+
+                function addClass(element, clas) {
+                     document.querySelector(element).classList.add(clas);              
+                }
+                function removeClass(element, clas) {
+                    document.querySelector(element).classList.remove(clas);
+                }
+               
+           
+                function WriteReview() {
+                    vm.src = document.getElementsByTagName("img").src;
+                    addClass("div.row", "hide")
+                 
+                    addClass("form", "show")
+                }
+                function cancel() {              
+                    removeClass("div.row", "hide")
+                    removeClass("form", "show")
+                }
+                function submit() {  
+                 //  vm.inProgress = true;
+                    vm.name
+                    vm.review
+                    vm.email
+                   $http({
+                        url: "http://localhost:8080/Products.html",
+                        method: "POST",
+                        data: {
+                          name:  vm.name,
+                           review: vm.review,
+                           email: vm.email
+                        }
+                   })
+                       .then(function (response) {
+                           response.data;
+                       })
+                       .finally(function () {
+                       //    vm.inProgress = false
+                           removeClass("div.row", "hide")
+                           removeClass("form", "show")
+
+                     })              
+                }
+                
+                function starColor() {
+                   vm.color
+                  vm.color =!vm.color;
+                }
+            })         
+    </script>
+
+</head>
+
+<body ng-app="app">
+    <div class="container" ng-controller="productReview as review">
+        <div class="row">
+            <figure ng-repeat="pic in review.pics track by $index" class="figure">
+                <img ng-src="{{pic}}" />
+                <figcaption> <button ng-click="review.WriteReview()"> write review </button> </figcaption>
+                <span ng-repeat="star in review.stars ">
+                    <i class="far fa-star" ng-click="review.starColor()" ng-style="{'background-color': (review.color ) ? 'red' : 'none' }"></i>
+                </span>
+            </figure>
+
+        </div>
+        <form ng-submit="review.submit()" class="overlay">
+            <label for="name">name</label>
+            <input ng-model="review.name" name="name" min="2" type="text" required id="name" />
+            <label for="email">email<span>(required)</span></label>
+            <input ng-model="review.email" type="email" name="email" id="email" required />
+            <label for="Review">Your Review</label>
+            <textarea ng-model="review.review" name="Review" id="Review" required></textarea>
+            <input  class="imgButton" type="submit" value="Submit">
+            <button ng-click="review.cancel()">Cancel</button>
+
+        </form>
+        
+    <!--<div class=" row bg-danger" ng-show="review.inProgress">
+        The program is loading
+    </div>-->
+    </div>
+    
+</body>
+</html>
