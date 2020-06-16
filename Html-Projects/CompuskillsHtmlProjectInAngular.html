@@ -107,7 +107,7 @@
                     removeClass("form", "show")
                 }
                 function submit() {  
-                 //  vm.inProgress = true;
+                   vm.inProgress = true;
                     vm.name
                     vm.review
                     vm.email
@@ -124,7 +124,7 @@
                            response.data;
                        })
                        .finally(function () {
-                       //    vm.inProgress = false
+                           vm.inProgress = false
                            removeClass("div.row", "hide")
                            removeClass("form", "show")
 
@@ -164,9 +164,9 @@
 
         </form>
         
-    <!--<div class=" row bg-danger" ng-show="review.inProgress">
+    <div class=" row bg-danger" ng-show="review.inProgress">
         The program is loading
-    </div>-->
+    </div>
     </div>
     
 </body>
