@@ -9,15 +9,8 @@ using System.Threading.Tasks;
 
 namespace DataAccess
 {
-  public  class EmployeeRepository:IDisposable
+  public  class EmployeeRepository:DataConnection
     {
-        private SqlConnection Sqlconn { get; set; }
-
-        public EmployeeRepository()
-        {
-            Sqlconn = CreateConnection();
-        }
-      
         private IEnumerable<EmployeeModel> ReadEmployee(string predicate,params SqlParameter[] parameters  )
         {
             Sqlconn.Open();
@@ -80,14 +73,6 @@ namespace DataAccess
             cmd.ExecuteNonQuery();
             Sqlconn.Close();
         }
-        private SqlConnection CreateConnection()
-        {
-          var Conn=  ConfigurationManager.ConnectionStrings["BuildingSecurityConnection"];
-            return new SqlConnection(Conn.ConnectionString);
-        }
-        public void Dispose()
-        {
-            Sqlconn.Dispose();     
-        }
+     
     }
 }
