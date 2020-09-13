@@ -1,7 +1,7 @@
 # Course-Final-Projects
 My final projects of each of the courses in my .Net full stack development course.
 
-1)Datbase Project- a c# console program that uses Entity Framework to connect to a sql server database.This particular database is devoted to building security. 
+1)DataAccessProjects- 1)A c# console program that uses Entity Framework to connect to a sql server database.This particular database is devoted to building security.2)I recently added a 2nd program that uses Ado.Net. (As of this writing it's still in progress).
 
 2)Mvc Project- a full web app designed for a small buisness to manage their employees,clients,billing etc.It is built on Asp.Net Mvc standard.  
 
