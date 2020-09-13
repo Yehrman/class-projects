@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
@@ -11,6 +12,28 @@ namespace DataAccess
 {
   public  class EmployeeRepository:DataConnection
     {
+        private IEnumerable<EmployeeModel> ReadEmployeeWithDataTable(string predicate, params SqlParameter[] parameters)
+        {
+            DataTable table = new DataTable(); 
+            Sqlconn.Open();
+            var cmd = new SqlCommand("select * from Employee e " + predicate, Sqlconn);
+            foreach (var item in parameters)
+            {
+                cmd.Parameters.Add(item);
+            }
+            SqlDataAdapter Adapter = new SqlDataAdapter(cmd);
+            Adapter.Fill(table);
+            for (int i = 0; i < table.Rows.Count; i++)
+            {
+                yield return new EmployeeModel
+                {
+                    EmployeeId = table.Rows[i].Field<int>("EmployeeId"),
+                    FirstName = table.Rows[i].Field<string>("FirstName"),
+                    LastName = table.Rows[i].Field<string>("LastName")
+                };
+            }
+            Sqlconn.Close();
+        }
         private IEnumerable<EmployeeModel> ReadEmployee(string predicate,params SqlParameter[] parameters  )
         {
             Sqlconn.Open();
@@ -30,7 +53,8 @@ namespace DataAccess
                 };
             }
             Sqlconn.Close();
-        }   
+        }
+      
         public IEnumerable<EmployeeModel> ReadEmployeeByPk(int Pk)
         {
             return ReadEmployee(
@@ -43,6 +67,19 @@ namespace DataAccess
             return ReadEmployee("where  e.FirstName like '%'+@Name+ '%' or e.LastName like '%'+ @Name +'%' or @Name='' ",
                 new SqlParameter("@Name", name)
                 );          
+        }
+        public IEnumerable<EmployeeModel> ReadEmployeeByNameUsingDataTable(string name)
+        {
+            return ReadEmployeeWithDataTable("where  e.FirstName like '%'+@Name+ '%' or e.LastName like '%'+ @Name +'%' or @Name='' ",
+                new SqlParameter("@Name", name)
+                );
+        }
+        public IEnumerable<EmployeeModel> ReadEmployeeByPkUsingDataTable(int Pk)
+        {
+            return ReadEmployeeWithDataTable(
+                "where e.EmployeeId=@Pk",
+                new SqlParameter("@Pk", Pk)
+                );
         }
         public void CreateEmployee(EmployeeModel model)
         {
