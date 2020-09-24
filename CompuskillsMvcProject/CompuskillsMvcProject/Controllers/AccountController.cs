@@ -11,6 +11,7 @@ using Microsoft.Owin.Security;
 using CompuskillsMvcProject.Models;
 using MvcProjectDbConn;
 using MvcProjectDbConn.Identity;
+using System.Data.Entity;
 
 namespace CompuskillsMvcProject.Controllers
 {
@@ -170,12 +171,13 @@ namespace CompuskillsMvcProject.Controllers
                 FirstName=model.FirstName,
                 LastName=model.LastName,
                 Email=model.Email,
-                PhoneNumber=model.Phonenumber
+                PhoneNumber=model.Phonenumber,
             }, password: model.Password);
-
+            
             if (user == IdentityResult.Success)
             {
-                return RedirectToAction("Login");
+               
+               return RedirectToAction("CompanyOfUser","Companies");
             }
             else
             {
@@ -183,7 +185,7 @@ namespace CompuskillsMvcProject.Controllers
                 return View();
             }
         }
-             
+     
                     
                     // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
                     // Send an email with this link

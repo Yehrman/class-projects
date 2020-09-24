@@ -7,5 +7,6 @@
         public virtual TtpUser TtpUser { get; set; }
         public int ClientId { get; set;}
         public virtual Client Client { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }

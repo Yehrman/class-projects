@@ -24,7 +24,7 @@ namespace CompuskillsMvcProject.Controllers
         public ActionResult UserIndex()
         {
             var UserId = User.Identity.GetUserId();
-            var Clients = db.UserClients.Include("Client").Where(x => x.TtpUserId == UserId);
+            var Clients = db.UserClients.Include("Client").Where(x => x.TtpUserId == UserId && x.IsDeleted==false);
             return View(Clients);
         }
         // GET: Clients/Details/5
@@ -103,24 +103,55 @@ namespace CompuskillsMvcProject.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            var currentUser = User.Identity.GetUserId();
-            var userClient = db.UserClients.FirstOrDefault(x => x.TtpUserId == currentUser && x.ClientId == id);
-            db.UserClients.Remove(userClient);
-      
-            var multipleClient = db.UserClients.Where(x => x.ClientId == id).Count();
-            if(multipleClient<=1)
-            {
-                Client client = db.Clients.Find(id);
-                db.Clients.Remove(client);
-            }     
+         
+                var currentUser = User.Identity.GetUserId();
+                var userClient = db.UserClients.FirstOrDefault(x => x.TtpUserId == currentUser && x.ClientId == id);
+                userClient.IsDeleted = true;
+                db.Entry(userClient).State = EntityState.Modified;
+                var multipleClient = db.UserClients.Where(x => x.ClientId == id).Count();
+                if (multipleClient <= 1)
+                {
+                    Client client = db.Clients.Find(id);
+                    client.IsActive = false;
+                    db.Entry(client).State = EntityState.Modified;
+                }
+            
             db.SaveChanges();
 
+            return RedirectToAction("UserIndex");
+        }
+        public ActionResult ViewDeletedClients()
+        {
+            var currentUser = User.Identity.GetUserId();
+            var DeletedClients = db.UserClients.Include("Client").Where(x => x.TtpUserId == currentUser && x.IsDeleted==true);
+            return View(DeletedClients);        
+        }
+        public ActionResult UndoDelete(int id,UserClient userClient)
+        {
+            var currentUser = User.Identity.GetUserId();
+            if (ModelState.IsValid)
+            {
+                var deletedClient = db.UserClients.FirstOrDefault(x => x.TtpUserId == currentUser && x.ClientId == id && x.IsDeleted == true);
+                userClient.id = deletedClient.id;
+                userClient.TtpUserId = deletedClient.TtpUserId;
+                userClient.ClientId = deletedClient.ClientId;
+                userClient.IsDeleted = false;
+                userClient.IsDeleted = deletedClient.IsDeleted;
+                db.Entry(deletedClient).State = EntityState.Modified;
+                var multipleClient = db.UserClients.Where(x => x.ClientId == id).Count();
+                if (multipleClient <= 1)
+                {
+                    Client client = db.Clients.Find(id);
+                    client.IsActive = true;
+                    db.Entry(client).State = EntityState.Modified;
+                }
+                db.SaveChanges();
+            }
             return RedirectToAction("UserIndex");
         }
         //Must calculate parts of hours and count hours and pay accordingly
         public ActionResult BillTotal(int id)
         {
-         
             var findUser = User.Identity.GetUserId();
             var Project = db.Projects.Find(id);
             ViewBag.Error = Project.IsActive == true;

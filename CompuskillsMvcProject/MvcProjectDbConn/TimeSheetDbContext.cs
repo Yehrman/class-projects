@@ -11,11 +11,13 @@ namespace MvcProjectDbConn
         public DbSet<Project> Projects { get; set; }
         public DbSet<WorkSchedule> WorkScheudules { get; set; }
         public DbSet<UserClient> UserClients { get; set; }
+        public DbSet<Company> Companies { get; set; }
         public static TimeSheetDbContext Create()
         {
             return new TimeSheetDbContext();
         }
 
-        public System.Data.Entity.DbSet<MvcProjectDbConn.TtpUser> IdentityUsers { get; set; }
+        public DbSet<TtpUser> IdentityUsers { get; set; }
+        public DbSet<CompanyUserRoles> IdentityUserRoles { get; set; }
     }
 }

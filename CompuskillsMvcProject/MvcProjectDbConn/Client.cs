@@ -12,5 +12,6 @@ namespace MvcProjectDbConn
         public string ClientName { get; set; }
         [Required]
         public string ClientEmail { get; set; }
+       public bool IsActive { get; set; }
     }
 }

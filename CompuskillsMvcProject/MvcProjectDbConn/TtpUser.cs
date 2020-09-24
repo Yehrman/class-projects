@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.AspNet.Identity.EntityFramework;
 namespace MvcProjectDbConn
 {
@@ -9,5 +10,7 @@ namespace MvcProjectDbConn
         public virtual ICollection<Project> Projects { get; set; }
         public virtual  ICollection<UserClient> UserClients { get; set; }
         public virtual ICollection<WorkSchedule> WorkSchedules { get; set; }
+        public Guid? CompanyId { get; set; }
+        public virtual Company Company { get; set; }
     }
 }

@@ -5,7 +5,7 @@ using System.Configuration;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 
 namespace SecuritySystemAdoNet
 {
@@ -96,17 +96,11 @@ namespace SecuritySystemAdoNet
             var DateF = DateTimeConverter(From);
             var DateT = DateTimeConverter(To);
             var match = sRepository.GetActivity(DateF, DateT);
-            /*           SqlCommand cmd = new SqlCommand(@"select ah.AccessHistoryId,ah.AttemptDate,e.EmployeeId, e.FirstName,e.LastName,d.DoorId,d.RoomName,ah.Result from AccessHistory ah join Employee
-e on ah.EmployeeId = e.EmployeeId join Door d on ah.DoorId = d.DoorId", Sqlconn); 
-*/
-
             foreach (var item in match)
             {
                 Console.WriteLine($"{item.AccessHistoryId}   {item.AccessAttempt}  {item.EmployeeId}  {item.FirstName} {item.LastName} {item.DoorId} {item.Door} {item.Result}");
             }
         }
-        /* SqlCommand cmd = new SqlCommand(@"select ah.AccessHistoryId,ah.AttemptDate,e.EmployeeId, e.FirstName,e.LastName,ah.Result from AccessHistory ah join Employee
-e on ah.EmployeeId = e.EmployeeId ", Sqlconn);*/
         void GetDoorHistory()
         {
             string From = Prompt("The begining date");
@@ -121,10 +115,21 @@ e on ah.EmployeeId = e.EmployeeId ", Sqlconn);*/
                 Console.WriteLine($"{item.AccessHistoryId}   {item.AccessAttempt}  {item.EmployeeId}  {item.FirstName} {item.LastName}  {item.Result}");
             }
         }
-     
+     void SuspiciousActivities()
+        {
+            string From = Prompt("The begining date");
+            string To = Prompt("The end date");
+            var DateF = DateTimeConverter(From);
+            var DateT = DateTimeConverter(To);
+            var Match = sRepository.GetSuspiciousAttempts(DateF, DateT);
+            foreach (var item in Match)
+            {
+                Console.WriteLine($"{item.AccessHistoryId}   {item.AccessAttempt}  {item.EmployeeId}  {item.FirstName} {item.LastName}  {item.Result}");
+            }
+        }
         static void Main(string[] args)
         {
-
+          
             using (Program p = new Program())
             {
                 while (true)
@@ -137,7 +142,7 @@ e on ah.EmployeeId = e.EmployeeId ", Sqlconn);*/
                         string Input = Console.ReadLine();
                         if (Input == "read")
                         {
-                            Console.WriteLine("Type store to store the data or any key to read without storing");
+                            Console.WriteLine("Type store to store the data or r to read without storing");
                             string typeOfRead = Console.ReadLine();
                             if (typeOfRead == "store")
                             {
@@ -147,12 +152,12 @@ e on ah.EmployeeId = e.EmployeeId ", Sqlconn);*/
                                 {
                                     p.GetEmployeeByNameUsingDataTable();
                                 }
-                                if(Search=="id")
+                                if (Search == "id")
                                 {
                                     p.GetEmployeeByIdUsingDataTable();
                                 }
                             }
-                            else
+                            if (typeOfRead == "R")
                             {
                                 Console.WriteLine("Type name to search by name or id to serch by id");
                                 string Search = Console.ReadLine();
@@ -174,9 +179,10 @@ e on ah.EmployeeId = e.EmployeeId ", Sqlconn);*/
                                 p.DeleteEmployee();
                             }
                         }
+                    }
                         if (Select == "sec")
                         {
-                            Console.WriteLine("To add a credential type cred.To see access history type ahist.To get history for a particular door type doorhist");
+                            Console.WriteLine("To add a credential type cred.To see access history type ahist.To get history for a particular door type doorhist.To get suspicious attempts type suspect");
                             string Search = Console.ReadLine();
                             if (Search == "cred")
                             {
@@ -190,6 +196,10 @@ e on ah.EmployeeId = e.EmployeeId ", Sqlconn);*/
                             {
                                 p.GetDoorHistory();
                             }
+                            if(Search=="suspect")
+                            {
+                                p.SuspiciousActivities();
+                            }
                         }
 
                     }
@@ -197,4 +207,3 @@ e on ah.EmployeeId = e.EmployeeId ", Sqlconn);*/
             }
         }
     }
-}

@@ -61,6 +61,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Client.cs" />
+    <Compile Include="Company.cs" />
+    <Compile Include="CompanyUserRoles.cs" />
     <Compile Include="Identity\TtpUserManager.cs" />
     <Compile Include="Project.cs" />
     <Compile Include="TimeSheetDbContext.cs" />
