@@ -15,13 +15,13 @@ namespace CompuskillsMvcProject.IdentietyExtensions
     {
         public static TtpUserManager CreateUserManager(this IdentityFactoryOptions<TtpUserManager> options, IOwinContext context)
         {
-            var UserStore = new UserStore<TtpUser>(context.Get<TimeSheetDbContext>());
+            var UserStore = new UserStore<Employee>(context.Get<TimeSheetDbContext>());
             var Manager = TtpUserManager.Create(UserStore);
             var dataProtectionProvider = options.DataProtectionProvider;
             if (dataProtectionProvider != null)
             {
                 Manager.UserTokenProvider =
-                    new DataProtectorTokenProvider<TtpUser>(dataProtectionProvider.Create("ASP.NET Identity"));
+                    new DataProtectorTokenProvider<Employee>(dataProtectionProvider.Create("ASP.NET Identity"));
             }
 
             return Manager;

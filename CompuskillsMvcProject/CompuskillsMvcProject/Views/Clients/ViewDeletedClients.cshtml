@@ -1,4 +1,4 @@
-﻿@model IEnumerable<MvcProjectDbConn.UserClient>
+﻿@model IEnumerable<MvcProjectDbConn.Client>
 
 @{
     ViewBag.Title = "ViewDeletedClients";
@@ -12,10 +12,10 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model=>model.Client.ClientName)
+            @Html.DisplayNameFor(model=>model.ClientName)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Client.ClientEmail)
+            @Html.DisplayNameFor(model => model.ClientEmail)
         </th>
     
         <th></th>
@@ -24,10 +24,10 @@
 @foreach (var item in Model) {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.Client.ClientName)
+            @Html.DisplayFor(modelItem => item.ClientName)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Client.ClientEmail)
+            @Html.DisplayFor(modelItem => item.ClientEmail)
         </td>
        
         <td>

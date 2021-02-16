@@ -1,16 +1,17 @@
 ﻿@model MvcProjectDbConn.Client
-
+@using CompuskillsMvcProject.Models;
 @{
+    ErrorMessages error = new ErrorMessages();
     ViewBag.Title = "Delete";
 }
 
 @{ if (ViewBag.error == true)
     {
-    <p>Please ensure that there is a number at the end of the url</p>
+    <p>@error.IdError()</p>
     }
     else if (ViewBag.clientError == true)
     {
-<p>We don't have a client with that id number in our system</p>
+<p>@error.NullError("client")</p>
     }
     else
     {

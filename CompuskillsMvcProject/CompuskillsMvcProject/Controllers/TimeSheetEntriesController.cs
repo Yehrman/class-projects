@@ -10,24 +10,42 @@ using MvcProjectDbConn;
 using Microsoft.AspNet.Identity;
 using CompuskillsMvcProject.Models;
 using System.Timers;
+using System.Diagnostics;
+
 namespace CompuskillsMvcProject.Controllers
 {     [Authorize]
     public class TimeSheetEntriesController : Controller
     {
 
         private TimeSheetDbContext db = new TimeSheetDbContext();
-        // GET: TimeSheetEntries
-        [Authorize(Roles = "Administrator")]
-        public ActionResult Index()
+  
+        [Authorize(Roles = "Ceo,Senior Managment,Finance Department")]
+        public ActionResult Index(string name="",DateTime? from=null,DateTime? to =null)
         {
-            var timeSheetEntries = db.TimeSheetEntries.Include(t => t.Project).Include(t => t.TtpUser);
-           return View(timeSheetEntries.ToList());
+            from = from ?? DateTime.Now.AddDays(-7);
+            to = to ?? DateTime.Now;
+            var FindUser = User.Identity.GetUserId();
+            var Company = db.CompanyEmployees.SingleOrDefault(x => x.EmployeeId == FindUser);
+            var Entries = db.TimeSheetEntries.Include("Project").Include("Employee").Where(x => x.CompanyId == Company.CompanyId  && x.StartTime>=from && x.EndTime<=to && x.Project.ProjectName.Contains(name)).OrderByDescending(x => x.StartTime);
+            return View(Entries);
         }
-        public ActionResult UserIndex()
+        [HttpGet]
+        [Authorize(Roles = "Ceo,Senior Managment,Finance Department")]
+        public ActionResult Search()
+        {
+            return PartialView();
+        }
+        [Authorize(Roles = "Ceo,Senior Managment,Finance Department")]
+        [HttpPost]
+        public ActionResult Search( DateTime? from = null, DateTime? to = null,string name="")
+        {
+            return RedirectToAction("Index", new {  from, to,name });
+        }
+        public ActionResult TimeSheetEntriesForCurrentUser()
         {
             var FindUser = User.Identity.GetUserId();
-            
-            var Entries = db.TimeSheetEntries.Where(x => x.TtpUserId == FindUser).Include("Client").Include("Project");
+            var Company = db.CompanyEmployees.SingleOrDefault(x => x.EmployeeId == FindUser);
+            var Entries = db.TimeSheetEntries.Include("Project").Where(x => x.EmployeeId == FindUser && x.CompanyId == Company.CompanyId).OrderByDescending(x => x.StartTime);
             return View(Entries);
         }
         // GET: TimeSheetEntries/Details/5
@@ -44,31 +62,30 @@ namespace CompuskillsMvcProject.Controllers
             DateTime date = DateTime.Now;
             TimeSpan span = new TimeSpan(16, 0, 0);
             DateTime time = date - span;
-            ViewBag.Error = db.TimeSheetEntries.Any(x => x.TtpUserId == FindUser && x.StartTime <date &&x.StartTime>time&& x.EndTime == null);
-            ViewBag.DifferentDate = db.TimeSheetEntries.Any(x => x.TtpUserId == FindUser && x.StartTime <time && x.EndTime == null);
-            if (db.TimeSheetEntries.Any(x => x.TtpUserId == FindUser && x.StartTime <date&&x.StartTime>time && x.EndTime == null))
+            ViewBag.Error = db.TimeSheetEntries.Any(x => x.EmployeeId == FindUser && x.StartTime <date &&x.StartTime>time&& x.EndTime == null);
+            ViewBag.DifferentDate = db.TimeSheetEntries.Any(x => x.EmployeeId == FindUser && x.StartTime <time && x.EndTime == null);
+            if (db.TimeSheetEntries.Any(x => x.EmployeeId == FindUser && x.StartTime <date&&x.StartTime>time && x.EndTime == null))
             {
                 ModelState.AddModelError("Error", "You never punched out from your last job");               
                 return PartialView();
             }
             else
             {
-                var project = db.Projects.FirstOrDefault(x => x.ProjectId == id);
-                var ProjectId = project.ProjectId;
-                var clientId = project.ClientID;
-                db.TimeSheetEntries.Add(new TimeSheetEntry { TtpUserId = FindUser, ProjectId = ProjectId, ClientId = clientId, StartTime = DateTime.Now });
+                //what am i loking ffor here
+                var project = db.Projects.Find(id);
+                Stopwatch timer = Stopwatch.StartNew();
+                db.TimeSheetEntries.Add(new TimeSheetEntry { EmployeeId = FindUser,ProjectId=project.ProjectId, StartTime = DateTime.Now,CompanyId=project.CompanyId });
                 db.SaveChanges();
                 return PartialView();
             }
         }
         public ActionResult PunchOut()
         {
-            var FindUser = User.Identity.GetUserId();
-           
+            var FindUser = User.Identity.GetUserId();          
             DateTime date = DateTime.Now;
             TimeSpan span = new TimeSpan(10, 0, 0);
             DateTime time = date - span;
-            var Entry = db.TimeSheetEntries.FirstOrDefault(x => x.TtpUserId == FindUser && x.StartTime>=time && x.EndTime == null);          
+            var Entry = db.TimeSheetEntries.FirstOrDefault(x => x.EmployeeId == FindUser && x.StartTime>=time && x.EndTime == null);          
             var start = Entry.StartTime;        
             ViewBag.Error = DateTime.Now - start > span;
             if (DateTime.Now - start < span)
@@ -85,29 +102,42 @@ namespace CompuskillsMvcProject.Controllers
                 return View();
             }
         }
-  
-
-        // GET: TimeSheetEntries/Delete/5
-        public ActionResult Delete(int? id)
+        [Authorize(Roles = "Ceo,Senior Managment,Finance Department")]
+        public ActionResult DelayedPunchoutIndex()
         {
-            ViewBag.error = id == null;
-            TimeSheetEntry timeSheetEntry = db.TimeSheetEntries.Find(id);
-            ViewBag.clientError = timeSheetEntry == null;
-            return View(timeSheetEntry);
-         
+            var user = User.Identity.GetUserId();
+            var empCompany = db.CompanyEmployees.SingleOrDefault(x => x.EmployeeId == user);
+            DateTime date = DateTime.Now;
+            TimeSpan span = new TimeSpan(10, 0, 0);
+            DateTime time = date - span;
+            var LatePunchouts = db.TimeSheetEntries.Include("Project").Where(x => x.CompanyId == empCompany.CompanyId && x.EndTime == null && x.StartTime < time);
+            return View(LatePunchouts);
         }
-
-        // POST: TimeSheetEntries/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        [HttpGet]
+        [Authorize(Roles = "Ceo,Senior Managment,Finance Department")]
+        //check out
+        public ActionResult DelayedPunchout(int? id)
         {
-            TimeSheetEntry timeSheetEntry = db.TimeSheetEntries.Find(id);
-            db.TimeSheetEntries.Remove(timeSheetEntry);
-            db.SaveChanges();
-            return RedirectToAction("UserIndex");
+            ViewBag.Error = id == null;
+            
+            DateTime date = DateTime.Now;
+            TimeSpan span = new TimeSpan(10, 0, 0);
+            DateTime time = date - span;
+            var entry = db.TimeSheetEntries.SingleOrDefault(x => x.TimeSheetEntryId == id && x.EndTime==null && x.StartTime< time);
+            ViewBag.illegal = entry.EndTime != null || entry.StartTime > time;
+            return View(entry);
         }
-    
+        [HttpPost]
+        [Authorize(Roles = "Ceo,Senior Managment,Finance Department")]
+        public ActionResult DelayedPunchout(int id,TimeSheetEntry entry)
+        {
+                var punchIn = db.TimeSheetEntries.Find(id);
+                punchIn.EndTime = entry.EndTime;
+                db.Entry(punchIn).State = EntityState.Modified;
+                db.SaveChanges();
+                return RedirectToAction("Index");
+        
+        }
         protected override void Dispose(bool disposing)
         {
             if (disposing)

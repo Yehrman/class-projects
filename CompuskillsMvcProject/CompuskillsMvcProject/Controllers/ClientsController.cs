@@ -11,23 +11,29 @@ using MvcProjectDbConn;
 using CompuskillsMvcProject.Models;
 
 namespace CompuskillsMvcProject.Controllers
-{     [Authorize]
+{[Authorize(Roles = "Ceo,Senior Managment,Human resources department")]
     public class ClientsController : Controller
     {
-        private TimeSheetDbContext db = new TimeSheetDbContext();
-
-        [Authorize(Roles = "Administrator")]
-        public ActionResult Index()
-        {
-            return View(db.Clients.ToList());
-        }
-        public ActionResult UserIndex()
+        private TimeSheetDbContext db = new TimeSheetDbContext();    
+        public ActionResult Index(string name="")
         {
             var UserId = User.Identity.GetUserId();
-            var Clients = db.UserClients.Include("Client").Where(x => x.TtpUserId == UserId && x.IsDeleted==false);
+            var Company = db.CompanyEmployees.FirstOrDefault(x => x.EmployeeId == UserId);
+            var Clients = db.Clients.Where(x => x.CompanyId == Company.CompanyId && x.IsDeleted == false && x.ClientName.Contains(name));
             return View(Clients);
-        }
+            }
+   
         // GET: Clients/Details/5
+        [HttpGet]
+        public ActionResult Search()
+        {
+            return PartialView ();
+        }
+        [HttpPost]
+        public ActionResult Search(string name)
+        {
+            return RedirectToAction("Index",new { name });
+        }
         public ActionResult Details(int? id)
         {
             
@@ -36,13 +42,13 @@ namespace CompuskillsMvcProject.Controllers
             ViewBag.clientError = client == null;
             return View(client);
         }
-
+  
         // GET: Clients/Create
         public ActionResult Create()
         {
             return View();
         }
-
+        
         // POST: Clients/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
@@ -51,42 +57,115 @@ namespace CompuskillsMvcProject.Controllers
         public ActionResult Create( CreateClientModel client)
         {
             var UserId = User.Identity.GetUserId();
-            
+            var company = db.CompanyEmployees.SingleOrDefault(x => x.EmployeeId == UserId);
             if (ModelState.IsValid)
             {
-                if (db.Clients.Any(x => x.ClientEmail == client.ClientEmail&&x.ClientName==client.ClientName))
-                {
-                    var Customer = db.Clients.FirstOrDefault(x => x.ClientEmail == client.ClientEmail && x.ClientName == client.ClientName);
-                    var id = Customer.ClientId;
-                    db.UserClients.Add(new UserClient {  TtpUserId = UserId,ClientId=id });                 
-                    db.SaveChanges();
-                    return RedirectToAction("UserIndex");
+                //errors 1) both bools unselected 2)both selected 3)billByProject selected and bill rate is not null 4)billByClient is true and bill rate is null 
+                if (db.Clients.Any(x => x.ClientEmail == client.ClientEmail &&x.CompanyId==company.CompanyId))
+                {//Make this partial view
+                    return RedirectToAction("EmailError");
                 }
-               else if(db.Clients.Any(x=>x.ClientEmail==client.ClientEmail&&x.ClientName!=client.ClientName))
+              else if(client.BillByProject==false && client.BillByClient==false)
                 {
-                    ModelState.AddModelError("ClientEmail", "That email is taken please add a unique email");
+                    ModelState.AddModelError("bools", "You must select either to bill by client or project");
+                    return View();
                 }
+                else if(client.BillByClient==true && client.BillByProject==true)
+                {
+                    return View();
+                }
+                else if(client.BillByProject==true && client.BillRate!=null)
+                {     
+                    return View();
+                }
+                else if(client.BillByClient==true && client.BillRate==null)
+                {
+                    return View();
+                }
+                //If email is different but everthing else is the same add new row in client
                 else
                 {
-                    db.Clients.Add(new Client { ClientName=client.ClientName,ClientEmail=client.ClientEmail});
+                    if(client.BillByClient==true)
+                    {
+                        client.BillByProject = false;
+                    }
+                    else if(client.BillByProject==true)
+                    {
+                        client.BillByClient = false;
+                        client.BillRate = null;
+                    }
+                    db.Clients.Add(new Client { CompanyId=company.CompanyId, ClientName = client.ClientName, ClientEmail=client.ClientEmail,ClientPhoneNumber=client.ClientPhoneNumber,ClientAddress = client.ClientAddress,BillByClient=client.BillByClient,BillRate=client.BillRate,BillByProject=client.BillByProject ,IsDeleted=false});
                     db.SaveChanges();
-                    var Customer = db.Clients.FirstOrDefault(x => x.ClientEmail == client.ClientEmail && x.ClientName == client.ClientName);
-                    var id = Customer.ClientId;
-                    db.UserClients.Add(new UserClient { TtpUserId = UserId,ClientId=id });
-                    db.SaveChanges();
-                    return RedirectToAction("UserIndex");
+                    return RedirectToAction("Index");
                 }
             }
 
             return View(client);
         }
-//Can't edit since the clients table is all users clients 1 user can't edit without the other
-        public ActionResult Edit()
-        {           
-            return View();
+            [HttpGet]
+        public ActionResult Edit(int? id)
+        {
+            ViewBag.error = id == null;
+            var client = db.Clients.Find(id);
+            ViewBag.clientError = client == null;
+            return View(client);
+        }
+        [HttpPost]
+        //debug edit
+        public ActionResult Edit (Client client,int id)
+        {
+            var UserId = User.Identity.GetUserId();
+            var company = db.CompanyEmployees.SingleOrDefault(x => x.EmployeeId == UserId);
+            var editedClient = db.Clients.Find(id);
+          if(client.ClientEmail!=editedClient.ClientEmail&&db.Clients.Any(x=>x.ClientEmail==client.ClientEmail))
+            {
+                return RedirectToAction("EmailError");
+            }
+       
+            else if (client.BillByProject == false && client.BillByClient == false)
+            {
+                ModelState.AddModelError("bools", "You must select either to bill by client or project");
+                return View();
+            }
+            else if (client.BillByClient == true && client.BillByProject == true)
+            {
+                return View();
+            }
+            else if (client.BillByProject == true && client.BillRate != null)
+            {
+                return View();
+            }
+            else if (client.BillByClient == true && client.BillRate == null)
+            {
+                return View();
+            }
+            //If email is different but everthing else is the same add new row in client
+            else
+            {
+                editedClient.ClientName = client.ClientName;
+                editedClient.ClientPhoneNumber = client.ClientPhoneNumber;
+              
+                editedClient.ClientEmail = client.ClientEmail;
+                editedClient.ClientAddress = client.ClientAddress;
+                if (client.BillByClient == true)
+                {
+                    client.BillByProject = false;
+                }
+                else if (client.BillByProject == true)
+                {
+                    client.BillByClient = false;
+                    client.BillRate = null;
+                }
+                editedClient.BillByClient = client.BillByClient;
+                editedClient.BillByProject = client.BillByProject;
+                editedClient.BillRate = client.BillRate;
+                db.Entry(editedClient).State = EntityState.Modified;
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
         }
 
-     
+     //make edit post with client.cs
 
         // GET: Clients/Delete/5
         public ActionResult Delete(int? id)
@@ -98,140 +177,48 @@ namespace CompuskillsMvcProject.Controllers
         }
 
         // POST: Clients/Delete/5
-        //make sure to 1st check userclients if there is thos client more then once
+    
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
          
-                var currentUser = User.Identity.GetUserId();
-                var userClient = db.UserClients.FirstOrDefault(x => x.TtpUserId == currentUser && x.ClientId == id);
-                userClient.IsDeleted = true;
-                db.Entry(userClient).State = EntityState.Modified;
-                var multipleClient = db.UserClients.Where(x => x.ClientId == id).Count();
-                if (multipleClient <= 1)
-                {
+            //var currentUser = User.Identity.GetUserId();
+            //var Company = db.CompanyEmployees.FirstOrDefault(x => x.EmployeeId == currentUser);
+         
                     Client client = db.Clients.Find(id);
-                    client.IsActive = false;
-                    db.Entry(client).State = EntityState.Modified;
-                }
-            
-            db.SaveChanges();
+                
+                   client.IsDeleted = true;
+                    db.Entry(client).State = EntityState.Modified;           
+                    db.SaveChanges();
 
-            return RedirectToAction("UserIndex");
+            return RedirectToAction("Index");
         }
+
         public ActionResult ViewDeletedClients()
         {
             var currentUser = User.Identity.GetUserId();
-            var DeletedClients = db.UserClients.Include("Client").Where(x => x.TtpUserId == currentUser && x.IsDeleted==true);
+            var Company = db.CompanyEmployees.FirstOrDefault(x => x.EmployeeId == currentUser);
+            var DeletedClients = db.Clients.Where(x => x.CompanyId==Company.CompanyId && x.IsDeleted==true);
             return View(DeletedClients);        
         }
-        public ActionResult UndoDelete(int id,UserClient userClient)
+        public ActionResult UndoDelete(int id)
         {
-            var currentUser = User.Identity.GetUserId();
-            if (ModelState.IsValid)
-            {
-                var deletedClient = db.UserClients.FirstOrDefault(x => x.TtpUserId == currentUser && x.ClientId == id && x.IsDeleted == true);
-                userClient.id = deletedClient.id;
-                userClient.TtpUserId = deletedClient.TtpUserId;
-                userClient.ClientId = deletedClient.ClientId;
-                userClient.IsDeleted = false;
-                userClient.IsDeleted = deletedClient.IsDeleted;
-                db.Entry(deletedClient).State = EntityState.Modified;
-                var multipleClient = db.UserClients.Where(x => x.ClientId == id).Count();
-                if (multipleClient <= 1)
-                {
-                    Client client = db.Clients.Find(id);
-                    client.IsActive = true;
-                    db.Entry(client).State = EntityState.Modified;
-                }
-                db.SaveChanges();
-            }
-            return RedirectToAction("UserIndex");
-        }
-        //Must calculate parts of hours and count hours and pay accordingly
-        public ActionResult BillTotal(int id)
-        {
-            var findUser = User.Identity.GetUserId();
-            var Project = db.Projects.Find(id);
-            ViewBag.Error = Project.IsActive == true;
-            if (Project.IsActive == false)
-            {
-                var ProjectId = Project.ProjectId;
-                var Entries = db.TimeSheetEntries.Where(x => x.TtpUserId == findUser && x.ProjectId == ProjectId);
-                TimeSpan? Interval;         
-              //  decimal TotalHours = 0;
-                //decimal Minutes = 0;
-                TimeSpan NonNull = new TimeSpan();
-                TimeSpan TotalTimeWorked = new TimeSpan();
-                foreach (var item in Entries)
-                {
-                    Interval = item.EndTime - item.StartTime;
-                    if (Interval.HasValue)
-                    {
-                        NonNull = Interval.Value;
-                        Interval = NonNull;
-                    }
-                   TotalTimeWorked += NonNull;                
-                }
-                string s = Convert.ToString(TotalTimeWorked);
-                decimal Hours = Convert.ToDecimal(TimeSpan.Parse(s).Hours);
-                decimal minutes = Convert.ToDecimal(TimeSpan.Parse(s).Minutes);
-                decimal seconds = Convert.ToDecimal(TimeSpan.Parse(s).Seconds);
-                string TotalTime = string.Format(" {0} hours, {1} minutes, {2} seconds",
-    TotalTimeWorked.Hours, TotalTimeWorked.Minutes, TotalTimeWorked.Seconds);
-                var PayHours = Hours * Project.BillRate;
-                var PayPerMinute = Project.BillRate / 60;
-                var PayMinutes = minutes * PayPerMinute;
-                var PayPerSecond = Project.BillRate / 3600;
-                var paySeconds = seconds * PayPerSecond;
-                var Pay = PayHours + PayMinutes + paySeconds;
-                var bill = Project.TotalBill = Pay;
-                //    decimal TimeTally = TotalHours + Minutes;
-                //  var hours = Project.TotalHours = TimeTally;
-                db.Entry(Project).CurrentValues.SetValues(bill);
-                //db.Entry(Project).CurrentValues.SetValues(hours);
-                db.SaveChanges();
-                ViewBag.Hours = TotalTime;
-                ViewBag.Client = Project.Client.ClientName;
-                ViewBag.Project = Project.ProjectName;
-                ViewBag.Total = Project.TotalBill;
-                return View();
-            }
-            else
-            {
-                var ProjectId = Project.ProjectId;
-                var Entries = db.TimeSheetEntries.Where(x => x.TtpUserId == findUser && x.ProjectId == ProjectId);
-                TimeSpan? Hours;
-                TimeSpan TotalTimeWorked = new TimeSpan();
-                decimal TotalHours = 0;
-                decimal Minutes = 0;
-                TimeSpan nonNull = new TimeSpan();
-                foreach (var item in Entries)
-                {
-                    Hours = item.EndTime - item.StartTime;
-                    if (Hours.HasValue)
-                    {
-                        nonNull = Hours.Value;
-                        Hours = nonNull;
-                    }
-                    TotalTimeWorked += nonNull;
-                    string s = Convert.ToString(TotalTimeWorked);
-                    decimal Total = Convert.ToDecimal(TimeSpan.Parse(s).Hours);
-                    decimal minutes = Convert.ToDecimal(TimeSpan.Parse(s).Minutes);
-                    TotalHours += Total;
-                    Minutes += minutes;
-                }
+            //var currentUser = User.Identity.GetUserId();
+          
+                var deletedClient = db.Clients.Find(id);
 
-                string TotalTime = string.Format(" {0} hours, {1} minutes, {2} seconds",
-    TotalTimeWorked.Hours, TotalTimeWorked.Minutes, TotalTimeWorked.Seconds);
-               // ModelState.AddModelError("error", "You can't bill a project that is still active");
-                ViewBag.Hours = TotalTime;
-                return View();
-            }
+                deletedClient.IsDeleted = false;
+                db.Entry(deletedClient).State = EntityState.Modified;
+            
+            db.SaveChanges();
+            return RedirectToAction("Index");
+        }     
+        public ActionResult EmailError()
+        {
+            return View();
         }
-       
-        protected override void Dispose(bool disposing)
+protected override void Dispose(bool disposing)
         {
             if (disposing)
             {

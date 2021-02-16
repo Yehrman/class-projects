@@ -6,128 +6,233 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
-using Microsoft.AspNet.Identity;
 using MvcProjectDbConn;
+using Microsoft.AspNet.Identity;
 using CompuskillsMvcProject.Models;
+
 namespace CompuskillsMvcProject.Controllers
-{   [Authorize]
+{
+    [Authorize(Roles = "Ceo,Senior Managment,Human resources department")]
     public class ProjectsController : Controller
     {
         private TimeSheetDbContext db = new TimeSheetDbContext();
-        [Authorize (Roles ="CEO")]
-        public ActionResult Index()
+       public ActionResult Index(string name="")
         {
-            var Projects = db.Projects.Include("Client");
-            return View(Projects);
+            var user = User.Identity.GetUserId();
+            var company = db.CompanyEmployees.SingleOrDefault(x => x.EmployeeId == user);
+            var projects = db.Projects.Where(x => x.CompanyId == company.CompanyId &&x.ProjectName.Contains(name) && x.IsDeleted==false || x.IsDeleted==null);
+            return View(projects);
         }
-        // GET: Project
-        public ActionResult UserIndex()
+        public ActionResult ClientProjectIndex(string name="")
         {
-            var WorkerId = User.Identity.GetUserId();
-            var Jobs = db.Projects.Include("Client").Where(x => x.TtpUserId == WorkerId);
-            return View(Jobs);
+            var user = User.Identity.GetUserId();
+            var company = db.CompanyEmployees.SingleOrDefault(x => x.EmployeeId == user);
+            var projects = db.ClientProjects.Include("Project").Where(x => x.Project.CompanyId == company.CompanyId && x.Project.ProjectName.Contains(name));
+            return View(projects);
         }
-
-        // GET: Project/Details/5
+        [HttpGet]
+        public ActionResult Search()
+        {
+            return PartialView();
+        }
+        [HttpPost]
+        public ActionResult Search(string name="")
+        {
+            return RedirectToAction("Index", new { name });
+        }
+        [HttpGet]
+        public ActionResult ClientProjectSearch()
+        {
+            return PartialView();
+        }
+        [HttpPost]
+        public ActionResult ClientProjectSearch(string name="")
+        {
+            return RedirectToAction("ClientProjectIndex", new { name });
+        }
+        public ActionResult CreateSelect()
+        {
+            return View();
+        }
         public ActionResult Details(int? id)
         {
             ViewBag.error = id == null;
             Project project = db.Projects.Find(id);
-            ViewBag.clientError = project== null;
+            ViewBag.Project = project == null;
             return View(project);
+        }
+        public ActionResult ClientDetails(int? id)
+        {
+            ViewBag.error = id == null;
+            ClientProject clientProject = db.ClientProjects.Include("Client").FirstOrDefault(x => x.ProjectId == id);
+            ViewBag.Project = clientProject == null;
+            return View(clientProject);
         }
         [HttpGet]
         public ActionResult Create()
         {
-            var currentUser = User.Identity.GetUserId();
-            ViewBag.ClientID = new SelectList(db.UserClients.Include("Client").Where(x => x.TtpUserId == currentUser), "ClientId", "Client.ClientName");
             return View();
         }
         [HttpPost]
-        public ActionResult Create(CreateProjectModel projectModel)
+        public ActionResult Create(Project project)
         {
-            var currentUser = User.Identity.GetUserId();
-            if (ModelState.IsValid)
-            {             
-                db.Projects.Add(new Project { ProjectName = projectModel.ProjectName, ClientID = projectModel.ClientID, TtpUserId = currentUser, BillRate = projectModel.BillRate, IsActive = true });
-                db.SaveChanges();
-                var job = db.Projects.FirstOrDefault(x => x.ProjectName == projectModel.ProjectName && x.ClientID == projectModel.ClientID && x.TtpUserId == currentUser);
-                var id = job.ProjectId;
-                db.WorkScheudules.Add(new WorkSchedule { TtpUserId = currentUser, ProjectId = id, ClientId = projectModel.ClientID, Date = projectModel.ScheduleDate });
-                db.SaveChanges();
-                return RedirectToAction("UserIndex");
+            var user = User.Identity.GetUserId();
+            var company = db.CompanyEmployees.SingleOrDefault(x => x.EmployeeId == user);
+            db.Projects.Add(new Project { CompanyId = company.CompanyId, ProjectName = project.ProjectName, IsCompleted = false, IsDeleted = false,IsForClient=false });
+            db.SaveChanges();
+            return RedirectToAction("Index");
+        }
+        [HttpGet]
+        public ActionResult CreateProjectForClient(int ? id)
+        {
+            var user = User.Identity.GetUserId();
+            if (id == null)
+            {
+                ViewBag.error = id == null;
+                return View();
             }
-            ViewBag.ClientID = new SelectList(db.UserClients.Include("Client").Where(x => x.TtpUserId == currentUser), "ClientId", "Client.ClientName", projectModel.ClientID);
-            return View(projectModel);
+            var company = db.CompanyEmployees.SingleOrDefault(x => x.EmployeeId == user);
+            var client = db.Clients.SingleOrDefault(x => x.CompanyId == company.CompanyId && x.ClientId == id);
+            CreateProjectForClientModel model = new CreateProjectForClientModel();
+            var isClient = db.Clients.Any(x => x.ClientId == id);
+            if (isClient==false)
+            {
+                ViewBag.project = true;
+                return View();
+            }
+                model.ClientId = client.ClientId;
+                return View(model);          
         }
-    
 
-        // GET: Project/Edit/5
-        public ActionResult Edit(int? id)
-        {
-            ViewBag.error = id == null;
-            Project project = db.Projects.Find(id);
-            ViewBag.clientError = project == null;
-            return View(project);
-        }
-
-        // POST: Project/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, Project project)
+        public ActionResult CreateProjectForClient(CreateProjectForClientModel project)
         {
+            var user = User.Identity.GetUserId();
+            var company = db.CompanyEmployees.SingleOrDefault(x => x.EmployeeId == user);
+            if (db.Clients.Any(x => x.ClientId == project.ClientId && x.BillByProject==true) && project.BillRate==null)
+            {
+                ModelState.AddModelError("bill", "You opted to bill on a per project basis.So you must fill out the bill rate.");
+                return View(project);
+            }
             if (ModelState.IsValid)
             {
-                var job = db.Projects.FirstOrDefault(x => x.ProjectId == id);
-                var user = User.Identity.GetUserId();
-                job.TtpUserId = user;
-                job.BillRate = project.BillRate;
-                job.IsActive = project.IsActive;
-                job.ProjectName = project.ProjectName;     
-                db.Entry(job).State = EntityState.Modified;
+                var newProj = db.Projects.Add(new Project { CompanyId = company.CompanyId, ProjectName = project.ProjectName, IsCompleted = false, IsDeleted = false,IsForClient=true });
+                db.ClientProjects.Add(new ClientProject { ClientId = project.ClientId, ProjectId = newProj.ProjectId, BillRate = project.BillRate });
                 db.SaveChanges();
-                return RedirectToAction("UserIndex");
+                return RedirectToAction("ClientProjectIndex");
             }
-            //ViewBag.ClientID = new SelectList(db.Clients, "ClientId", "ClientName", project.ClientID);
-       
             return View(project);
         }
-
-        // GET: Project/Delete/5
-        public ActionResult Delete(int? id)
+        [HttpGet]
+        public ActionResult Edit(int ? id)
         {
             ViewBag.error = id == null;
             Project project = db.Projects.Find(id);
-            ViewBag.clientError = project == null;
+            ViewBag.project = project == null;
+            return View(project);
+        }
+        public ActionResult Edit(Project project)
+        {
+            var editedProject = db.Projects.Find(project.ProjectId);
+          
+                editedProject.ProjectName = project.ProjectName;
+                editedProject.IsCompleted = project.IsCompleted;
+            if (editedProject.IsCompleted == true)
+            {
+                editedProject.DateCompleted = DateTime.Now;
+            }
+                db.Entry(editedProject).State = EntityState.Modified;
+                db.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
+        // GET: Projects/Edit/5
+        public ActionResult ChangeProjectBillRate(int? id)
+        {
+
+            ViewBag.error = id == null;
+            ClientProject project = db.ClientProjects.Find(id);
+            ViewBag.project = project == null;
+          
             return View(project);
         }
 
-        // POST: Project/Delete/5
+        // POST: Projects/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult ChangeProjectBillRate(ClientProject project)
+        {
+            var editedProj = db.ClientProjects.SingleOrDefault(x => x.id == project.id);
+            if (ModelState.IsValid)
+            {
+                editedProj.BillRate = project.BillRate;          
+                db.Entry(editedProj).State = EntityState.Modified;
+                db.SaveChanges();
+                return RedirectToAction("ClientProjectIndex");
+            }
+      
+            return View(project);
+        }
+        public ActionResult ConcludeProject(int id)
+        {
+            var project = db.Projects.Find(id);
+            project.IsCompleted = true;
+            project.DateCompleted = DateTime.Today;
+            db.Entry(project).State = EntityState.Modified;
+            db.SaveChanges();
+            var user = User.Identity.GetUserId();
+            var employee = db.CompanyEmployees.FirstOrDefault(x => x.EmployeeId == user);
+            var company = db.Companies.SingleOrDefault(x => x.CompanyId == employee.CompanyId);
+            if (company.EmployeePayInterval == "On a per project basis")
+            {
+                return RedirectToAction("EmployeePay", "EmployeePayStubs" ,new {time= "On a per project basis" });
+            }
+            else if(company.ClientBillInterval== "On a per project basis")
+            {
+                return RedirectToAction("BillClients", "ClientBills", new { time = "On a per project basis" });
+            }
+            else if(company.ClientBillInterval == "On a per project basis" && company.EmployeePayInterval == "On a per project basis")
+            {
+                ClientBillsController bill = new ClientBillsController();
+                EmployeePayStubsController employeePay = new EmployeePayStubsController();
+                bill.BillClients("On a per project basis");
+                employeePay.EmployeePay("On a per project basis");
+                return View();
+            }
+            return RedirectToAction("Index");
+        }
+      
+
+        // GET: Projects/Delete/5
+        //Working on project delete
+        public ActionResult Delete(int? id)
+        {
+      
+            Project project = db.Projects.Find(id);
+            ViewBag.error = id == null;
+            ViewBag.project = project == null;
+            return View(project);
+        }
+
+        // POST: Projects/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public ActionResult DeleteConfirmed(int? id)
         {
-        
-           var schedules = db.WorkScheudules.Where(x => x.ProjectId == id);
-       
-           foreach (var item in schedules)
-            {
-                var Id = db.WorkScheudules.Find(item.id);
-                db.WorkScheudules.Remove(Id);
-            }
+            var user = User.Identity.GetUserId();
+            var company = db.CompanyEmployees.SingleOrDefault(x => x.EmployeeId == user);
+            Project project = db.Projects.SingleOrDefault(x => x.CompanyId == company.CompanyId && x.ProjectId == id);
+            project.IsDeleted = true;
+            db.Entry(project).State = EntityState.Modified;
             db.SaveChanges();
-            Project project = db.Projects.Find(id);
-            db.Projects.Remove(project);
-            db.SaveChanges();
-            
-            return RedirectToAction("UserIndex");
+            return RedirectToAction("Index");
         }
-  
-    
 
-       
         protected override void Dispose(bool disposing)
         {
             if (disposing)

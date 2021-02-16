@@ -1,21 +1,15 @@
 ﻿@model IEnumerable<MvcProjectDbConn.TimeSheetEntry>
 
-@{
-    ViewBag.Title = "Index";
-}
+        <h2> Timesheet Entries</h2>   
 
-<h2>Index</h2>
-
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
 <table class="table">
     <tr>
+
         <th>
-            @Html.DisplayNameFor(model => model.Project.ProjectId)
+            Employee
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.TtpUser.Email)
+            @Html.DisplayNameFor(model => model.Project.ProjectName)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.StartTime)
@@ -26,22 +20,47 @@
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Project.ProjectId)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.TtpUser.Email)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.StartTime)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.EndTime)
-        </td>
-    
-    </tr>
-}
+    @foreach (var item in Model)
+    {
 
+        <tr>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.Employee.FullName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Project.ProjectName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StartTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EndTime)
+            </td>
+            <td>
+                @Html.ActionLink("Details", "Details", new { id = item.TimeSheetEntryId }) |
+
+            </td>
+        </tr>
+    }
 </table>
+@section scripts{
+    @Scripts.Render("~/bundles/jqueryunobtrusive")
+    <script>
+        $(document).ready(function () {
+            "use strict";
+
+            $("span#searchLink").on("click", function () {
+                $("div#search").slideToggle();
+            })
+        });
+    </script>
+}
+<style>
+    span {
+        margin: 60px;
+    }
+</style>
+<span id="seachLink">@Ajax.ActionLink("open/close search", "Search", new AjaxOptions { UpdateTargetId = "search" })</span>
+<span>@Html.ActionLink("View punchins where more the 10 hours passed without a punchout", "DelayedPunchoutIndex") </span>
+<div id="search"></div>

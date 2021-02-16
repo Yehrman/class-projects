@@ -1,74 +1,92 @@
 ﻿@model MvcProjectDbConn.Project
+@using CompuskillsMvcProject.Models;
+@using MvcProjectDbConn;
+@using Microsoft.AspNet.Identity;
+@{
 
-@{
+    ErrorMessages error = new ErrorMessages();
     ViewBag.Title = "Details";
-}
-@{
     if (ViewBag.error == true)
     {
-        <p>Please ensure that there is a number at the end of the url</p>
+        error.IdError();
     }
-    else if (ViewBag.clientError == true)
+    else if (ViewBag.Project == true)
     {
-        <p>We don't have a project with that id number in our system</p>
+        error.NullError("project");
     }
     else
     {
-<h2>Details</h2>
 
-<div>
-    <h4>Project</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Client.ClientName)
-        </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Client.ClientName)
-        </dd>
+        <h2>Details</h2>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.TtpUser.Email)
-        </dt>
+        <div>
+            <h4>Project</h4>
+            <hr />
+            <dl class="dl-horizontal">
 
-        <dd>
-            @Html.DisplayFor(model => model.TtpUser.Email)
-        </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.ProjectName)
-        </dt>
+                <dt>
+                    @Html.DisplayNameFor(model => model.ProjectName)
+                </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.ProjectName)
-        </dd>
+                <dd>
+                    @Html.DisplayFor(model => model.ProjectName)
+                </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.BillRate)
-        </dt>
+                <dt>
+                    @Html.DisplayNameFor(model => model.IsCompleted)
+                </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.BillRate)
-        </dd>
+                <dd>
+                    @Html.DisplayFor(model => model.IsCompleted)
+                </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.IsActive)
-        </dt>
+                <dt>
+                    @Html.DisplayNameFor(model => model.IsForClient)
+                </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.IsActive)
-        </dd>
+                <dd>
+                    @Html.DisplayFor(model => model.IsForClient)
+                </dd>
 
-    </dl>
-</div>
-<p>
-    <%= @Html.ActionLink("Schedule this job", "ScheduleJob", "WorkSchedules", new { id = Model.ProjectId }, null)%>|
-    <%=@Html.ActionLink("View all times scheduled for this job ", "JobSchedule", "WorkSchedules", new { id = Model.ProjectId }, null)%>
-</p>
+                <dt>
+                    @Html.DisplayNameFor(model => model.DateCompleted)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.DateCompleted)
+                </dd>
+           
+
+
+            </dl>
+        </div>
+    @section scripts{
+        @Scripts.Render("~/bundles/jqueryunobtrusive")
+    }
 <p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.ProjectId }) |
-    @Html.ActionLink("Back to List", "UserIndex")
-</p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ProjectId }) |
+    @Html.ActionLink("Delete", "Delete", new { id = Model.ProjectId })|
+    @Html.ActionLink("Back to List", "Index")|
+    @if (Model.IsForClient == true)
+    {
+        @Html.ActionLink("See client details", "ClientDetails", new { id = Model.ProjectId })  
+    }|
+    @{ 
+        var user = User.Identity.GetUserId();
+        using (TimeSheetDbContext db = new TimeSheetDbContext())
+        {
+            var employee = db.CompanyEmployees.FirstOrDefault(x => x.EmployeeId == user);
+            var Company = db.Companies.SingleOrDefault(x => x.CompanyId == employee.CompanyId);
+            if(Company.EmployeePayInterval=="On a per project basis" ||Company.ClientBillInterval=="On a per project basis")
+            {
+                @Html.ActionLink("Conclude Project", "ConcludeProject",new { id = Model.ProjectId })
+            }
         }
     }
+</p>
+    }
+ }
+ 

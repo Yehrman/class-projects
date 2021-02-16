@@ -50,6 +50,7 @@
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Activities" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -60,16 +61,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Chat.cs" />
     <Compile Include="Client.cs" />
+    <Compile Include="ClientBill.cs" />
+    <Compile Include="ClientProject.cs" />
     <Compile Include="Company.cs" />
-    <Compile Include="CompanyUserRoles.cs" />
+    <Compile Include="CompanyEmployees.cs" />
+    <Compile Include="DeletedCompanies.cs" />
+    <Compile Include="EmployeePayStub.cs" />
+    <Compile Include="FileDetail.cs" />
     <Compile Include="Identity\TtpUserManager.cs" />
     <Compile Include="Project.cs" />
     <Compile Include="TimeSheetDbContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TimeSheetEntry.cs" />
-    <Compile Include="TtpUser.cs" />
-    <Compile Include="UserClient.cs" />
+    <Compile Include="Employee.cs" />
     <Compile Include="WorkScheudule.cs" />
   </ItemGroup>
   <ItemGroup>

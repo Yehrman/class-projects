@@ -1,20 +1,26 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MvcProjectDbConn
 {
     public class WorkSchedule
     {
         public int id { get; set; }
-        public string TtpUserId { get; set; }
-        public virtual TtpUser TtpUser { get; set; }
-        public int? ProjectId { get; set; }
+        public Guid? CompanyId { get; set; }
+        public virtual Company Company { get; set; } 
+      [ForeignKey("Employee")]
+        public string EmployeeId { get; set; }
+        public virtual Employee Employee { get; set; }
+        public int? ClientId { get; set; }
+          public virtual Client Client { get; set; }
+        public int ProjectId { get; set; }
         public virtual Project Project { get; set; }
-        public int ClientId { get; set; }
-        public virtual Client Client { get; set; }
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy/MM/dd }"), DataType(DataType.Date)]
         //[UIHint("PickDate")]
-        public DateTime? Date { get; set; }
+        public DateTime Date { get; set; }
+        [DataType(DataType.Time)]
+        public string Time { get; set; }
       
     }
 } 

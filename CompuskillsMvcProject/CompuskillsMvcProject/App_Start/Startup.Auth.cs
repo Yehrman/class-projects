@@ -37,7 +37,7 @@ namespace CompuskillsMvcProject
                     // OnValidateIdentity = SecurityStampValidator.OnValidateIdentity<TtpUserManager, TtpUser>(
                     //validateInterval: TimeSpan.FromMinutes(30),
                     // regenerateIdentity: (manager, user) => manager.GenerateUserIdentityAsync(user,DefaultAuthenticationTypes.ApplicationCookie))
-                    OnValidateIdentity = SecurityStampValidator.OnValidateIdentity<TtpUserManager, TtpUser>(
+                    OnValidateIdentity = SecurityStampValidator.OnValidateIdentity<TtpUserManager, Employee>(
                         validateInterval: TimeSpan.FromMinutes(30),
                         regenerateIdentity: (manager, user) => manager.CreateIdentityAsync(user, DefaultAuthenticationTypes.ApplicationCookie)
                         )

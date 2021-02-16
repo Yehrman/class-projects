@@ -1,4 +1,4 @@
-﻿
+﻿@using System.Diagnostics;
 
 @{ if (ViewBag.Error == true)
     {
@@ -15,6 +15,7 @@
     else
     {
         <p>You punched in at @DateTime.Now</p>
+     
     }
 }
-@Html.ActionLink("View all timesheet entries", "UserIndex")
+@Html.ActionLink("View all timesheet entries", "TimeSheetEntriesForCurrentUser")

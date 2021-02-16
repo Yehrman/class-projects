@@ -76,23 +76,23 @@ namespace CompuskillsMvcProject.Controllers
                 {
                     return View(model);
                 }
-            var a = User.Identity.GetUserId();
+            //var a = User.Identity.GetUserId();
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, change to shouldLockout: true
-            using (TimeSheetDbContext DB = new TimeSheetDbContext())
+            using (TimeSheetDbContext db = new TimeSheetDbContext())
             {
                 var result = await SignInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, shouldLockout: false);
                 switch (result)
                 {
                     case SignInStatus.Success:
-                            return RedirectToAction("Select", "Home");                      
+                            return RedirectToAction("Index", "Home");                      
                     case SignInStatus.LockedOut:
                         return View("Lockout");
                     case SignInStatus.RequiresVerification:
                         return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
                     case SignInStatus.Failure:
                     default:
-                        ModelState.AddModelError("", "Invalid login attempt.");
+                        ModelState.AddModelError("", "Invalid login attempt.");                      
                         return View(model);
                 }
             }  
@@ -164,20 +164,25 @@ namespace CompuskillsMvcProject.Controllers
             {
                 return View(model);
             }
-
-            var user = await UserManager.CreateAsync(new TtpUser
+            //var names = new RegisterViewModel();
+            //names.FirstName = model.FirstName;
+            //names.LastName = model.LastName;
+            //names.JobTitle = model.JobTitle;
+            var user = await UserManager.CreateAsync(new Employee
             {
                 UserName=model.Email,
                 FirstName=model.FirstName,
                 LastName=model.LastName,
                 Email=model.Email,
                 PhoneNumber=model.Phonenumber,
+              //  JobTitle=model.JobTitle,
             }, password: model.Password);
             
             if (user == IdentityResult.Success)
             {
                
-               return RedirectToAction("CompanyOfUser","Companies");
+             //  TempData["Names"] = names;
+               return RedirectToAction("Login");
             }
             else
             {
@@ -395,7 +400,7 @@ namespace CompuskillsMvcProject.Controllers
                 {
                     return View("ExternalLoginFailure");
                 }
-                var user = new TtpUser { UserName = model.Email, Email = model.Email };
+                var user = new Employee { UserName = model.Email, Email = model.Email };
                 var result = await UserManager.CreateAsync(user);
                 if (result.Succeeded)
                 {

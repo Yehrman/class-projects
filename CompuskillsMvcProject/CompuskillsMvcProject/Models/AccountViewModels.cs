@@ -86,12 +86,9 @@ namespace CompuskillsMvcProject.Models
         [Display(Name="Phone number")]
         public string Phonenumber { get; set; }
     
+    
     }
-    public class CompanyViewModel
-    {
-        [Required]
-        public string CompanyName { get; set; }
-    }
+ 
     public class ResetPasswordViewModel
     {
         [Required]

@@ -1,58 +1,63 @@
 ﻿@model MvcProjectDbConn.WorkSchedule
-
+@using CompuskillsMvcProject.Models
 @{
     ViewBag.Title = "Details";
-}
+    ErrorMessages payment = new ErrorMessages();
 
-
-@{
-    if (ViewBag.error == true)
+    if (ViewBag.idError == true)
     {
-        <p>Please ensure that there is a number at the end of the url</p>
+        <p> @payment.IdError()</p>
     }
-    else if (ViewBag.clientError == true)
+    else if (ViewBag.schedule == true)
     {
-        <p>We don't have a scheduled project with that id number in our system</p>
+        <p>@payment.NullError("scheduled job")</p>
     }
     else
     {
 
-        <h2>Details</h2>
+<h2>Details</h2>
 
-        <div>
-            <h4>WorkSchedule</h4>
-            <hr />
+<div>
+    <h4>WorkSchedule</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Client.ClientName)
+        </dt>
 
-        
-            <dl class="dl-horizontal">
-                <dt>
-                    @Html.DisplayNameFor(model => model.Client.ClientName)
-                </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Client.ClientName)
+        </dd>
 
-                <dd>
-                    @Html.DisplayFor(model => model.Client.ClientName)
-                </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Employee.Email)
+        </dt>
 
-                <dt>
-                    @Html.DisplayNameFor(model => model.Project.ProjectName)
-                </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Employee.Email)
+        </dd>
 
-                <dd>
-                    @Html.DisplayFor(model => model.Project.ProjectName)
-                </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Project.ProjectName)
+        </dt>
 
-                <dt>
-                    @Html.DisplayNameFor(model => model.Date)
-                </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Project.ProjectName)
+        </dd>
 
-                <dd>
-                    @Html.DisplayFor(model => model.Date)
-                </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Date)
+        </dt>
 
-            </dl>
-        </div>
-     
-        @Html.ActionLink("Reschedule","ReSchedule")
+        <dd>
+            @Html.DisplayFor(model => model.Date)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
         }
     }
-

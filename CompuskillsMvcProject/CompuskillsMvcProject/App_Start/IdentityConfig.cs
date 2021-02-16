@@ -36,14 +36,14 @@ namespace CompuskillsMvcProject
 
 
     // Configure the application sign-in manager which is used in this application.
-    public class TtpSignInManager : SignInManager<TtpUser, string>
+    public class TtpSignInManager : SignInManager<Employee, string>
     {
         public TtpSignInManager(TtpUserManager userManager, IAuthenticationManager authenticationManager)
             : base(userManager, authenticationManager)
         {
         }
 
-        public override Task<ClaimsIdentity> CreateUserIdentityAsync(TtpUser user)
+        public override Task<ClaimsIdentity> CreateUserIdentityAsync(Employee user)
         {
             return ((TtpUserManager)UserManager).CreateIdentityAsync(user, DefaultAuthenticationTypes.ApplicationCookie);
         }

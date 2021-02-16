@@ -1,5 +1,5 @@
 ﻿@model MvcProjectDbConn.TimeSheetEntry
-
+@using CompuskillsMvcProject.Models
 @{
 
 
@@ -8,59 +8,54 @@
 
 <h2>Details</h2>
 @{
-    if (ViewBag.error == true)
-    {
-        <p>Please ensure that there is a number at the end of the url</p>
-    }
-    else if (ViewBag.clientError == true)
-    {
-        <p>We don't have a time sheet entry with that id number in our system</p>
-
-    }
-    else
-    {
-
-<div>
-    <h4>TimeSheetEntry</h4>
-    <hr />
-    <dl class="dl-horizontal">
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Project.ProjectId)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Project.ProjectId)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.TtpUser.Email)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.TtpUser.Email)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.StartTime)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.StartTime)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.EndTime)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.EndTime)
-        </dd>
-
-    </dl>
-</div>
+        ErrorMessages error = new ErrorMessages();
+        if (ViewBag.error == true)
+        {
+        <p> @error.IdError() </p>
         }
+        else if (ViewBag.clientError == true)
+        {
+        <p>@error.NullError("time sheet entry")</p>
+    
     }
+        else
+        {
+
+        <div>
+            <h4>TimeSheetEntry</h4>
+            <hr />
+            <dl class="dl-horizontal">
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Project.ProjectId)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Project.ProjectId)
+                </dd>
+
+            
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.StartTime)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.StartTime)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.EndTime)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.EndTime)
+                </dd>
+
+            </dl>
+        </div>
+    }
+}
 <p>
     @Html.ActionLink("Back to List", "UserIndex")
 </p>
