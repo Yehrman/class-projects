@@ -11,8 +11,7 @@ namespace Yahtzee
 
         public void SetMoves(List<string> moves)
         {
-            moves.AddRange(ScoringOptions().Keys);
-          
+            moves.AddRange(ScoringOptions().Keys);        
         }
         public List<string> GetPlayer1Moves { get => Player1Moves; }
         public List<string> GetPlayer2Moves { get => Player2Moves; }
@@ -29,7 +28,6 @@ namespace Yahtzee
                 }
             }
         }
-
         public void RemoveScoringOptions(Dictionary<string, int> options)
         {
             foreach (var item in ScoringOptions())
@@ -37,7 +35,6 @@ namespace Yahtzee
                 options.Remove(item.Key);
             }
         }
-
         public Dictionary<string, int> GetScoringOptionsPlayer1 { get; set; } = new Dictionary<string, int>();
 
         public Dictionary<string, int> GetScoringOptionsPlayer2 { get; set; } = new Dictionary<string, int>();

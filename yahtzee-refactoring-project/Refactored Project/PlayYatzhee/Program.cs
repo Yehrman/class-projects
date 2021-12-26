@@ -4,7 +4,6 @@ using System.Linq;
 using System.Collections;
 using System.Threading.Tasks;
 using Yahtzee;
-using Yahtzee.YatzheeObjects;
 namespace PlayYatzhee
 {
     class Program
@@ -24,33 +23,35 @@ namespace PlayYatzhee
         
       
 
-        private string Dice { get; set; }
-     
+       
         public void StartTurn()
         {
             if (GetSet.GetDiceCount > 0)
             {
               
                 Console.WriteLine("press any key to spin");
-                Console.ReadKey();
+               Console.ReadKey();
                 Console.WriteLine();
 
                 GetSet.ThrowDice();
                 Show.PrintSpinresult();
                 Console.WriteLine();
                 var options = GetSet.GetSpinResult;
-                List<string> scoringOptions = options.ConvertAll<string>(x => x.ToString());
+                List<string> scoringOptions = options.ConvertAll(x => x.ToString());
                 for (int i = 0; i < GetSet.GetDiceCount; i++)
-                {                
-                    Console.WriteLine("Press the number of the dice to select it otherwise press any key to spin again");
-                                  
-                    SelectedDie= Console.ReadLine();
+                {
+                     Console.WriteLine("Press the number of the dice to select it otherwise press any key to spin again");
+
+                       SelectedDie= Console.ReadLine();
+                    
+                 //   SelectedNumber = random.Next(GetSet.GetSpinResult.Count);
+                   // GetSet.AddToSelectedDice_RemoveFromSpinResult(SelectedNumber);
                     if (scoringOptions.Any(x => x == SelectedDie) && GetSet.GetSelectedDice.Count() < 5)
                     {
                         SelectedNumber = int.Parse(SelectedDie);
                         GetSet.AddToSelectedDice_RemoveFromSpinResult(SelectedNumber);
                     }
-                    else if (options.Any(x => x != SelectedNumber) || GetSet.GetSelectedDice.Count() == 5)
+                   else   if (options.Any(x => x != SelectedNumber) || GetSet.GetSelectedDice.Count() == 5)
                     {
                         break;
                     }
@@ -75,13 +76,14 @@ namespace PlayYatzhee
         static void Main(string[] args)
         {
             int score;
+            YatzheeAI aI = new YatzheeAI();
             Program p = new Program();
             Console.WriteLine("Player 1 type your name");
             Player1 = Console.ReadLine();
             Console.WriteLine("Player 2 type your name");
             Player2 = Console.ReadLine();
             p.PossibleScores.SetMoves(p.PossibleScores.GetPlayer1Moves);
-            p.PossibleScores.SetMoves(p.PossibleScores.GetPlayer2Moves);
+            p.PossibleScores.SetMoves(p.PossibleScores.GetPlayer2Moves); 
 
             while (p.PossibleScores.GetPlayer2Moves.Count() > 0)
             {
@@ -89,7 +91,8 @@ namespace PlayYatzhee
                 p.Show.ShowPossibleMoves(p.PossibleScores.GetPlayer1Moves);
                 for (int i = 0; i < 3; i++)
                 {
-                    p.StartTurn();
+                       p.StartTurn();
+                   // aI.StartTurn();
                 }
 
                 p.ShowSelectedDiceAndScoringOptions(p.PossibleScores.GetScoringOptionsPlayer1, p.PossibleScores.GetPlayer1Moves);

@@ -36,17 +36,26 @@ namespace Yahtzee
         {
             dice.RemoveAll(x => x > 0);
         }
-       
-    
+        public void AddToSelectedDice_RemoveFromSpinResult(List<int> dice,int dieNumb=0)
+        {
+            SpinResult.RemoveAll(x => x == dieNumb);
+             if (SelectedDice.All(x => x != dieNumb))
+            {
+                SelectedDice.AddRange(dice);
+                SelectedDice.Sort();
+            }
+            else
+            {
+                SelectedDice.AddRange(dice);
+            }
+        }
+
+
         public void AddToSelectedDice_RemoveFromSpinResult(int die)
         {       
             SpinResult.Remove(die);
                 
-            if(SelectedDice.Count()<1)
-            {
-                SelectedDice.Add(die);
-            }
-            else if(SelectedDice.All(x=>x!=die))
+             if(SelectedDice.All(x=>x!=die))
             {
                 SelectedDice.Add(die);
                 SelectedDice.Sort();
