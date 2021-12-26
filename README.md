@@ -11,6 +11,6 @@ There  are 2 versions that use Jquery, 1 version in which the which the the html
 
 # Newer projects
 
-BizAssist-A outgrowth of my origional compuskills mvc project.This is a full  web app that allows small buisnesses to manage there clients and employess.Primarily for employees to clock in and tally up there pay, and for clients to tally up there bill.
+BizAssist-A outgrowth of my original compuskills mvc project.This is a full  web app that allows small buisnesses to manage there clients and employess.Primarily for employees to clock in and tally up there pay, and for clients to tally up there bill.
 
 Encryption Decryption- A project that encrypts client data and sends it to a database and then when the user requests it the data.It decrypts it and sends it to the front end looking normal. This program is running on BizAssist
