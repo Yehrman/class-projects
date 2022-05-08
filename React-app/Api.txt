@@ -1,0 +1,35 @@
+import React, {Component} from 'react';
+  
+
+    const  Investor=props=>{
+      const OneInvestor=props.investorsData.map((row)=>{
+        return(
+                 <figure key={row.id}>
+                 <img alt=''>  src={row.speaker_head_shot_to_display}</img>
+                 <figcaption>{row.firstname+' '+row.lastname}</figcaption>
+                 <figcaption>{row.company}</figcaption>
+                   <span className='hideBio'>    
+                     {row.bio}        
+                    </span>
+               </figure>
+               
+             
+        )
+      })
+    //  const oldCss=document.getElementById('hideBio').className
+     // const newCss=oldCss=== 'hideBio'?'showBio':'hideBio'
+    //  return <span onClick={()=>newCss}>  {OneInvestor}</span>
+    return <span>{OneInvestor}</span>
+    }
+    
+     class Api extends Component { 
+      render() {
+        const {investorsData}=this.props
+          return(
+            <div>
+              <Investor investorsData= {investorsData}/>           
+            </div>
+            );
+    }    
+  }  
+export default Api

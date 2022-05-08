@@ -1,0 +1,31 @@
+import React, {Component} from 'react';
+import Api from './Api.js';
+
+class App extends Component{
+  SeeBio()
+  {
+    
+  }
+  render(){
+  const  investors= []
+  
+ // componentDidMount() {
+      const url =
+        'https://youngstartup.io/api/cwebsite/get_speakers_dyn '
+  
+      fetch(url)
+        .then((result) => result.json())
+        .then((result) => {
+          this.setState({
+            investors: {result},
+          })
+        })
+      
+  return(
+    <Api investorsData={investors}/>
+  )
+  } 
+}
+
+export default App
+    
